@@ -4,12 +4,12 @@ Priority: extra
 Maintainer: Rui Nuno Capela <rncbc@rncbc.org>
 Build-Depends: debhelper (>= 5), automake, pkg-config, qtbase5-dev (>= 5.1),
   qtbase5-dev-tools (>= 5.1), qttools5-dev-tools (>= 5.1), qtchooser,
-  libjack-dev, libasound2-dev, fftw3-dev, lv2-dev, libsndfile-dev, liblo0-dev
+  libjack-dev, libasound2-dev, fftw3-dev, lv2-dev, liblo0-dev
 Standards-Version: 3.7.2
 
 Package: padthv1
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: an old-school polyphonic sampler
-  An old-school polyphonic sampler synthesizer with stereo fx.
+  An old-school polyphonic additive synthesizer with stereo fx.
 

@@ -189,9 +189,9 @@ AC_ARG_WITH(lv2,
   AC_HELP_STRING([--with-lv2=PATH], [use alternate LV2 install path]),
   [ac_with_paths="$ac_with_paths $withval"])
 
-# Set for alternate libsndfile installation dir.
-AC_ARG_WITH(sndfile,
-  AC_HELP_STRING([--with-sndfile=PATH], [use alternate libsndfile path]),
+# Set for alternate FFTW3 installation dir.
+AC_ARG_WITH(fftw3,
+  AC_HELP_STRING([--with-fftw3=PATH], [use alternate FFTW3 path]),
   [ac_with_paths="$ac_with_paths $withval"])
 
 # Set for alternate liblo installation dir.
@@ -393,16 +393,6 @@ AC_CHECK_LIB(X11, main)
 AC_CHECK_LIB(Xext, main)
 
 ac_cflags="-ffast-math $ac_cflags"
-
-# Check for core SNDFILE library.
-PKG_CHECK_MODULES([SNDFILE], [sndfile], [ac_sndfile="yes"], [ac_sndfile="no"])
-if test "x$ac_sndfile" = "xyes"; then
-   AC_DEFINE(CONFIG_SNDFILE, 1, [Define if SNDFILE library is available.])
-   ac_cflags="$ac_cflags $SNDFILE_CFLAGS"
-   ac_libs="$ac_libs $SNDFILE_LIBS"
-else
-   AC_MSG_ERROR([*** SNDFILE library not found.])
-fi
 
 # Check for core FFTW3 library.
 PKG_CHECK_MODULES([FFTW3], [fftw3], [ac_fftw3="yes"], [ac_fftw3="no"])

@@ -199,14 +199,14 @@ private:
 
 
 //-------------------------------------------------------------------------
-// padsynth_oscillator - synth oscillator (sort of:)
+// padthv1_generator - synth oscillator (sort of:)
 
-class padsynth_oscillator
+class padthv1_generator
 {
 public:
 
 	// ctor.
-	padsynth_oscillator(padthv1_sample *sample)
+	padthv1_generator(padthv1_sample *sample)
 		{ reset(sample); }
 
 	// wave and phase accessors.

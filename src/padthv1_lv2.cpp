@@ -21,11 +21,8 @@
 
 #include "padthv1_lv2.h"
 #include "padthv1_config.h"
-
 #include "padthv1_sched.h"
-#if 0 //padsynth
-#include "padthv1_sample.h"
-#endif
+
 #include "padthv1_programs.h"
 #include "padthv1_controls.h"
 

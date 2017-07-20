@@ -5,9 +5,9 @@
  <metadata_license>GPL-2.0+</metadata_license>
  <project_license>GPL-2.0+</project_license>
  <name>padthv1</name>
- <summary>an old-school polyphonic sampler</summary>
+ <summary>an old-school polyphonic additive synthesizer</summary>
  <description>
-  <p>padthv1 is an old-school polyphonic sampler synthesizer
+  <p>padthv1 is an old-school polyphonic additive synthesizer
   with stereo fx.</p>
   <p>features:<ul>
   <li>pure stand-alone JACK client with JACK-session, NSM and both JACK MIDI
@@ -28,7 +28,6 @@
   <keyword>ALSA</keyword>
   <keyword>JACK</keyword>
   <keyword>Synthesizer</keyword>
-  <keyword>Sampler</keyword>
   <keyword>LV2</keyword>
   <keyword>Qt</keyword>
  </keywords>

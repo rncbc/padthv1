@@ -711,7 +711,7 @@ struct padthv1_voice : public padthv1_list<padthv1_voice>
 	float vel;									// key velocity
 	float pre;									// key pressure/after-touch
 
-	padsynth_oscillator gen1_osc1, gen1_osc2;	// generators
+	padthv1_generator gen1_osc1, gen1_osc2;		// generators aka. oscillators
 
 	float gen1_freq1, gen1_sample1;				// frequency and phase
 	float gen1_freq2, gen1_sample2;
@@ -720,11 +720,11 @@ struct padthv1_voice : public padthv1_list<padthv1_voice>
 
 	float lfo1_sample;
 
-	padthv1_bal gen1_bal;					// oscillator balance
+	padthv1_bal gen1_bal;						// oscillator balance
 
 	float gen1_balance;
 
-	padthv1_filter1 dcf11, dcf12;			// filters
+	padthv1_filter1 dcf11, dcf12;				// filters
 	padthv1_filter2 dcf13, dcf14;
 	padthv1_filter3 dcf15, dcf16;
 	padthv1_formant dcf17, dcf18;

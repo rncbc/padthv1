@@ -29,7 +29,7 @@ install:
 - sudo apt-get install -qq libjack-dev libasound2-dev libsndfile1-dev liblo-dev fftw3-dev lv2-dev
 
 before_script:
-- git fetch --unshallow --tags -q
+# git fetch --unshallow --tags -q
 - ./autogen.sh
 
 script:

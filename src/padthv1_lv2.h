@@ -84,7 +84,6 @@ public:
 protected:
 
 	void updatePreset(bool bDirty);
-	void updateSample();
 
 	bool state_changed();
 

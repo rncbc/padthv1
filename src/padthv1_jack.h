@@ -70,7 +70,6 @@ public:
 protected:
 
 	void updatePreset(bool bDirty);
-	void updateSample();
 
 private:
 

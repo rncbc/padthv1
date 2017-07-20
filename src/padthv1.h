@@ -173,10 +173,6 @@ public:
 
 	void directNoteOn(int note, int vel);
 
-protected:
-
-	virtual void updateSample() = 0;
-
 private:
 
 	padthv1_impl *m_pImpl;

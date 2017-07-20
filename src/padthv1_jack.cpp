@@ -602,12 +602,6 @@ void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 }
 
 
-void padthv1_jack::updateSample (void)
-{
-	// nothing to do here...
-}
-
-
 //-------------------------------------------------------------------------
 // padthv1_jack_application -- Singleton application instance.
 //

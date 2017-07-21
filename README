@@ -49,7 +49,7 @@ requirements:
     cross-platform application and UI development
     http://qt.io/
 
-  - FFTW, a C library for computing the discrete
+  - FFTW3, a C library for computing the discrete
     Fourier transform (DFT) in one or more dimensions
     http://www.fftw.org
 

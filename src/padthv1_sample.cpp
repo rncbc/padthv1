@@ -93,8 +93,8 @@ private:
 //
 
 // ctor.
-padthv1_sample::padthv1_sample ( padthv1 *pSynth, uint32_t nsize )
-	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0),
+padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
+	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0), m_sid(sid),
 		m_nh_max(0), m_ah(NULL), m_nsize(nsize), m_srate(44100.0f),
 		m_phase0(0.0f), m_apod(Gauss), m_srand(0)
 {
@@ -141,8 +141,8 @@ padthv1_sample::~padthv1_sample (void)
 
 
 // init.
-void padthv1_sample::reset_test ( float freq0,
-	float width, float scale, uint16_t nh, Apodizer apod, int sid )
+void padthv1_sample::reset_test (
+	float freq0, float width, float scale, uint16_t nh, Apodizer apod )
 {
 	int updated = 0;
 
@@ -158,7 +158,7 @@ void padthv1_sample::reset_test ( float freq0,
 		++updated;
 
 	if (updated > 0)
-		m_sample_sched->schedule(freq0, width, scale, nh, apod, sid);
+		m_sample_sched->schedule(freq0, width, scale, nh, apod, m_sid);
 }
 
 
@@ -209,8 +209,13 @@ void padthv1_sample::reset_nh_max ( uint16_t nh )
 		if (old_ah) for (uint16_t n = 0; n < m_nh_max; ++n)
 			new_ah[n] = old_ah[n];
 		::memset(&new_ah[m_nh_max], 0, (nh - m_nh_max) * sizeof(float));
-		for (uint16_t n = m_nh_max; n < nh; ++n)
-			new_ah[n] = ((n & 1) ? 1.667f : 1.0f) / float(n + 1);
+		if (m_sid & 1) {
+			for (uint16_t n = m_nh_max; n < nh; ++n) // odd...
+				new_ah[n] = ((n & 1) ? 1.667f : 1.0f) / float(n + 1);
+		} else {
+			for (uint16_t n = m_nh_max; n < nh; ++n) // even...
+				new_ah[n] = ((n & 1) || (n < 1) ? 1.0f : 1.667f) / float(n + 1);
+		}
 		m_ah = new_ah;
 		m_nh_max = nh;
 		if (old_ah) delete [] old_ah;

@@ -50,7 +50,9 @@ public:
 	static const uint32_t DEFAULT_NSIZE = 1024 << 6; // 64K
 
 	// ctor.
-	padthv1_sample(padthv1 *pSynth, uint32_t nsize = DEFAULT_NSIZE);
+	padthv1_sample(
+		padthv1 *pSynth, int sid = 0,
+		uint32_t nsize = DEFAULT_NSIZE);
 
 	// dtor.
 	~padthv1_sample();
@@ -90,10 +92,10 @@ public:
 		{ return (n < m_nh_max) ? m_ah[n] : 0.0f; }
 
 	// init.
-	void reset_test(float freq0,
-		float width, float scale, uint16_t nh, Apodizer apod, int sid = 0);
-	void reset(float freq0,
-		float width, float scale, uint16_t nh, Apodizer apod);
+	void reset_test(
+		float freq0, float width, float scale, uint16_t nh, Apodizer apod);
+	void reset(
+		float freq0, float width, float scale, uint16_t nh, Apodizer apod);
 	void reset();
 
 	// begin.
@@ -175,6 +177,9 @@ private:
 	float     m_width;
 	float     m_scale;
 	uint16_t  m_nh;
+
+	int       m_sid;
+
 	uint16_t  m_nh_max;
 	float    *m_ah;
 

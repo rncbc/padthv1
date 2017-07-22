@@ -527,7 +527,7 @@ void padthv1widget_sample::resetSquareOdd (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = ((n & 1) ? 1.667f : 1.0f) / ::sqrtf(float(n + 1));
+		const float v = ((n & 1) ? 1.291f : 1.0f) / ::sqrtf(float(n + 1));
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -541,7 +541,8 @@ void padthv1widget_sample::resetSquareEven (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.667f) / ::sqrtf(float(n + 1));
+		const float n1 = float(n + 1);
+		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.291f) / ::sqrtf(float(n1));
 		m_pSample->setHarmonic(n, v);
 	}
 

@@ -941,7 +941,7 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 
 padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate )
-	: gen1_sample1(pSampl), gen1_sample2(pSampl),
+	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
 		m_controls(pSampl), m_programs(pSampl), m_midi_in(pSampl), m_bpm(180.0f)
 {
 	// null sample freqs.
@@ -1718,22 +1718,20 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 
 	if (m_gen1.sample1_0 != *m_gen1.sample1) {
 		m_gen1.sample1_0  = *m_gen1.sample1;
-		m_gen1.freq1 = padthv1_freq(
-			m_gen1.sample1_0 + *m_gen1.detune1 * DETUNE_SCALE);
+		m_gen1.freq1 = padthv1_freq(m_gen1.sample1_0);
 	}
 
 	if (m_gen1.sample2_0 != *m_gen1.sample2) {
 		m_gen1.sample2_0  = *m_gen1.sample2;
-		m_gen1.freq2 = padthv1_freq(
-			m_gen1.sample2_0 + *m_gen1.detune2 * DETUNE_SCALE);
+		m_gen1.freq2 = padthv1_freq(m_gen1.sample2_0);
 	}
 
 	gen1_sample1.reset_test(m_gen1.freq1,
 		*m_gen1.width1, *m_gen1.scale1, uint16_t(*m_gen1.nh1),
-		padthv1_sample::Apodizer(*m_gen1.apod1), 1);
+		padthv1_sample::Apodizer(*m_gen1.apod1));
 	gen1_sample2.reset_test(m_gen1.freq2,
 		*m_gen1.width2, *m_gen1.scale2, uint16_t(*m_gen1.nh2),
-		padthv1_sample::Apodizer(*m_gen1.apod2), 2);
+		padthv1_sample::Apodizer(*m_gen1.apod2));
 
 	if (m_gen1.envtime0 != *m_gen1.envtime) {
 		m_gen1.envtime0  = *m_gen1.envtime;

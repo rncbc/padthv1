@@ -404,24 +404,28 @@ struct padthv1_gen
 	padthv1_port scale1;
 	padthv1_port nh1;
 	padthv1_port apod1;
+	padthv1_port detune1;
+	padthv1_port glide1;
+
 	padthv1_port sample2;
 	padthv1_port width2;
 	padthv1_port scale2;
 	padthv1_port nh2;
 	padthv1_port apod2;
+	padthv1_port detune2;
+	padthv1_port glide2;
+
 	padthv1_port balance;
-	padthv1_port detune;
 	padthv1_port phase;
 	padthv1_port ringmod;
 	padthv1_port octave;
 	padthv1_port tuning;
-	padthv1_port glide;
 	padthv1_port envtime;
 
 	float sample1_0, freq1;
 	float sample2_0, freq2;
 
-	float detune0, envtime0;
+	float envtime0;
 };
 
 
@@ -733,7 +737,7 @@ struct padthv1_voice : public padthv1_list<padthv1_voice>
 	padthv1_env::State dcf1_env;
 	padthv1_env::State lfo1_env;
 
-	padthv1_glide gen1_glide1, gen1_glide2;	// glides (portamento)
+	padthv1_glide gen1_glide1, gen1_glide2;		// glides (portamento)
 
 	padthv1_pre dca1_pre;
 
@@ -943,7 +947,6 @@ padthv1_impl::padthv1_impl (
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;
 	m_gen1.freq1 = m_gen1.freq2 = 0.0f;
-	m_gen1.detune0 = 0.0f;
 
 	// max env. stage length (default)
 	m_gen1.envtime0 = 0.0001f * MAX_ENV_MSECS;
@@ -1200,18 +1203,20 @@ padthv1_port *padthv1_impl::paramPort ( padthv1::ParamIndex index )
 	case padthv1::GEN1_SCALE1:    pParamPort = &m_gen1.scale1;      break;
 	case padthv1::GEN1_NH1:       pParamPort = &m_gen1.nh1;         break;
 	case padthv1::GEN1_APOD1:     pParamPort = &m_gen1.apod1;       break;
+	case padthv1::GEN1_DETUNE1:   pParamPort = &m_gen1.detune1;     break;
+	case padthv1::GEN1_GLIDE1:    pParamPort = &m_gen1.glide1;      break;
 	case padthv1::GEN1_SAMPLE2:   pParamPort = &m_gen1.sample2;     break;
 	case padthv1::GEN1_WIDTH2:    pParamPort = &m_gen1.width2;      break;
 	case padthv1::GEN1_SCALE2:    pParamPort = &m_gen1.scale2;      break;
 	case padthv1::GEN1_NH2:       pParamPort = &m_gen1.nh2;         break;
 	case padthv1::GEN1_APOD2:     pParamPort = &m_gen1.apod2;       break;
+	case padthv1::GEN1_DETUNE2:   pParamPort = &m_gen1.detune2;     break;
+	case padthv1::GEN1_GLIDE2:    pParamPort = &m_gen1.glide2;      break;
 	case padthv1::GEN1_BALANCE:   pParamPort = &m_gen1.balance;     break;
-	case padthv1::GEN1_DETUNE:    pParamPort = &m_gen1.detune;      break;
 	case padthv1::GEN1_PHASE:     pParamPort = &m_gen1.phase;       break;
 	case padthv1::GEN1_RINGMOD:   pParamPort = &m_gen1.ringmod;     break;
 	case padthv1::GEN1_OCTAVE:    pParamPort = &m_gen1.octave;      break;
 	case padthv1::GEN1_TUNING:    pParamPort = &m_gen1.tuning;      break;
-	case padthv1::GEN1_GLIDE:     pParamPort = &m_gen1.glide;       break;
 	case padthv1::GEN1_ENVTIME:   pParamPort = &m_gen1.envtime;     break;
 	case padthv1::DCF1_CUTOFF:    pParamPort = &m_dcf1.cutoff;      break;
 	case padthv1::DCF1_RESO:      pParamPort = &m_dcf1.reso;        break;
@@ -1393,9 +1398,10 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				const float note1 = float(key)
 					+ *m_gen1.octave * OCTAVE_SCALE
 					+ *m_gen1.tuning * TUNING_SCALE;
-				const float detune1	= m_gen1.detune0 * DETUNE_SCALE;
-				pv->gen1_freq1 = padthv1_freq(note1 - detune1);
-				pv->gen1_freq2 = padthv1_freq(note1 + detune1);
+				const float detune1	= *m_gen1.detune1 * DETUNE_SCALE;
+				const float detune2	= *m_gen1.detune2 * DETUNE_SCALE;
+				pv->gen1_freq1 = padthv1_freq(note1 + detune1);
+				pv->gen1_freq2 = padthv1_freq(note1 + detune2);
 				// phases
 				const float phase1 = *m_gen1.phase * PHASE_SCALE;
 				pv->gen1_sample1 = pv->gen1_osc1.start(  0.0f, pv->gen1_freq1);
@@ -1423,9 +1429,11 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				pv->lfo1_sample = pv->lfo1.start(pshift1);
 				// glides (portamentoa)
 				const float frames1
-					= uint32_t(*m_gen1.glide * *m_gen1.glide * m_srate);
+					= uint32_t(*m_gen1.glide1 * *m_gen1.glide1 * m_srate);
+				const float frames2
+					= uint32_t(*m_gen1.glide2 * *m_gen1.glide2 * m_srate);
 				pv->gen1_glide1.reset(frames1, pv->gen1_freq1);
-				pv->gen1_glide2.reset(frames1, pv->gen1_freq2);
+				pv->gen1_glide2.reset(frames2, pv->gen1_freq2);
 				// sustain
 				pv->sustain = false;
 				// allocated
@@ -1707,20 +1715,17 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 
 	const float modwheel1 = m_ctl1.modwheel + PITCH_SCALE * *m_lfo1.pitch;
 	const float fxsend1 = *m_out1.fxsend * *m_out1.fxsend;
-	const bool detuned1 = (m_gen1.detune0 != *m_gen1.detune);
-	if (detuned1)
-		m_gen1.detune0 = *m_gen1.detune;
 
-	if (m_gen1.sample1_0 != *m_gen1.sample1 || detuned1) {
+	if (m_gen1.sample1_0 != *m_gen1.sample1) {
 		m_gen1.sample1_0  = *m_gen1.sample1;
 		m_gen1.freq1 = padthv1_freq(
-			m_gen1.sample1_0 - m_gen1.detune0 * DETUNE_SCALE);
+			m_gen1.sample1_0 + *m_gen1.detune1 * DETUNE_SCALE);
 	}
 
-	if (m_gen1.sample2_0 != *m_gen1.sample2 || detuned1) {
+	if (m_gen1.sample2_0 != *m_gen1.sample2) {
 		m_gen1.sample2_0  = *m_gen1.sample2;
 		m_gen1.freq2 = padthv1_freq(
-			m_gen1.sample2_0 + m_gen1.detune0 * DETUNE_SCALE);
+			m_gen1.sample2_0 + *m_gen1.detune2 * DETUNE_SCALE);
 	}
 
 	gen1_sample1.reset_test(m_gen1.freq1,

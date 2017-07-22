@@ -55,18 +55,20 @@ struct ParamInfo {
 	{ "GEN1_SCALE1",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Scale 1
 	{ "GEN1_NH1",      PARAM_INT,    32.0f,   2.0f,  64.0f }, // GEN1 Nh 1
 	{ "GEN1_APOD1",    PARAM_INT,     4.0f,   0.0f,   4.0f }, // GEN1 Apodizer 1
+	{ "GEN1_DETUNE1",  PARAM_FLOAT,  -0.1f,  -1.0f,   1.0f }, // GEN1 Detune 1
+	{ "GEN1_GLIDE1",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Glide 1
 	{ "GEN1_SAMPLE2",  PARAM_INT,    60.0f,   0.0f, 127.0f }, // GEN1 Sample 2
 	{ "GEN1_WIDTH2",   PARAM_FLOAT,  40.0f,   2.0f, 200.0f }, // GEN1 Width 2
 	{ "GEN1_SCALE2",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Scale 2
 	{ "GEN1_NH2",      PARAM_INT,    32.0f,   2.0f,  64.0f }, // GEN1 Nh 2
 	{ "GEN1_APOD2",    PARAM_INT,     4.0f,   0.0f,   4.0f }, // GEN1 Apodizer 2
+	{ "GEN1_DETUNE2",  PARAM_FLOAT,   0.1f,  -1.0f,   1.0f }, // GEN1 Detune 2
+	{ "GEN1_GLIDE2",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Glide 2
 	{ "GEN1_BALANCE",  PARAM_FLOAT,   0.0f,  -1.0f,   1.0f }, // GEN1 Balance
-	{ "GEN1_DETUNE",   PARAM_FLOAT,   0.1f,   0.0f,   1.0f }, // GEN1 Detune
 	{ "GEN1_PHASE",    PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Phase
 	{ "GEN1_RINGMOD",  PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Ring Mod
 	{ "GEN1_OCTAVE",   PARAM_FLOAT,   0.0f,  -4.0f,   4.0f }, // GEN1 Octave
 	{ "GEN1_TUNING",   PARAM_FLOAT,   0.0f,  -1.0f,   1.0f }, // GEN1 Tuning
-	{ "GEN1_GLIDE",    PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Glide
 	{ "GEN1_ENVTIME",  PARAM_FLOAT,   0.5f,   0.0f,   1.0f }, // GEN1 Env.Time
 	{ "DCF1_CUTOFF",   PARAM_FLOAT,   1.0f,   0.0f,   1.0f }, // DCF1 Cutoff
 	{ "DCF1_RESO",     PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // DCF1 Resonance

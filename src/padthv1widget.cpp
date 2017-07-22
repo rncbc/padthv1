@@ -149,7 +149,8 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	const QString& sOff = states.first();
 	m_ui.Gen1Scale1Knob->setSpecialValueText(sOff);
 	m_ui.Gen1Scale2Knob->setSpecialValueText(sOff);
-	m_ui.Gen1GlideKnob->setSpecialValueText(sOff);
+	m_ui.Gen1Glide1Knob->setSpecialValueText(sOff);
+	m_ui.Gen1Glide2Knob->setSpecialValueText(sOff);
 	m_ui.Cho1WetKnob->setSpecialValueText(sOff);
 	m_ui.Fla1WetKnob->setSpecialValueText(sOff);
 	m_ui.Pha1WetKnob->setSpecialValueText(sOff);
@@ -185,6 +186,11 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	m_ui.Gen1Nh2Knob->setDecimals(0);
 	m_ui.Gen1Nh2Knob->setMinimum(2.0f);
 	m_ui.Gen1Nh2Knob->setMaximum(64.0f);
+
+	m_ui.Gen1Detune1Knob->setMinimum(-1.0f);
+	m_ui.Gen1Detune1Knob->setMaximum(+1.0f);
+	m_ui.Gen1Detune2Knob->setMinimum(-1.0f);
+	m_ui.Gen1Detune2Knob->setMaximum(+1.0f);
 
 	// GEN octave limits.
 	m_ui.Gen1OctaveKnob->setMinimum(-4.0f);
@@ -261,18 +267,20 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	setParamKnob(padthv1::GEN1_SCALE1,  m_ui.Gen1Scale1Knob);
 	setParamKnob(padthv1::GEN1_NH1,     m_ui.Gen1Nh1Knob);
 	setParamKnob(padthv1::GEN1_APOD1,   m_ui.Gen1Apod1Knob);
+	setParamKnob(padthv1::GEN1_DETUNE1, m_ui.Gen1Detune1Knob);
+	setParamKnob(padthv1::GEN1_GLIDE1,  m_ui.Gen1Glide1Knob);
 	setParamKnob(padthv1::GEN1_SAMPLE2, m_ui.Gen1Sample2Knob);
 	setParamKnob(padthv1::GEN1_WIDTH2,  m_ui.Gen1Width2Knob);
 	setParamKnob(padthv1::GEN1_SCALE2,  m_ui.Gen1Scale2Knob);
 	setParamKnob(padthv1::GEN1_NH2,     m_ui.Gen1Nh2Knob);
 	setParamKnob(padthv1::GEN1_APOD2,   m_ui.Gen1Apod2Knob);
+	setParamKnob(padthv1::GEN1_DETUNE2, m_ui.Gen1Detune2Knob);
+	setParamKnob(padthv1::GEN1_GLIDE2,  m_ui.Gen1Glide1Knob);
 	setParamKnob(padthv1::GEN1_BALANCE, m_ui.Gen1BalanceKnob);
-	setParamKnob(padthv1::GEN1_DETUNE,  m_ui.Gen1DetuneKnob);
 	setParamKnob(padthv1::GEN1_PHASE,   m_ui.Gen1PhaseKnob);
 	setParamKnob(padthv1::GEN1_RINGMOD, m_ui.Gen1RingModKnob);
 	setParamKnob(padthv1::GEN1_OCTAVE,  m_ui.Gen1OctaveKnob);
 	setParamKnob(padthv1::GEN1_TUNING,  m_ui.Gen1TuningKnob);
-	setParamKnob(padthv1::GEN1_GLIDE,   m_ui.Gen1GlideKnob);
 	setParamKnob(padthv1::GEN1_ENVTIME, m_ui.Gen1EnvTimeKnob);
 
 	// DCF1

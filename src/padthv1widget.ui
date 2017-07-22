@@ -182,6 +182,64 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="padthv1widget_spin" name="Gen1Detune1Knob">
+                <property name="toolTip">
+                 <string>GEN Detune 1</string>
+                </property>
+                <property name="text">
+                 <string>Detune 1</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="padthv1widget_spin" name="Gen1Glide1Knob">
+                <property name="toolTip">
+                 <string>GEN Glide 1</string>
+                </property>
+                <property name="text">
+                 <string>Glide 1</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="margin" >
+             <number>8</number>
+            </property>
+            <property name="spacing" >
+             <number>8</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout">
+              <item>          
+               <widget class="padthv1widget_spin" name="Gen1BalanceKnob">
+                <property name="toolTip">
+                 <string>GEN Balance</string>
+                </property>
+                <property name="text">
+                 <string>Balance</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout">
+              <item>
+               <widget class="padthv1widget_spin" name="Gen1RingModKnob">
+                <property name="toolTip">
+                 <string>GEN Ring Mod</string>
+                </property>
+                <property name="text">
+                 <string>Ring Mod</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
@@ -247,47 +305,40 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="padthv1widget_spin" name="Gen1Detune2Knob">
+                <property name="toolTip">
+                 <string>GEN Detune 2</string>
+                </property>
+                <property name="text">
+                 <string>Detune 2</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="padthv1widget_spin" name="Gen1Glide2Knob">
+                <property name="toolTip">
+                 <string>GEN Glide 2</string>
+                </property>
+                <property name="text">
+                 <string>Glide 2</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QVBoxLayout">
+            <property name="margin" >
+             <number>8</number>
+            </property>
+            <property name="spacing" >
+             <number>8</number>
+            </property>
             <item>
              <layout class="QHBoxLayout">
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>          
-               <widget class="padthv1widget_spin" name="Gen1BalanceKnob">
-                <property name="toolTip">
-                 <string>GEN Balance</string>
-                </property>
-                <property name="text">
-                 <string>Balance</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="padthv1widget_spin" name="Gen1DetuneKnob">
-                <property name="toolTip">
-                 <string>GEN Detune</string>
-                </property>
-                <property name="text">
-                 <string>Detune</string>
-                </property>
-               </widget>
-              </item>
               <item>
                <widget class="padthv1widget_spin" name="Gen1PhaseKnob">
                 <property name="toolTip">
@@ -299,71 +350,19 @@
                </widget>
               </item>
               <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="padthv1widget_spin" name="Gen1RingModKnob">
+               <widget class="padthv1widget_spin" name="Gen1EnvTimeKnob">
                 <property name="toolTip">
-                 <string>GEN Ring Mod</string>
+                 <string>GEN Env.Time</string>
                 </property>
                 <property name="text">
-                 <string>Ring Mod</string>
+                 <string>Env.Time</string>
                 </property>
                </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </item>
             <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint">
-               <size>
-                <width>8</width>
-                <height>8</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
              <layout class="QHBoxLayout">
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
               <item>
                <widget class="padthv1widget_spin" name="Gen1OctaveKnob">
                 <property name="toolTip">
@@ -381,52 +380,6 @@
                 </property>
                 <property name="text">
                  <string>Tuning</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="padthv1widget_spin" name="Gen1GlideKnob">
-                <property name="toolTip">
-                 <string>GEN Glide</string>
-                </property>
-                <property name="text">
-                 <string>Glide</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint">
-                 <size>
-                  <width>8</width>
-                  <height>8</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="padthv1widget_spin" name="Gen1EnvTimeKnob">
-                <property name="toolTip">
-                 <string>GEN Env.Time</string>
-                </property>
-                <property name="text">
-                 <string>Env.Time</string>
                 </property>
                </widget>
               </item>

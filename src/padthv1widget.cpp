@@ -275,7 +275,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	setParamKnob(padthv1::GEN1_NH2,     m_ui.Gen1Nh2Knob);
 	setParamKnob(padthv1::GEN1_APOD2,   m_ui.Gen1Apod2Knob);
 	setParamKnob(padthv1::GEN1_DETUNE2, m_ui.Gen1Detune2Knob);
-	setParamKnob(padthv1::GEN1_GLIDE2,  m_ui.Gen1Glide1Knob);
+	setParamKnob(padthv1::GEN1_GLIDE2,  m_ui.Gen1Glide2Knob);
 	setParamKnob(padthv1::GEN1_BALANCE, m_ui.Gen1BalanceKnob);
 	setParamKnob(padthv1::GEN1_PHASE,   m_ui.Gen1PhaseKnob);
 	setParamKnob(padthv1::GEN1_RINGMOD, m_ui.Gen1RingModKnob);

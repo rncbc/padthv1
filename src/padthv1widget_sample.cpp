@@ -169,31 +169,47 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	const bool bDark = (pal.window().color().value() < 0x7f);
 	const QColor& rgbLite = (isEnabled()
 		? (bDark ? Qt::darkYellow : Qt::yellow) : pal.mid().color());
-    const QColor& rgbDark = pal.window().color().darker(180);
+	const QColor& rgbDark = pal.window().color().darker(180);
 
-    painter.fillRect(rect, rgbDark);
+	painter.fillRect(rect, rgbDark);
 
 	if (m_pPolyg && m_pRects) {
+		QColor rgbLite1(rgbLite);
+		QColor rgbDark1(rgbDark);
+		QColor rgbLine1(bDark ? Qt::gray : Qt::darkGray);
+		QColor rgbDrop1(Qt::black);
+		rgbLite1.setAlpha(120);
+		rgbDark1.setAlpha(120);
+		rgbLine1.setAlpha(80);
+		rgbDrop1.setAlpha(80);
 		const int w2 = (w << 1);
 		painter.setRenderHint(QPainter::Antialiasing, true);
 		// Sample waveform...
 		QLinearGradient grad1(0, 0, w2, h);
-		grad1.setColorAt(0.0f, rgbLite);
-		grad1.setColorAt(1.0f, Qt::black);
-		painter.setPen(bDark ? Qt::gray : Qt::darkGray);
+		grad1.setColorAt(0.0f, rgbLite1);
+		grad1.setColorAt(1.0f, rgbDark1);
+		painter.setPen(rgbLine1);
 		painter.setBrush(grad1);
 		painter.drawPolygon(*m_pPolyg);
 		// Sample harmonics...
 		QLinearGradient grad2(0, 0, w2, h);
-		grad2.setColorAt(0.0f, rgbDark);
-		grad2.setColorAt(1.0f, rgbLite);
-		painter.setPen(QPen(grad2, 3));
-		painter.setBrush(grad1);
+		grad2.setColorAt(0.0f, rgbLite);
+		grad2.setColorAt(1.0f, rgbDark);
+		const QPen pen1(rgbDrop1, 5);
+		const QBrush brush1(rgbDrop1);
+		const QPen pen2(grad2, 3);
+		const QBrush brush2(rgbLite.lighter(140));
 		for (int n = 0; n < m_nrects; ++n) {
 			const QRect& rect = m_pRects[n];
 			const QPoint& cpos = rect.center();
 			const int x = cpos.x() + 1;
 			const int y = cpos.y() + 1;
+			painter.setPen(pen1);
+			painter.setBrush(brush1);
+			painter.drawLine(x + 1, h, x + 1, y + 1);
+			painter.drawEllipse(rect.adjusted(+2, +2, 0, 0));
+			painter.setPen(pen2);
+			painter.setBrush(brush2);
 			painter.drawLine(x, h, x, y);
 			painter.drawEllipse(rect.adjusted(+1, +1, -1, -1));
 		}
@@ -201,6 +217,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	}
 
 	painter.end();
+
 
 	QFrame::paintEvent(pPaintEvent);
 }

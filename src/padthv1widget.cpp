@@ -151,6 +151,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	m_ui.Gen1Scale2Knob->setSpecialValueText(sOff);
 	m_ui.Gen1Glide1Knob->setSpecialValueText(sOff);
 	m_ui.Gen1Glide2Knob->setSpecialValueText(sOff);
+	m_ui.Gen1RingModKnob->setSpecialValueText(sOff);
 	m_ui.Cho1WetKnob->setSpecialValueText(sOff);
 	m_ui.Fla1WetKnob->setSpecialValueText(sOff);
 	m_ui.Pha1WetKnob->setSpecialValueText(sOff);

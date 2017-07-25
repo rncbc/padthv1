@@ -68,6 +68,8 @@ protected slots:
 	void resetSquareOdd();
 	void resetSquareEven();
 
+	void resetSinc();
+
 protected:
 
 	// Widget resize handler.

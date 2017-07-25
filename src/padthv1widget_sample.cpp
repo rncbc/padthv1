@@ -393,6 +393,8 @@ void padthv1widget_sample::contextMenuEvent ( QContextMenuEvent *pContextMenuEve
 	QMenu menu(this);
 
 	QMenu resetMenu(tr("&Reset"));
+	resetMenu.addAction(tr("&Default"),     this, SLOT(resetDefault()));
+	resetMenu.addSeparator();
 	resetMenu.addAction(tr("&Normal"),      this, SLOT(resetNormal()));
 	resetMenu.addAction(tr("Normal &Odd"),  this, SLOT(resetNormalOdd()));
 	resetMenu.addAction(tr("Normal &Even"), this, SLOT(resetNormalEven()));
@@ -401,7 +403,7 @@ void padthv1widget_sample::contextMenuEvent ( QContextMenuEvent *pContextMenuEve
 	resetMenu.addAction(tr("Sq&uare Odd"),  this, SLOT(resetSquareOdd()));
 	resetMenu.addAction(tr("Squ&are Even"), this, SLOT(resetSquareEven()));
 	resetMenu.addSeparator();
-	resetMenu.addAction(tr("Default"),      this, SLOT(resetDefault()));
+	resetMenu.addAction(tr("S&inc"),        this, SLOT(resetSinc()));
 	menu.addMenu(&resetMenu);
 
 	menu.exec(pContextMenuEvent->globalPos());
@@ -487,7 +489,8 @@ void padthv1widget_sample::resetNormal (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = 1.0f / float(n + 1);
+		const float n1 = float(n + 1);
+		const float v = 1.0f / n1;
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -501,7 +504,8 @@ void padthv1widget_sample::resetNormalOdd (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = ((n & 1) ? 1.667f : 1.0f) / float(n + 1);
+		const float n1 = float(n + 1);
+		const float v = ((n & 1) ? 1.667f : 1.0f) / n1;
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -515,7 +519,8 @@ void padthv1widget_sample::resetNormalEven (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.667f) / float(n + 1);
+		const float n1 = float(n + 1);
+		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.667f) / n1;
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -530,7 +535,8 @@ void padthv1widget_sample::resetSquare (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = 1.0f / ::sqrtf(float(n + 1));
+		const float n1 = float(n + 1);
+		const float v = 1.0f / ::sqrtf(n1);
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -544,7 +550,8 @@ void padthv1widget_sample::resetSquareOdd (void)
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = ((n & 1) ? 1.291f : 1.0f) / ::sqrtf(float(n + 1));
+		const float n1 = float(n + 1);
+		const float v = ((n & 1) ? 1.291f : 1.0f) / ::sqrtf(n1);
 		m_pSample->setHarmonic(n, v);
 	}
 
@@ -559,7 +566,25 @@ void padthv1widget_sample::resetSquareEven (void)
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
 		const float n1 = float(n + 1);
-		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.291f) / ::sqrtf(float(n1));
+		const float v = ((n & 1) || (n < 1) ? 1.0f : 1.291f) / ::sqrtf(n1);
+		m_pSample->setHarmonic(n, v);
+	}
+
+	emit sampleChanged();
+}
+
+
+void padthv1widget_sample::resetSinc (void)
+{
+	if (m_pSample == NULL)
+		return;
+
+
+	const int nh = m_pSample->nh();
+	for (int n = 1; n < nh; ++n) {
+		const float n1 = float(n + 1);
+		const float n2 = float(n) * M_2_PI;
+		const float v = (n > 0 ? M_PI_2 : 1.0f) * ::fabsf(::cosf(n2) / n1);
 		m_pSample->setHarmonic(n, v);
 	}
 

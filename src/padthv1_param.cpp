@@ -52,14 +52,14 @@ struct ParamInfo {
 	// name            type,           def,    min,    max
 	{ "GEN1_SAMPLE1",  PARAM_INT,    60.0f,   0.0f, 127.0f }, // GEN1 Sample 1
 	{ "GEN1_WIDTH1",   PARAM_FLOAT,  40.0f,   2.0f, 200.0f }, // GEN1 Width 1
-	{ "GEN1_SCALE1",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Scale 1
+	{ "GEN1_SCALE1",   PARAM_FLOAT,   0.0f,  -1.0f,   1.0f }, // GEN1 Scale 1
 	{ "GEN1_NH1",      PARAM_INT,    32.0f,   2.0f,  64.0f }, // GEN1 Nh 1
 	{ "GEN1_APOD1",    PARAM_INT,     4.0f,   0.0f,   4.0f }, // GEN1 Apodizer 1
 	{ "GEN1_DETUNE1",  PARAM_FLOAT,  -0.1f,  -1.0f,   1.0f }, // GEN1 Detune 1
 	{ "GEN1_GLIDE1",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Glide 1
 	{ "GEN1_SAMPLE2",  PARAM_INT,    60.0f,   0.0f, 127.0f }, // GEN1 Sample 2
 	{ "GEN1_WIDTH2",   PARAM_FLOAT,  40.0f,   2.0f, 200.0f }, // GEN1 Width 2
-	{ "GEN1_SCALE2",   PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // GEN1 Scale 2
+	{ "GEN1_SCALE2",   PARAM_FLOAT,   0.0f,  -1.0f,   1.0f }, // GEN1 Scale 2
 	{ "GEN1_NH2",      PARAM_INT,    32.0f,   2.0f,  64.0f }, // GEN1 Nh 2
 	{ "GEN1_APOD2",    PARAM_INT,     4.0f,   0.0f,   4.0f }, // GEN1 Apodizer 2
 	{ "GEN1_DETUNE2",  PARAM_FLOAT,   0.1f,  -1.0f,   1.0f }, // GEN1 Detune 2

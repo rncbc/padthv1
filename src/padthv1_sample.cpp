@@ -225,12 +225,12 @@ void padthv1_sample::reset_nh_max ( uint16_t nh )
 
 // windowing/apodizing functions
 
-static inline float hprofile_rect ( float fi, float bwi )
+static inline float apod_rect ( float fi, float bwi )
 {
 	return (fi > -bwi && fi < +bwi ? 1.0f : 0.0f);
 }
 
-static inline float hprofile_triang ( float fi, float bwi )
+static inline float apod_triang ( float fi, float bwi )
 {
 	const float bw2 = 2.0f * bwi;
 	if (fi > -bw2 && fi < +bw2) {
@@ -241,7 +241,7 @@ static inline float hprofile_triang ( float fi, float bwi )
 	}
 }
 
-static inline float hprofile_welch ( float fi, float bwi )
+static inline float apod_welch ( float fi, float bwi )
 {
 	if (fi > -bwi && fi < +bwi) {
 		const float x1 = fi / bwi;
@@ -251,7 +251,7 @@ static inline float hprofile_welch ( float fi, float bwi )
 	}
 }
 
-static inline float hprofile_hann ( float fi, float bwi )
+static inline float apod_hann ( float fi, float bwi )
 {
 	const float bw2 = 2.0f * bwi;
 	if (fi > -bw2 && fi < +bw2) {
@@ -261,7 +261,7 @@ static inline float hprofile_hann ( float fi, float bwi )
 	}
 }
 
-static inline float hprofile_gauss ( float fi, float bwi )
+static inline float apod_gauss ( float fi, float bwi )
 {
 	const float x1 = fi / bwi;
 	const float x2 = x1 * x1;
@@ -270,9 +270,34 @@ static inline float hprofile_gauss ( float fi, float bwi )
 
 
 // relative frequency of the nth harmonic to fundamental.
-static inline float hrelfreq ( float ni, float bws )
+static inline float fast_log2f ( float x )
 {
-    return (1.0f + 0.1f * bws * ni) * ni;
+	union { uint32_t i; float f; } u, v;
+	u.f = x;
+	v.i = (u.i & 0x007FFFFF) | 0x3f000000;
+	const float y = float(u.i) * 1.1920928955078125e-7f - 124.22551499f;
+	return y - 1.498030302f * v.f - 1.72587999f / (0.3520887068f + v.f);
+}
+
+static inline float fast_pow2f ( float p )
+{
+	const float z = p - int(p) + (p < 0.0f ? 1.0f : 0.0f);
+	union { uint32_t i; float f; } u;
+	u.i = uint32_t((1 << 23)
+		* (p + 121.2740575f + 27.7280233f / (4.84252568f - z)
+		- 1.49012907f * z));
+	return u.f;
+}
+
+static inline float fast_powf ( float x, float p )
+{
+	return fast_pow2f(p * fast_log2f(x));
+}
+
+static inline float freq_powf ( float ni, float bws )
+{
+//	return (1.0f + 0.1f * bws * ni) * ni;
+	return fast_powf(ni, 1.0f + bws);
 }
 
 
@@ -301,42 +326,42 @@ void padthv1_sample::reset_table (void)
 
 		// n-th harmonic bandwidth scaling
 		const float ni = float(n + 1);
-		const float bws = m_scale * m_scale;
+		const float bws = m_scale * m_scale * m_scale;
 		const float bwi
-			= (::powf(2.0f, m_width / 1200.0f) - 1.0f)
-			* 0.5f * m_freq0 * hrelfreq(ni, bws);
-		const float fi = m_freq0 * hrelfreq(ni, bws);
+			= (fast_powf(2.0f, m_width / 1200.0f) - 1.0f)
+			* 0.5f * m_freq0 * freq_powf(ni, bws);
+		const float fi = m_freq0 * freq_powf(ni, bws);
 		const float hi = 1.0f / ni;
 
 		switch (m_apod) {
 		case Rect:
 			for (i = 0; i < nsize2; ++i) {
-				const float hp = hprofile_rect(rate1 * float(i) - fi, bwi);
+				const float hp = apod_rect(rate1 * float(i) - fi, bwi);
 				m_freq_amp[i] += hp * hi * m_ah[n];
 			}
 			break;
 		case Triang:
 			for (i = 0; i < nsize2; ++i) {
-				const float hp = hprofile_triang(rate1 * float(i) - fi, bwi);
+				const float hp = apod_triang(rate1 * float(i) - fi, bwi);
 				m_freq_amp[i] += hp * hi * m_ah[n];
 			}
 			break;
 		case Welch:
 			for (i = 0; i < nsize2; ++i) {
-				const float hp = hprofile_welch(rate1 * float(i) - fi, bwi);
+				const float hp = apod_welch(rate1 * float(i) - fi, bwi);
 				m_freq_amp[i] += hp * hi * m_ah[n];
 			}
 			break;
 		case Hann:
 			for (i = 0; i < nsize2; ++i) {
-				const float hp = hprofile_hann(rate1 * float(i) - fi, bwi);
+				const float hp = apod_hann(rate1 * float(i) - fi, bwi);
 				m_freq_amp[i] += hp * hi * m_ah[n];
 			}
 			break;
 		case Gauss:
 		default:
 			for (i = 0; i < nsize2; ++i) {
-				const float hp = hprofile_gauss(rate1 * float(i) - fi, bwi);
+				const float hp = apod_gauss(rate1 * float(i) - fi, bwi);
 				m_freq_amp[i] += hp * hi * m_ah[n];
 			}
 			break;

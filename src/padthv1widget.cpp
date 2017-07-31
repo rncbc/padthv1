@@ -147,8 +147,6 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 
 	// Special values
 	const QString& sOff = states.first();
-	m_ui.Gen1Scale1Knob->setSpecialValueText(sOff);
-	m_ui.Gen1Scale2Knob->setSpecialValueText(sOff);
 	m_ui.Gen1Glide1Knob->setSpecialValueText(sOff);
 	m_ui.Gen1Glide2Knob->setSpecialValueText(sOff);
 	m_ui.Gen1RingModKnob->setSpecialValueText(sOff);
@@ -178,6 +176,11 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	m_ui.Gen1Width2Knob->setScale(1.0f);
 	m_ui.Gen1Width2Knob->setMinimum(2.0f);
 	m_ui.Gen1Width2Knob->setMaximum(200.0f);
+
+	m_ui.Gen1Scale1Knob->setMinimum(-1.0f);
+	m_ui.Gen1Scale1Knob->setMaximum(+1.0f);
+	m_ui.Gen1Scale2Knob->setMinimum(-1.0f);
+	m_ui.Gen1Scale2Knob->setMaximum(+1.0f);
 
 	m_ui.Gen1Nh1Knob->setScale(1.0f);
 	m_ui.Gen1Nh1Knob->setDecimals(0);

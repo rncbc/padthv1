@@ -88,7 +88,7 @@
 		lv2:symbol "GEN1_SCALE1" ;
 		lv2:name "GEN1 Scale 1" ;
 		lv2:default 0.0 ;
-		lv2:minimum 0.0 ;
+		lv2:minimum -1.0 ;
 		lv2:maximum 1.0 ;
 		lv2pg:group padthv1_lv2:101_GEN1 ;
 	], [
@@ -158,7 +158,7 @@
 		lv2:symbol "GEN1_SCALE2" ;
 		lv2:name "GEN1 Scale 2" ;
 		lv2:default 0.0 ;
-		lv2:minimum 0.0 ;
+		lv2:minimum -1.0 ;
 		lv2:maximum 1.0 ;
 		lv2pg:group padthv1_lv2:101_GEN1 ;
 	], [

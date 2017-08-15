@@ -560,7 +560,7 @@ private:
 #include <math.h>
 
 padthv1_controls::padthv1_controls ( padthv1 *pSynth )
-	: m_pImpl(new padthv1_controls::Impl()), m_mode(0),
+	: m_pImpl(new padthv1_controls::Impl()), m_enabled(false),
 		m_sched_in(pSynth), m_sched_out(pSynth),
 		m_timeout(0), m_timein(0)
 {

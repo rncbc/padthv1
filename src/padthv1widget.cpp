@@ -28,6 +28,9 @@
 #include "padthv1widget_config.h"
 #include "padthv1widget_control.h"
 
+#include "padthv1_controls.h"
+#include "padthv1_programs.h"
+
 #include <QMessageBox>
 #include <QDir>
 #include <QTimer>
@@ -1030,8 +1033,7 @@ void padthv1widget::helpConfigure (void)
 	padthv1widget_config form(this);
 
 	// Set controllers&&programs database...
-	form.setControls(pSynthUi->controls());
-	form.setPrograms(pSynthUi->programs());
+	form.setInstance(pSynthUi);
 
 	form.exec();
 }

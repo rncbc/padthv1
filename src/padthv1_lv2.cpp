@@ -161,9 +161,6 @@ padthv1_lv2::padthv1_lv2 (
 	m_outs = new float * [nchannels];
 	for (uint16_t k = 0; k < nchannels; ++k)
 		m_ins[k] = m_outs[k] = NULL;
-
-	padthv1::programs()->optional(true);
-	padthv1::controls()->optional(true);
 }
 
 

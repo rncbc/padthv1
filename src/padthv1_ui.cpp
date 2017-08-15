@@ -26,7 +26,8 @@
 // padthv1_ui - decl.
 //
 
-padthv1_ui::padthv1_ui ( padthv1 *pSynth ) : m_pSynth(pSynth)
+padthv1_ui::padthv1_ui ( padthv1 *pSynth, bool bPlugin )
+	: m_pSynth(pSynth), m_bPlugin(bPlugin)
 {
 }
 
@@ -34,6 +35,12 @@ padthv1_ui::padthv1_ui ( padthv1 *pSynth ) : m_pSynth(pSynth)
 padthv1 *padthv1_ui::instance (void) const
 {
 	return m_pSynth;
+}
+
+
+bool padthv1_ui::isPlugin (void) const
+{
+	return m_bPlugin;
 }
 
 

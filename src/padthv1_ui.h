@@ -33,14 +33,13 @@ class padthv1_ui
 {
 public:
 
-	padthv1_ui(padthv1 *pSynth);
-
-	void setSampleFile(const char *pszSampleFile);
-	const char *sampleFile() const;
-
-	padthv1_sample *sample(int sid) const;
+	padthv1_ui(padthv1 *pSynth, bool bPlugin);
 
 	padthv1 *instance() const;
+
+	bool isPlugin() const;
+
+	padthv1_sample *sample(int sid) const;
 
 	void setParamValue(padthv1::ParamIndex index, float fValue);
 	float paramValue(padthv1::ParamIndex index) const;
@@ -57,9 +56,12 @@ public:
 
 	void directNoteOn(int note, int vel);
 
+
 private:
 
 	padthv1 *m_pSynth;
+
+	bool m_bPlugin;
 };
 
 

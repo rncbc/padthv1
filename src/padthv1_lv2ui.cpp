@@ -35,7 +35,7 @@
 
 padthv1_lv2ui::padthv1_lv2ui ( padthv1_lv2 *pSampl,
 	LV2UI_Controller controller, LV2UI_Write_Function write_function )
-	: padthv1_ui(pSampl)
+	: padthv1_ui(pSampl, true)
 {
 	m_controller = controller;
 	m_write_function = write_function;

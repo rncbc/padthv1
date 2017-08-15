@@ -70,7 +70,7 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 		QApplication::setStyle(QStyleFactory::create(pConfig->sCustomStyleTheme));
 
 	// Initialize (user) interface stuff...
-	m_pSynthUi = new padthv1_ui(m_pSynth);
+	m_pSynthUi = new padthv1_ui(m_pSynth, false);
 
 	// May initialize the scheduler/work notifier.
 	openSchedNotifier();

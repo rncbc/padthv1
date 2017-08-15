@@ -24,9 +24,11 @@
 
 #include "ui_padthv1widget_config.h"
 
-#include "padthv1_programs.h"
-#include "padthv1_controls.h"
 #include "padthv1_config.h"
+
+
+// forward decls.
+class padthv1_ui;
 
 
 //----------------------------------------------------------------------------
@@ -44,13 +46,9 @@ public:
 	// dtor.
 	~padthv1widget_config();
 
-	// controllers accessors.
-	void setControls(padthv1_controls *pControls);
-	padthv1_controls *controls() const;
-
-	// programs accessors.
-	void setPrograms(padthv1_programs *pPrograms);
-	padthv1_programs *programs() const;
+	// instance accessors.
+	void setInstance(padthv1_ui *pSynthUi);
+	padthv1_ui *instance() const;
 
 protected slots:
 
@@ -93,11 +91,8 @@ private:
 	// UI struct.
 	Ui::padthv1widget_config m_ui;
 
-	// Controllers database.
-	padthv1_controls *m_pControls;
-
-	// Programs database.
-	padthv1_programs *m_pPrograms;
+	// Instance reference.
+	padthv1_ui *m_pSynthUi;
 
 	// Dialog dirty flag.
 	int m_iDirtyControls;

@@ -489,8 +489,6 @@ void padthv1widget_config::accept (void)
 		else
 			pConfig->sCustomStyleTheme.clear();
 		int iNeedRestart = 0;
-		if (!pConfig->bUseGMDrumNames && bOldUseGMDrumNames)
-			++iNeedRestart;
  		if (pConfig->sCustomStyleTheme != sOldCustomStyleTheme) {
 			if (pConfig->sCustomStyleTheme.isEmpty()) {
 				++iNeedRestart;

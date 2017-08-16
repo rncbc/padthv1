@@ -41,14 +41,11 @@
 
 // ctor.
 padthv1widget_config::padthv1widget_config (
-	QWidget *pParent, Qt::WindowFlags wflags )
-	: QDialog(pParent, wflags)
+	padthv1_ui *pSynthUi, QWidget *pParent, Qt::WindowFlags wflags )
+	: QDialog(pParent, wflags), m_pSynthUi(pSynthUi)
 {
 	// Setup UI struct...
 	m_ui.setupUi(this);
-
-	// UI instance reference.
-	m_pSynthUi = NULL;
 
 	// Custom style themes...
 	//m_ui.CustomStyleThemeComboBox->clear();
@@ -57,7 +54,8 @@ padthv1widget_config::padthv1widget_config (
 
 	// Setup options...
 	padthv1_config *pConfig = padthv1_config::getInstance();
-	if (pConfig) {
+	if (pConfig && m_pSynthUi) {
+		const bool bPlugin = m_pSynthUi->isPlugin();
 		m_ui.ProgramsPreviewCheckBox->setChecked(pConfig->bProgramsPreview);
 		m_ui.UseNativeDialogsCheckBox->setChecked(pConfig->bUseNativeDialogs);
 		m_ui.KnobDialModeComboBox->setCurrentIndex(pConfig->iKnobDialMode);
@@ -67,6 +65,23 @@ padthv1widget_config::padthv1widget_config (
 			iCustomStyleTheme = m_ui.CustomStyleThemeComboBox->findText(
 				pConfig->sCustomStyleTheme);
 		m_ui.CustomStyleThemeComboBox->setCurrentIndex(iCustomStyleTheme);
+		m_ui.CustomStyleThemeTextLabel->setEnabled(!bPlugin);
+		m_ui.CustomStyleThemeComboBox->setEnabled(!bPlugin);
+		// Load controllers database...
+		padthv1_controls *pControls = m_pSynthUi->controls();
+		if (pControls) {
+			m_ui.ControlsTreeWidget->loadControls(pControls);
+			m_ui.ControlsEnabledCheckBox->setEnabled(bPlugin);
+			m_ui.ControlsEnabledCheckBox->setChecked(pControls->enabled());
+		}
+		// Load programs database...
+		padthv1_programs *pPrograms = m_pSynthUi->programs();
+		if (pPrograms) {
+			m_ui.ProgramsTreeWidget->loadPrograms(pPrograms);
+			m_ui.ProgramsEnabledCheckBox->setEnabled(bPlugin);
+			m_ui.ProgramsPreviewCheckBox->setEnabled(!bPlugin);
+			m_ui.ProgramsEnabledCheckBox->setChecked(pPrograms->enabled());
+		}
 	}
 
 	// Signal/slots connections...
@@ -170,43 +185,7 @@ padthv1widget_config::~padthv1widget_config (void)
 }
 
 
-// instance accessors.
-void padthv1widget_config::setInstance ( padthv1_ui *pSynthUi )
-{
-	m_pSynthUi = pSynthUi;
-
-	padthv1_config *pConfig = padthv1_config::getInstance();
-	if (pConfig && m_pSynthUi) {
-		const bool bOptional = m_pSynthUi->isPlugin();
-		// Load controllers database...
-		padthv1_controls *pControls = pSynthUi->controls();
-		if (pControls) {
-			m_ui.ControlsTreeWidget->loadControls(pControls);
-			m_ui.ControlsEnabledCheckBox->setEnabled(bOptional);
-			m_ui.ControlsEnabledCheckBox->setChecked(pControls->enabled());
-		}
-		// Load programs database...
-		padthv1_programs *pPrograms = pSynthUi->programs();
-		if (pPrograms) {
-			m_ui.ProgramsTreeWidget->loadPrograms(pPrograms);
-			m_ui.ProgramsEnabledCheckBox->setEnabled(bOptional);
-			m_ui.ProgramsPreviewCheckBox->setEnabled(!bOptional);
-			m_ui.ProgramsEnabledCheckBox->setChecked(pPrograms->enabled());
-		}
-		// Widget styles not available on plugin mode...
-		m_ui.CustomStyleThemeTextLabel->setEnabled(!bOptional);
-		m_ui.CustomStyleThemeComboBox->setEnabled(!bOptional);
-	}
-
-	// Reset dialog dirty flags.
-	m_iDirtyControls = 0;
-	m_iDirtyPrograms = 0;
-
-	stabilize();
-}
-
-
-padthv1_ui *padthv1widget_config::instance (void) const
+padthv1_ui *padthv1widget_config::ui_instance (void) const
 {
 	return m_pSynthUi;
 }

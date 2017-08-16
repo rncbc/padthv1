@@ -41,14 +41,14 @@ class padthv1widget_config : public QDialog
 public:
 
 	// ctor.
-	padthv1widget_config(QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+	padthv1widget_config(padthv1_ui *pSynthUi,
+		QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
 
 	// dtor.
 	~padthv1widget_config();
 
-	// instance accessors.
-	void setInstance(padthv1_ui *pSynthUi);
-	padthv1_ui *instance() const;
+	// UI instance accessors.
+	padthv1_ui *ui_instance() const;
 
 protected slots:
 

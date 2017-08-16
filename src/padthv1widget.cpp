@@ -1030,12 +1030,7 @@ void padthv1widget::helpConfigure (void)
 	if (pSynthUi == NULL)
 		return;
 
-	padthv1widget_config form(this);
-
-	// Set controllers&&programs database...
-	form.setInstance(pSynthUi);
-
-	form.exec();
+	padthv1widget_config(pSynthUi, this).exec();
 }
 
 

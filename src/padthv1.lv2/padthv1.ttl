@@ -110,7 +110,7 @@
 		lv2:scalePoint [ rdfs:label "Triang"; rdf:value 1 ] ;
 		lv2:scalePoint [ rdfs:label "Welch"; rdf:value 2 ] ;
 		lv2:scalePoint [ rdfs:label "Hann"; rdf:value 3 ] ;
-		lv2:scalePoint [ rdfs:label "Gauss"; rdf:value 3 ] ;
+		lv2:scalePoint [ rdfs:label "Gauss"; rdf:value 4 ] ;
 		lv2:default 4.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 4.0 ;
@@ -180,7 +180,7 @@
 		lv2:scalePoint [ rdfs:label "Triang"; rdf:value 1 ] ;
 		lv2:scalePoint [ rdfs:label "Welch"; rdf:value 2 ] ;
 		lv2:scalePoint [ rdfs:label "Hann"; rdf:value 3 ] ;
-		lv2:scalePoint [ rdfs:label "Gauss"; rdf:value 3 ] ;
+		lv2:scalePoint [ rdfs:label "Gauss"; rdf:value 4 ] ;
 		lv2:default 4.0 ;
 		lv2:minimum 0.0 ;
 		lv2:maximum 4.0 ;

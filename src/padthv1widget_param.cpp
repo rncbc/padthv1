@@ -745,10 +745,6 @@ padthv1widget_radio::padthv1widget_radio ( QWidget *pParent )
 	);
 #endif
 
-	const QFont& font = padthv1widget_param::font();
-	const QFont font1(font.family(), font.pointSize() - 1);
-	QWidget::setFont(font1);
-
 	QObject::connect(&m_group,
 		SIGNAL(buttonClicked(int)),
 		SLOT(radioGroupValueChanged(int)));
@@ -792,6 +788,9 @@ QString padthv1widget_radio::valueText (void) const
 // Special combo-box mode accessors.
 void padthv1widget_radio::insertItems ( int iIndex, const QStringList& items )
 {
+	const QFont& font = padthv1widget_param::font();
+	const QFont font1(font.family(), font.pointSize() - 1);
+
 	QGridLayout *pGridLayout
 		= static_cast<QGridLayout *> (padthv1widget_param::layout());
 	const QString sToolTipMask(padthv1widget_param::toolTip() + ": %1");
@@ -800,6 +799,7 @@ void padthv1widget_radio::insertItems ( int iIndex, const QStringList& items )
 		const QString& sValueText = iter.next();
 		QRadioButton *pRadioButton = new QRadioButton(sValueText);
 		pRadioButton->setStyle(padthv1widget_param_style::getRef());
+		pRadioButton->setFont(font1);
 		pRadioButton->setToolTip(sToolTipMask.arg(sValueText));
 		pGridLayout->addWidget(pRadioButton, iIndex, 0);
 		m_group.addButton(pRadioButton, iIndex);

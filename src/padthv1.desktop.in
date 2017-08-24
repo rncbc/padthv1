@@ -2,12 +2,12 @@
 Name=@PACKAGE_NAME@
 Version=1.0
 GenericName=MIDI
-Comment=padthv1 is an old school polyphonic sampler
-Comment[fr]=padthv1 est un échantillonneur polyphonique à l'ancienne
+Comment=padthv1 is an old school polyphonic additive synthesizer 
+Comment[fr]=padthv1 est un synthétiseur polyphonique additive à l'ancienne
 Exec=@ac_prefix@/bin/padthv1_jack
 Icon=padthv1
 Categories=Audio;AudioVideo;Midi;X-Alsa;X-Jack;Qt;
-Keywords=Audio;MIDI;ALSA;JACK;Synthesizer;Sampler;LV2;Qt;
+Keywords=Audio;MIDI;ALSA;JACK;Synthesizer;LV2;Qt;
 Terminal=false
 Type=Application
 StartupWMClass=padthv1_jack

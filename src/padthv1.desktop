@@ -11,4 +11,5 @@ Keywords=Audio;MIDI;ALSA;JACK;Synthesizer;LV2;Qt;
 Terminal=false
 Type=Application
 StartupWMClass=padthv1_jack
+X-Window-Icon=padthv1
 X-SuSE-translate=true

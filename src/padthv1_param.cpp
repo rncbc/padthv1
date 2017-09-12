@@ -111,7 +111,7 @@ struct ParamInfo {
 	{ "DEF1_PRESSURE", PARAM_FLOAT,   0.2f,   0.0f,   1.0f }, // DEF1 Pressure
 	{ "DEF1_VELOCITY", PARAM_FLOAT,   0.2f,   0.0f,   1.0f }, // DEF1 Velocity
 	{ "DEF1_CHANNEL",  PARAM_INT,     0.0f,   0.0f,  16.0f }, // DEF1 Channel
-	{ "DEF1_MONO",     PARAM_BOOL,    0.0f,   0.0f,   1.0f }, // DEF1 Mono
+	{ "DEF1_MONO",     PARAM_INT,     0.0f,   0.0f,   2.0f }, // DEF1 Mono
 
 	{ "CHO1_WET",      PARAM_FLOAT,   0.0f,   0.0f,   1.0f }, // Chorus Wet
 	{ "CHO1_DELAY",    PARAM_FLOAT,   0.5f,   0.0f,   1.0f }, // Chorus Delay

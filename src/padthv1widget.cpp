@@ -893,7 +893,7 @@ void padthv1widget::loadPreset ( const QString& sFilename )
 
 	padthv1_ui *pSynthUi = ui_instance();
 	if (pSynthUi)
-		padthv1_param::loadPreset(pSynthUi->instance(), sFilename);
+		pSynthUi->loadPreset(sFilename);
 
 	updateLoadPreset(QFileInfo(sFilename).completeBaseName());
 }
@@ -907,7 +907,7 @@ void padthv1widget::savePreset ( const QString& sFilename )
 
 	padthv1_ui *pSynthUi = ui_instance();
 	if (pSynthUi)
-		padthv1_param::savePreset(pSynthUi->instance(), sFilename);
+		pSynthUi->savePreset(sFilename);
 
 	const QString& sPreset
 		= QFileInfo(sFilename).completeBaseName();

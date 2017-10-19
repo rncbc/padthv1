@@ -45,10 +45,8 @@ namespace padthv1_param
 	bool paramFloat(padthv1::ParamIndex index);
 
 	// Preset serialization methods.
-	void loadPreset(padthv1 *pSynth,
-		const QString& sFilename);
-	void savePreset(padthv1 *pSynth,
-		const QString& sFilename);
+	bool loadPreset(padthv1 *pSynth, const QString& sFilename);
+	bool savePreset(padthv1 *pSynth, const QString& sFilename);
 
 	// Sample serialization methods.
 	void loadSamples(padthv1 *pSynth,

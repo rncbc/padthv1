@@ -24,6 +24,8 @@
 
 #include "padthv1.h"
 
+#include <QString>
+
 
 //-------------------------------------------------------------------------
 // padthv1_ui - decl.
@@ -40,6 +42,9 @@ public:
 	bool isPlugin() const;
 
 	padthv1_sample *sample(int sid) const;
+
+	bool loadPreset(const QString& sFilename);
+	bool savePreset(const QString& sFilename);
 
 	void setParamValue(padthv1::ParamIndex index, float fValue);
 	float paramValue(padthv1::ParamIndex index) const;

@@ -21,6 +21,8 @@
 
 #include "padthv1_ui.h"
 
+#include "padthv1_param.h"
+
 
 //-------------------------------------------------------------------------
 // padthv1_ui - decl.
@@ -47,6 +49,17 @@ bool padthv1_ui::isPlugin (void) const
 padthv1_sample *padthv1_ui::sample ( int sid ) const
 {
 	return m_pSynth->sample(sid);
+}
+
+
+bool padthv1_ui::loadPreset ( const QString& sFilename )
+{
+	return padthv1_param::loadPreset(m_pSynth, sFilename);
+}
+
+bool padthv1_ui::savePreset ( const QString& sFilename )
+{
+	return padthv1_param::savePreset(m_pSynth, sFilename);
 }
 
 

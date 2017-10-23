@@ -581,7 +581,7 @@ void padthv1_jack::sessionEvent ( void *pvSessionArg )
 	args << QString("\"${SESSION_DIR}%1\"").arg(sSessionFile);
 
 	padthv1_param::savePreset(this,
-		QFileInfo(sSessionDir, sSessionFile).absoluteFilePath());
+		QFileInfo(sSessionDir, sSessionFile).absoluteFilePath(), true);
 
 	const QByteArray aCmdLine = args.join(" ").toUtf8();
 	pJackSessionEvent->command_line = ::strdup(aCmdLine.constData());
@@ -821,7 +821,7 @@ void padthv1_jack_application::saveSession (void)
 //	const QString& client_id = m_pNsmClient->client_id();
 	const QFileInfo fi(path_name, display_name + '.' + PADTHV1_TITLE);
 
-	padthv1_param::savePreset(m_pSynth, fi.absoluteFilePath());
+	padthv1_param::savePreset(m_pSynth, fi.absoluteFilePath(), true);
 
 	m_pNsmClient->save_reply();
 	m_pNsmClient->dirty(false);

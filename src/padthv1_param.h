@@ -37,22 +37,26 @@ class QDomDocument;
 
 namespace padthv1_param
 {
+	// Sample serialization methods.
+	void loadSamples(padthv1 *pSynth,
+		const QDomElement& eSamples);
+	void saveSamples(padthv1 *pSynth,
+		QDomDocument& doc, QDomElement& eSamples,
+		bool bSymLink = false);
+
+	// Preset serialization methods.
+	bool loadPreset(padthv1 *pSynth,
+		const QString& sFilename);
+	bool savePreset(padthv1 *pSynth,
+		const QString& sFilename,
+		bool bSymLink = false);
+
 	// Default parameter name/value helpers.
 	const char *paramName(padthv1::ParamIndex index);
 	float paramDefaultValue(padthv1::ParamIndex index);
 	float paramValue(padthv1::ParamIndex index, float fScale);
 	float paramScale(padthv1::ParamIndex index, float fValue);
 	bool paramFloat(padthv1::ParamIndex index);
-
-	// Preset serialization methods.
-	bool loadPreset(padthv1 *pSynth, const QString& sFilename);
-	bool savePreset(padthv1 *pSynth, const QString& sFilename);
-
-	// Sample serialization methods.
-	void loadSamples(padthv1 *pSynth,
-		const QDomElement& eSamples);
-	void saveSamples(padthv1 *pSynth,
-		QDomDocument& doc, QDomElement& eSamples);
 };
 
 

@@ -193,7 +193,8 @@ bool padthv1_param::paramFloat ( padthv1::ParamIndex index )
 
 
 // Preset serialization methods.
-bool padthv1_param::loadPreset ( padthv1 *pSynth, const QString& sFilename )
+bool padthv1_param::loadPreset (
+	padthv1 *pSynth, const QString& sFilename )
 {
 	if (pSynth == NULL)
 		return false;
@@ -277,10 +278,11 @@ bool padthv1_param::loadPreset ( padthv1 *pSynth, const QString& sFilename )
 }
 
 
-bool padthv1_param::savePreset ( padthv1 *pSynth, const QString& sFilename )
+bool padthv1_param::savePreset (
+	padthv1 *pSynth, const QString& sFilename, bool bSymLink )
 {
 	if (pSynth == NULL)
-		return true;
+		return false;
 
 	const QFileInfo fi(sFilename);
 	const QDir currentDir(QDir::current());
@@ -292,7 +294,7 @@ bool padthv1_param::savePreset ( padthv1 *pSynth, const QString& sFilename )
 	ePreset.setAttribute("version", CONFIG_BUILD_VERSION);
 
 	QDomElement eSamples = doc.createElement("samples");
-	padthv1_param::saveSamples(pSynth, doc, eSamples);
+	padthv1_param::saveSamples(pSynth, doc, eSamples, bSymLink);
 	ePreset.appendChild(eSamples);
 
 	QDomElement eParams = doc.createElement("params");
@@ -372,7 +374,7 @@ void padthv1_param::loadSamples (
 
 
 void padthv1_param::saveSamples (
-	padthv1 *pSynth, QDomDocument& doc, QDomElement& eSamples )
+	padthv1 *pSynth, QDomDocument& doc, QDomElement& eSamples, bool /*bSymLink*/ )
 {
 	if (pSynth == NULL)
 		return;

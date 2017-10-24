@@ -5,16 +5,13 @@ NAME = padthv1
 TARGET = $${NAME}_lv2ui
 TEMPLATE = lib
 CONFIG += shared plugin
+LIBS += -L.
 
 include(src_lv2.pri)
 
 HEADERS = \
 	config.h \
 	padthv1_ui.h \
-	padthv1_config.h \
-	padthv1_param.h \
-	padthv1_programs.h \
-	padthv1_controls.h \
 	padthv1_lv2ui.h \
 	padthv1widget.h \
 	padthv1widget_env.h \
@@ -32,26 +29,7 @@ HEADERS = \
 
 SOURCES = \
 	padthv1_lv2ui.cpp \
-	padthv1widget.cpp \
-	padthv1widget_env.cpp \
-	padthv1widget_filt.cpp \
-	padthv1widget_sample.cpp \
-	padthv1widget_wave.cpp \
-	padthv1widget_param.cpp \
-	padthv1widget_preset.cpp \
-	padthv1widget_status.cpp \
-	padthv1widget_programs.cpp \
-	padthv1widget_controls.cpp \
-	padthv1widget_control.cpp \
-	padthv1widget_config.cpp \
 	padthv1widget_lv2.cpp
-
-FORMS = \
-	padthv1widget.ui \
-	padthv1widget_control.ui \
-	padthv1widget_config.ui
-
-RESOURCES += padthv1.qrc
 
 
 unix {
@@ -106,7 +84,7 @@ unix {
 
 	QMAKE_CLEAN += $${TARGET_LV2UI}.so $${TARGET_LV2UI}.ttl
 
-	LIBS += -L. -l$${NAME} -L$${NAME}.lv2 -Wl,-rpath,$${LIBDIR}:$${LV2DIR}/$${NAME}.lv2
+	LIBS += -l$${NAME} -l$${NAME}_ui -L$${NAME}.lv2 -Wl,-rpath,$${LIBDIR}:$${LV2DIR}/$${NAME}.lv2
 }
 
 QT += xml

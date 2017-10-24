@@ -22,12 +22,16 @@
 #ifndef __padthv1widget_control_h
 #define __padthv1widget_control_h
 
-#include "ui_padthv1widget_control.h"
-
 #include "padthv1_controls.h"
 #include "padthv1_param.h"
 
+#include <QDialog>
+
+
 // forward decls.
+namespace Ui { class padthv1widget_control; }
+
+class QAbstractButton;
 class QCloseEvent;
 
 
@@ -103,7 +107,8 @@ protected:
 private:
 
 	// The Qt-designer UI struct...
-	Ui::padthv1widget_control m_ui;
+	Ui::padthv1widget_control *p_ui;
+	Ui::padthv1widget_control& m_ui;
 
 	// Instance variables.
 	padthv1_controls *m_pControls;

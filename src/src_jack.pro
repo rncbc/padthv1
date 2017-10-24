@@ -35,26 +35,7 @@ HEADERS = \
 SOURCES = \
 	padthv1_nsm.cpp \
 	padthv1_jack.cpp \
-	padthv1widget.cpp \
-	padthv1widget_env.cpp \
-	padthv1widget_filt.cpp \
-	padthv1widget_sample.cpp \
-	padthv1widget_wave.cpp \
-	padthv1widget_param.cpp \
-	padthv1widget_preset.cpp \
-	padthv1widget_status.cpp \
-	padthv1widget_programs.cpp \
-	padthv1widget_controls.cpp \
-	padthv1widget_control.cpp \
-	padthv1widget_config.cpp \
 	padthv1widget_jack.cpp
-
-FORMS = \
-	padthv1widget.ui \
-	padthv1widget_control.ui \
-	padthv1widget_config.ui
-
-RESOURCES += padthv1.qrc
 
 
 unix {
@@ -112,7 +93,7 @@ unix {
 	mimetypes_scalable.path = $${DATADIR}/icons/hicolor/scalable/mimetypes
 	mimetypes_scalable.files += mimetypes/application-x-$${NAME}-preset.svg
 
-	LIBS += -l$${NAME} -Wl,-rpath,$${LIBDIR}
+	LIBS += -l$${NAME} -l$${NAME}_ui -Wl,-rpath,$${LIBDIR}
 }
 
 QT += xml

@@ -11,11 +11,6 @@ include(src_lv2.pri)
 
 HEADERS = \
 	config.h \
-	padthv1.h \
-	padthv1_config.h \
-	padthv1_param.h \
-	padthv1_programs.h \
-	padthv1_controls.h \
 	padthv1_lv2.h
 
 SOURCES = \

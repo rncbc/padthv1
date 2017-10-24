@@ -10,26 +10,8 @@ include(src_jack.pri)
 
 HEADERS = \
 	config.h \
-	padthv1.h \
-	padthv1_ui.h \
-	padthv1_config.h \
-	padthv1_param.h \
-	padthv1_programs.h \
-	padthv1_controls.h \
 	padthv1_nsm.h \
 	padthv1_jack.h \
-	padthv1widget.h \
-	padthv1widget_env.h \
-	padthv1widget_filt.h \
-	padthv1widget_sample.h \
-	padthv1widget_wave.h \
-	padthv1widget_param.h \
-	padthv1widget_preset.h \
-	padthv1widget_status.h \
-	padthv1widget_programs.h \
-	padthv1widget_controls.h \
-	padthv1widget_control.h \
-	padthv1widget_config.h \
 	padthv1widget_jack.h
 
 SOURCES = \

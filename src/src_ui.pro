@@ -12,10 +12,6 @@ include(src_ui.pri)
 HEADERS = \
 	config.h \
 	padthv1_ui.h \
-	padthv1_config.h \
-	padthv1_param.h \
-	padthv1_programs.h \
-	padthv1_controls.h \
 	padthv1widget.h \
 	padthv1widget_env.h \
 	padthv1widget_filt.h \

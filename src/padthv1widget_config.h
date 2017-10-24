@@ -22,12 +22,14 @@
 #ifndef __padthv1widget_config_h
 #define __padthv1widget_config_h
 
-#include "ui_padthv1widget_config.h"
-
 #include "padthv1_config.h"
+
+#include <QDialog>
 
 
 // forward decls.
+namespace Ui { class padthv1widget_config; }
+
 class padthv1_ui;
 
 
@@ -89,7 +91,8 @@ protected:
 private:
 
 	// UI struct.
-	Ui::padthv1widget_config m_ui;
+	Ui::padthv1widget_config *p_ui;
+	Ui::padthv1widget_config& m_ui;
 
 	// Instance reference.
 	padthv1_ui *m_pSynthUi;

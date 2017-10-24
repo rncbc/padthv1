@@ -27,6 +27,7 @@
 #include "padthv1_controls.h"
 #include "padthv1_programs.h"
 
+#include "ui_padthv1widget_config.h"
 
 #include <QPushButton>
 #include <QMessageBox>
@@ -42,7 +43,8 @@
 // ctor.
 padthv1widget_config::padthv1widget_config (
 	padthv1_ui *pSynthUi, QWidget *pParent, Qt::WindowFlags wflags )
-	: QDialog(pParent, wflags), m_pSynthUi(pSynthUi)
+	: QDialog(pParent, wflags), p_ui(new Ui::padthv1widget_config), m_ui(*p_ui),
+		m_pSynthUi(pSynthUi)
 {
 	// Setup UI struct...
 	m_ui.setupUi(this);
@@ -182,6 +184,7 @@ padthv1widget_config::padthv1widget_config (
 // dtor.
 padthv1widget_config::~padthv1widget_config (void)
 {
+	delete p_ui;
 }
 
 

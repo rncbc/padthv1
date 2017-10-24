@@ -22,15 +22,18 @@
 #ifndef __padthv1widget_h
 #define __padthv1widget_h
 
-#include "ui_padthv1widget.h"
-
 #include "padthv1_config.h"
 #include "padthv1_sched.h"
 
 #include "padthv1_ui.h"
 
+#include <QWidget>
+
 
 // forward decls.
+namespace Ui { class padthv1widget; }
+
+class padthv1widget_param;
 class padthv1widget_sched;
 
 
@@ -156,7 +159,8 @@ protected:
 private:
 
 	// Instance variables.
-	Ui::padthv1widget m_ui;
+	Ui::padthv1widget *p_ui;
+	Ui::padthv1widget& m_ui;
 
 	padthv1widget_sched *m_sched_notifier;
 

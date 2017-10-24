@@ -31,6 +31,8 @@
 #include "padthv1_controls.h"
 #include "padthv1_programs.h"
 
+#include "ui_padthv1widget.h"
+
 #include <QMessageBox>
 #include <QDir>
 #include <QTimer>
@@ -45,7 +47,7 @@
 
 // Constructor.
 padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
-	: QWidget(pParent, wflags)
+	: QWidget(pParent, wflags), p_ui(new Ui::padthv1widget), m_ui(*p_ui)
 {
 	Q_INIT_RESOURCE(padthv1);
 
@@ -565,6 +567,8 @@ padthv1widget::~padthv1widget (void)
 {
 	if (m_sched_notifier)
 		delete m_sched_notifier;
+
+	delete p_ui;
 }
 
 

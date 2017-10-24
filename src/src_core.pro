@@ -11,7 +11,6 @@ include(src_core.pri)
 HEADERS = \
 	config.h \
 	padthv1.h \
-	padthv1_ui.h \
 	padthv1_sample.h \
 	padthv1_config.h \
 	padthv1_filter.h \
@@ -28,7 +27,6 @@ HEADERS = \
 
 SOURCES = \
 	padthv1.cpp \
-	padthv1_ui.cpp \
 	padthv1_sample.cpp \
 	padthv1_config.cpp \
 	padthv1_formant.cpp \

@@ -1,7 +1,7 @@
 // padthv1.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2017, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -137,9 +137,14 @@ inline float padthv1_pow2f ( const float x )
 
 // convert note to frequency (hertz)
 
-inline float padthv1_freq ( float note )
+inline float padthv1_freq2 ( float delta )
 {
-	return (440.0f / 32.0f) * ::powf(2.0f, (note - 9.0f) / 12.0f);
+	return ::powf(2.0f, delta / 12.0f);
+}
+
+inline float padthv1_freq ( int note )
+{
+	return (440.0f / 32.0f) * padthv1_freq2(float(note - 9));
 }
 
 
@@ -889,6 +894,8 @@ private:
 	float    m_srate;
 	float    m_bpm;
 
+	float    m_freqs[MAX_NOTES];
+
 	padthv1_ctl m_ctl1;
 
 	padthv1_gen m_gen1;
@@ -982,8 +989,10 @@ padthv1_impl::padthv1_impl (
 		m_free_list.append(m_voices[i]);
 	}
 
-	for (int note = 0; note < MAX_NOTES; ++note)
+	for (int note = 0; note < MAX_NOTES; ++note) {
+		m_freqs[note] = padthv1_freq(note);
 		m_notes[note] = NULL;
+	}
 
 	// local buffers none yet
 	m_sfxs = NULL;
@@ -1422,13 +1431,15 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 					m_def.pressure.value_ptr(),
 					&m_ctl1.pressure, &pv->pre);
 				// frequencies
-				const float note1 = float(key)
-					+ *m_gen1.octave * OCTAVE_SCALE
+				const float tuning1
+					= *m_gen1.octave * OCTAVE_SCALE
 					+ *m_gen1.tuning * TUNING_SCALE;
-				const float detune1	= *m_gen1.detune1 * DETUNE_SCALE;
-				const float detune2	= *m_gen1.detune2 * DETUNE_SCALE;
-				pv->gen1_freq1 = padthv1_freq(note1 + detune1);
-				pv->gen1_freq2 = padthv1_freq(note1 + detune2);
+				const float detune1
+					= *m_gen1.detune1 * DETUNE_SCALE;
+				const float detune2
+					= *m_gen1.detune2 * DETUNE_SCALE;
+				pv->gen1_freq1 = m_freqs[key] * padthv1_freq2(tuning1 + detune1);
+				pv->gen1_freq2 = m_freqs[key] * padthv1_freq2(tuning1 + detune2);
 				// phases
 				const float phase1 = *m_gen1.phase * PHASE_SCALE;
 				pv->gen1_sample1 = pv->gen1_osc1.start(  0.0f, pv->gen1_freq1);

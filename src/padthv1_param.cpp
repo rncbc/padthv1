@@ -153,6 +153,25 @@ float padthv1_param::paramDefaultValue ( padthv1::ParamIndex index )
 }
 
 
+float padthv1_param::paramSafeValue ( padthv1::ParamIndex index, float fValue )
+{
+	const ParamInfo& param = padthv1_params[index];
+
+	if (param.type == PARAM_BOOL)
+		return (fValue > 0.5f ? 1.0f : 0.0f);
+
+	if (fValue < param.min)
+		return param.min;
+	if (fValue > param.max)
+		return param.max;
+
+	if (param.type == PARAM_INT)
+		return ::rintf(fValue);
+	else
+		return fValue;
+}
+
+
 float padthv1_param::paramValue ( padthv1::ParamIndex index, float fScale )
 {
 	const ParamInfo& param = padthv1_params[index];
@@ -189,7 +208,6 @@ bool padthv1_param::paramFloat ( padthv1::ParamIndex index )
 {
 	return (padthv1_params[index].type == PARAM_FLOAT);
 }
-
 
 
 // Preset serialization methods.
@@ -256,7 +274,8 @@ bool padthv1_param::loadPreset (
 								index = s_hash.value(sName);
 							}
 							const float fValue = eParam.text().toFloat();
-							pSynth->setParamValue(index, fValue);
+							pSynth->setParamValue(index,
+								padthv1_param::paramSafeValue(index, fValue));
 						}
 					}
 				}

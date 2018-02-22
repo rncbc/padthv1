@@ -54,6 +54,7 @@ namespace padthv1_param
 	// Default parameter name/value helpers.
 	const char *paramName(padthv1::ParamIndex index);
 	float paramDefaultValue(padthv1::ParamIndex index);
+	float paramSafeValue(padthv1::ParamIndex index, float fValue);
 	float paramValue(padthv1::ParamIndex index, float fScale);
 	float paramScale(padthv1::ParamIndex index, float fValue);
 	bool paramFloat(padthv1::ParamIndex index);

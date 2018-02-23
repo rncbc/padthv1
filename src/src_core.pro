@@ -22,6 +22,7 @@ HEADERS = \
 	padthv1_reverb.h \
 	padthv1_param.h \
 	padthv1_sched.h \
+	padthv1_tuning.h \
 	padthv1_programs.h \
 	padthv1_controls.h
 
@@ -33,6 +34,7 @@ SOURCES = \
 	padthv1_wave.cpp \
 	padthv1_param.cpp \
 	padthv1_sched.cpp \
+	padthv1_tuning.cpp \
 	padthv1_programs.cpp \
 	padthv1_controls.cpp
 

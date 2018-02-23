@@ -37,6 +37,7 @@
 #include "padthv1_config.h"
 #include "padthv1_controls.h"
 #include "padthv1_programs.h"
+#include "padthv1_tuning.h"
 
 #include "padthv1_sched.h"
 
@@ -833,6 +834,8 @@ public:
 	padthv1_controls *controls();
 	padthv1_programs *programs();
 
+	void updateTuning();
+
 	void process_midi(uint8_t *data, uint32_t size);
 	void process(float **ins, float **outs, uint32_t nframes);
 
@@ -989,10 +992,8 @@ padthv1_impl::padthv1_impl (
 		m_free_list.append(m_voices[i]);
 	}
 
-	for (int note = 0; note < MAX_NOTES; ++note) {
-		m_freqs[note] = padthv1_freq(note);
+	for (int note = 0; note < MAX_NOTES; ++note)
 		m_notes[note] = NULL;
-	}
 
 	// local buffers none yet
 	m_sfxs = NULL;
@@ -1009,6 +1010,9 @@ padthv1_impl::padthv1_impl (
 
 	// compressors none yet
 	m_comp = NULL;
+
+	// Micro-tuning support, if any...
+	updateTuning();
 
 	// load controllers & programs database...
 	m_config.loadControls(&m_controls);
@@ -1673,6 +1677,31 @@ padthv1_programs *padthv1_impl::programs (void)
 }
 
 
+// Micro-tuning support
+void padthv1_impl::updateTuning (void)
+{
+
+	if (m_config.bTuningEnabled) {
+		// Custom micro-tuning, possibly from Scala keymap and scale files...
+		padthv1_tuning tuning(
+			m_config.fTuningRefPitch,
+			m_config.iTuningRefNote);
+		if (!m_config.sTuningKeyMapFile.isEmpty())
+			tuning.loadKeyMapFile(m_config.sTuningKeyMapFile);
+		if (!m_config.sTuningScaleFile.isEmpty())
+			tuning.loadScaleFile(m_config.sTuningScaleFile);
+		for (int note = 0; note < MAX_NOTES; ++note)
+			m_freqs[note] = tuning.noteToPitch(note);
+		// Done custom tuning.
+	} else {
+		// Native tuning, 12-tone equal temperament western standard...
+		for (int note = 0; note < MAX_NOTES; ++note)
+			m_freqs[note] = padthv1_freq(note);
+		// Done native tuning.
+	}
+}
+
+
 // all reset clear
 
 void padthv1_impl::reset (void)
@@ -2167,6 +2196,13 @@ uint32_t padthv1::midiInCount (void)
 void padthv1::directNoteOn ( int note, int vel )
 {
 	m_pImpl->directNoteOn(note, vel);
+}
+
+
+// Micro-tuning support
+void padthv1::updateTuning (void)
+{
+	m_pImpl->updateTuning();
 }
 
 

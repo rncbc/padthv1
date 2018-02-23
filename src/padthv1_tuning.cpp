@@ -52,9 +52,9 @@
 
 
 // Default ctor.
-padthv1_tuning::padthv1_tuning (void)
+padthv1_tuning::padthv1_tuning ( float refPitch, int refNote )
 {
-	reset();
+	reset(refPitch, refNote);
 }
 
 

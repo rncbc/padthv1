@@ -175,6 +175,8 @@ public:
 
 	void directNoteOn(int note, int vel);
 
+	void updateTuning();
+
 private:
 
 	padthv1_impl *m_pImpl;

@@ -1,7 +1,7 @@
 // padthv1widget.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2017, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -89,7 +89,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	// Note names.
 	QStringList notes;
 	for (int note = 0; note < 128; ++note)
-		notes << noteName(note);
+		notes << padthv1_ui::noteName(note);
 
 	m_ui.Gen1Sample1Knob->setScale(1000.0f);
 	m_ui.Gen1Sample1Knob->insertItems(0, notes);
@@ -946,15 +946,6 @@ void padthv1widget::updateSample ( int sid )
 		m_ui.Gen1Sample1->setSample(pSynthUi->sample(1));
 	if (sid & 2)
 		m_ui.Gen1Sample2->setSample(pSynthUi->sample(2));
-}
-
-
-// MIDI note/octave name helper (static).
-QString padthv1widget::noteName ( int note )
-{
-	static const char *notes[] =
-		{ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-	return QString("%1 %2").arg(notes[note % 12]).arg((note / 12) - 1);
 }
 
 

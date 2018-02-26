@@ -62,7 +62,7 @@ padthv1widget_config::padthv1widget_config (
 	// Note names.
 	QStringList notes;
 	for (int note = 0; note < 128; ++note)
-		notes << noteName(note);
+		notes << padthv1_ui::noteName(note);
 	m_ui.TuningRefNoteComboBox->insertItems(0, notes);
 
 	// Setup options...
@@ -242,15 +242,6 @@ padthv1widget_config::~padthv1widget_config (void)
 padthv1_ui *padthv1widget_config::ui_instance (void) const
 {
 	return m_pSynthUi;
-}
-
-
-// MIDI note/octave name helper (static).
-QString padthv1widget_config::noteName ( int note )
-{
-	static const char *notes[] =
-		{ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
-	return QString("%1 %2").arg(notes[note % 12]).arg((note / 12) - 1);
 }
 
 

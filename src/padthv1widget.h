@@ -1,7 +1,7 @@
 // padthv1widget.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2017, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -65,9 +65,6 @@ public:
 	// Param kbob (widget) mapper.
 	void setParamKnob(padthv1::ParamIndex index, padthv1widget_param *pKnob);
 	padthv1widget_param *paramKnob(padthv1::ParamIndex index) const;
-
-	// MIDI note/octave name helper.
-	static QString noteName(int note);
 
 	// Preset init.
 	void initPreset();

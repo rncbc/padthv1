@@ -6,6 +6,7 @@ ChangeLog
 
 GIT HEAD
 
+- Added LV2 UI X11 support option. (EXPERIMENTAL)
 - Disable reference micro-tuning settings when a Scala
   keyboard map override is in effect (EXPERIMENTAL).
 - Added "All files (*.*)" filter to every file requestor

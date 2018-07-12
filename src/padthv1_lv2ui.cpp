@@ -178,7 +178,6 @@ static const LV2UI_Show_Interface padthv1_lv2ui_show_interface =
 
 int padthv1_lv2ui_resize ( LV2UI_Handle ui, int width, int height )
 {
-qDebug("DEBUG> padthv1_lv2ui_resize(%p, %d, %d)", ui, width, height);
 	padthv1widget_lv2 *pWidget = static_cast<padthv1widget_lv2 *> (ui);
 	if (pWidget) {
 		pWidget->resize(width, height);

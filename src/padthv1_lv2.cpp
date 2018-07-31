@@ -562,7 +562,7 @@ static LV2_Worker_Status padthv1_lv2_worker_response (
 	if (pSynth && pSynth->worker_response(data, size))
 		return LV2_WORKER_SUCCESS;
 	else
-		return LV2_WORKER_SUCCESS;
+		return LV2_WORKER_ERR_UNKNOWN;
 }
 
 

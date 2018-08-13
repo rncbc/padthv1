@@ -705,7 +705,7 @@ bool padthv1_jack_application::setup (void)
 
 	if (m_bGui) {
 		m_pWidget = new padthv1widget_jack(m_pSynth);
-		m_pWidget->show();
+	//	m_pWidget->show();
 		if (m_presets.isEmpty())
 			m_pWidget->initPreset();
 		else
@@ -740,7 +740,11 @@ bool padthv1_jack_application::setup (void)
 		if (m_pWidget)
 			m_pWidget->setNsmClient(m_pNsmClient);
 	}
+	else
 #endif	// CONFIG_NSM
+	if (m_pWidget)
+		m_pWidget->show();
+
 
 	return true;
 }

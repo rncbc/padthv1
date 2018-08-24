@@ -648,14 +648,13 @@ padthv1widget_param *padthv1widget::paramKnob ( padthv1::ParamIndex index ) cons
 
 
 // Param port accessors.
-void padthv1widget::setParamValue (
-	padthv1::ParamIndex index, float fValue, bool bDefault )
+void padthv1widget::setParamValue ( padthv1::ParamIndex index, float fValue )
 {
 	++m_iUpdate;
 
 	padthv1widget_param *pParam = paramKnob(index);
 	if (pParam)
-		pParam->setValue(fValue, bDefault);
+		pParam->setValue(fValue);
 
 	updateParamEx(index, fValue);
 
@@ -726,7 +725,7 @@ void padthv1widget::updateSchedParam ( padthv1::ParamIndex index, float fValue )
 
 	padthv1widget_param *pParam = paramKnob(index);
 	if (pParam) {
-		pParam->setValue(fValue, false);
+		pParam->setValue(fValue);
 		updateParam(index, fValue);
 		updateParamEx(index, fValue);
 		m_ui.StatusBar->showMessage(QString("%1: %2")
@@ -817,7 +816,7 @@ void padthv1widget::updateParamValues (void)
 		const float fValue = (pSynthUi
 			? pSynthUi->paramValue(index)
 			: padthv1_param::paramDefaultValue(index));
-		setParamValue(index, fValue, true);
+		setParamValue(index, fValue);
 		updateParam(index, fValue);
 	//	updateParamEx(index, fValue);
 		m_params_ab[i] = fValue;
@@ -833,7 +832,7 @@ void padthv1widget::resetParamValues (void)
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
 		const float fValue = padthv1_param::paramDefaultValue(index);
-		setParamValue(index, fValue, true);
+		setParamValue(index, fValue);
 		updateParam(index, fValue);
 	//	updateParamEx(index, fValue);
 		m_params_ab[i] = fValue;
@@ -959,6 +958,7 @@ bool padthv1widget::queryClose (void)
 // Preset status updater.
 void padthv1widget::updateLoadPreset ( const QString& sPreset )
 {
+	resetParamKnobs();
 	updateParamValues();
 
 	m_ui.Preset->setPreset(sPreset);
@@ -1007,7 +1007,12 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 	}
 	case padthv1_sched::Sample:
 		updateSample(sid);
-		// fall thru...
+		if (sid > 2) {
+			updateParamValues();
+			resetParamKnobs();
+			updateDirtyPreset(false);
+		}
+		// Fall thru...
 	default:
 		break;
 	}

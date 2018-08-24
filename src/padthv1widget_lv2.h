@@ -62,8 +62,6 @@ protected:
 	// Param methods.
 	void updateParam(padthv1::ParamIndex index, float fValue) const;
 
-	bool m_params_def[padthv1::NUM_PARAMS];
-
 	// Close event handler.
 	void closeEvent(QCloseEvent *pCloseEvent);
 

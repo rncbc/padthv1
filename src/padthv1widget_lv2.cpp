@@ -45,9 +45,6 @@ padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pSampl,
 	m_bIdleClosed = false;
 #endif
 
-	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i)
-		m_params_def[i] = true;
-
 	// May initialize the scheduler/work notifier.
 	openSchedNotifier();
 
@@ -126,8 +123,7 @@ void padthv1widget_lv2::port_event ( uint32_t port_index,
 		const padthv1::ParamIndex index
 			= padthv1::ParamIndex(port_index - padthv1_lv2::ParamBase);
 		const float fValue = *(float *) buffer;
-		setParamValue(index, fValue, m_params_def[index]);
-		m_params_def[index] = false;
+		setParamValue(index, fValue);
 	}
 }
 

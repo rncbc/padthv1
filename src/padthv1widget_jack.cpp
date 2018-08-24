@@ -80,7 +80,8 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	// initPreset();
 	updateSample();
 
-	updateParamValues();
+	resetParamKnobs();
+	resetParamValues();
 }
 
 

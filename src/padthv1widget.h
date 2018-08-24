@@ -58,8 +58,7 @@ public:
 	void closeSchedNotifier();
 
 	// Param port accessors.
-	void setParamValue(
-		padthv1::ParamIndex index, float fValue, bool bDefault = false);
+	void setParamValue(padthv1::ParamIndex index, float fValue);
 	float paramValue(padthv1::ParamIndex index) const;
 
 	// Param kbob (widget) mapper.

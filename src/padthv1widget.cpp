@@ -775,7 +775,6 @@ void padthv1widget::swapParams ( bool bOn )
 #ifdef CONFIG_DEBUG
 	qDebug("padthv1widget::swapParams(%d)", int(bOn));
 #endif
-//	resetParamKnobs();
 
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);

@@ -73,15 +73,17 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	// Initialize (user) interface stuff...
 	m_pSynthUi = new padthv1_ui(m_pSynth, false);
 
-	// May initialize the scheduler/work notifier.
-	openSchedNotifier();
+	// Initialise preset stuff...
+	clearPreset();
 
-	// Initialize preset stuff...
-	// initPreset();
+	// Initial update, always...
 	updateSample();
 
-	resetParamKnobs();
 	resetParamValues();
+	resetParamKnobs();
+
+	// May initialize the scheduler/work notifier.
+	openSchedNotifier();
 }
 
 

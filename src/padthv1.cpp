@@ -846,6 +846,8 @@ public:
 
 	void directNoteOn(int note, int vel);
 
+	bool running(bool on);
+
 	padthv1_sample gen1_sample1, gen1_sample2;
 
 	padthv1_wave_lf lfo1_wave;
@@ -941,6 +943,8 @@ private:
 	volatile int m_direct_chan;
 	volatile int m_direct_note;
 	volatile int m_direct_vel;
+
+	volatile bool m_running;
 };
 
 
@@ -969,8 +973,9 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 
 padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate )
-	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
-		m_controls(pSampl), m_programs(pSampl), m_midi_in(pSampl), m_bpm(180.0f)
+		: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
+			m_controls(pSampl), m_programs(pSampl),
+			m_midi_in(pSampl), m_bpm(180.0f), m_running(false)
 {
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;
@@ -1024,7 +1029,8 @@ padthv1_impl::padthv1_impl (
 
 	// reset all voices
 	allControllersOff();
-	allNotesOff();
+
+	running(true);
 }
 
 
@@ -1766,6 +1772,8 @@ uint32_t padthv1_impl::midiInCount (void)
 
 void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 {
+	if (!m_running) return;
+
 	float *v_outs[m_nchannels];
 	float *v_sfxs[m_nchannels];
 
@@ -2033,6 +2041,16 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 }
 
 
+// process running state...
+bool padthv1_impl::running ( bool on )
+{
+	const bool running = m_running;
+	m_running = on;
+	reset();
+	return running;
+}
+
+
 //-------------------------------------------------------------------------
 // padthv1 - decl.
 //
@@ -2163,6 +2181,14 @@ padthv1_controls *padthv1::controls (void) const
 padthv1_programs *padthv1::programs (void) const
 {
 	return m_pImpl->programs();
+}
+
+
+// process state
+
+bool padthv1::running ( bool on )
+{
+	return m_pImpl->running(on);
 }
 
 

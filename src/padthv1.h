@@ -160,6 +160,8 @@ public:
 	void setParamValue(ParamIndex index, float fValue);
 	float paramValue(ParamIndex index) const;
 
+	bool running(bool on);
+
 	void reset();
 
 	padthv1_controls *controls() const;

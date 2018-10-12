@@ -1029,6 +1029,7 @@ padthv1_impl::padthv1_impl (
 
 	// reset all voices
 	allControllersOff();
+	allNotesOff();
 
 	running(true);
 }

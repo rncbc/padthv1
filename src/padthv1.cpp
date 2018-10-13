@@ -2034,6 +2034,11 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 	// post-processing
 	m_phasor.process(nframes);
 
+	m_dca1.volume.tick(nframes);
+	m_out1.width.tick(nframes);
+	m_out1.panning.tick(nframes);
+	m_out1.volume.tick(nframes);
+
 	m_wid1.process(nframes);
 	m_pan1.process(nframes);
 	m_vol1.process(nframes);

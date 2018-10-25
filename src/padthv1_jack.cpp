@@ -620,6 +620,7 @@ void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 
 #include <QSocketNotifier>
 
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <signal.h>

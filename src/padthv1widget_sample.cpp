@@ -1,7 +1,7 @@
 // padthv1widget_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2017, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -94,29 +94,29 @@ void padthv1widget_sample::setSample ( padthv1_sample *pSample )
 		// Sample waveform...
 		const int h = height();
 		const int w = width() & 0x7ffe; // force even.
+		const int h2 = (h >> 1);
 		const int w2 = (w >> 1);
-		const unsigned int nframes = m_pSample->size();
-		const unsigned int nperiod = nframes / w2;
+		const uint32_t nframes = m_pSample->size();
+		const uint32_t nperiod = nframes / w2;
 		const float phase_inc = 1.0f / float(nframes);
-		const float h2 = float(h >> 1);
 		m_pPolyg = new QPolygon(w);
 		float phase = 0.0f;
 		float vmax = 0.0f;
 		float vmin = 0.0f;
 		int n = 0;
 		int x = 1;
-		unsigned int j = nperiod;
-		for (unsigned int i = 0; i < nframes; ++i) {
+		uint32_t j = 0;
+		for (uint32_t i = 0; i < nframes; ++i) {
 			const float v = m_pSample->value(phase);
-			if (vmax < v)
+			if (vmax < v || j == 0)
 				vmax = v;
-			if (vmin > v)
+			if (vmin > v || j == 0)
 				vmin = v;
 			if (++j > nperiod) {
 				m_pPolyg->setPoint(n, x, h2 - int(vmax * h2));
 				m_pPolyg->setPoint(w - n - 1, x, h2 - int(vmin * h2));
-				j = 0; vmax = vmin = 0.0f;
-				++n; x += 2;
+				vmax = vmin = 0.0f;
+				++n; x += 2; j = 0;
 			}
 			phase += phase_inc;
 		}

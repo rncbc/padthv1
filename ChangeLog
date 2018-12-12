@@ -4,11 +4,11 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+0.9.4  2018-12-12  A Late Autumn'18 release.
 
 - Sample waveform drawing is a bit more keen to precision.
 - Old deprecated Qt4 build support is no more.
-- Normalized wavetable oscillator phasors. (EXPERIMENTAL)
+- Normalized wavetable oscillator phasors.
 - Added missing include <unistd.h> to shut up some stricter
   compilers from build failures.
 

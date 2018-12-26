@@ -101,10 +101,12 @@ static void padthv1_lv2ui_cleanup ( LV2UI_Handle ui )
 	padthv1widget_lv2 *pWidget = static_cast<padthv1widget_lv2 *> (ui);
 	if (pWidget) {
 		delete pWidget;
+	#if 0//Avoid destructing the possibly shared QApplication instance...
 		if (--padthv1_lv2ui_qapp_refcount == 0 && padthv1_lv2ui_qapp_instance) {
 			delete padthv1_lv2ui_qapp_instance;
 			padthv1_lv2ui_qapp_instance = NULL;
 		}
+	#endif
 	}
 }
 

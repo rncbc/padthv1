@@ -1,7 +1,7 @@
 // padthv1widget.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -979,6 +979,12 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 
 	switch (padthv1_sched::Type(stype)) {
 	case padthv1_sched::MidiIn:
+		if (sid >= 0) {
+			const int key = (sid & 0x7f);
+			const int vel = (sid >> 7) & 0x7f;
+			m_ui.StatusBar->midiInNote(key, vel);
+		}
+		else
 		if (pSynthUi->midiInCount() > 0) {
 			m_ui.StatusBar->midiInLed(true);
 			QTimer::singleShot(200, this, SLOT(midiInLedTimeout()));

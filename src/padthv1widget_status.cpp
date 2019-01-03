@@ -98,18 +98,24 @@ padthv1widget_status::~padthv1widget_status (void)
 
 
 // Permanent widgets accessors.
+padthv1widget_keybd *padthv1widget_status::keybd (void) const
+{
+	return m_pKeybd;
+}
+
+
 void padthv1widget_status::midiInLed ( bool bMidiInLed )
 {
 	m_pMidiInLedLabel->setPixmap(*m_midiInLed[bMidiInLed ? 1 : 0]);
 }
 
 
-void padthv1widget_status::midiInNote ( int key, int vel )
+void padthv1widget_status::midiInNote ( int iNote, int iVelocity )
 {
-	if (vel > 0)
-		m_pKeybd->noteOn(key);
+	if (iVelocity > 0) 
+		m_pKeybd->noteOn(iNote);
 	else
-		m_pKeybd->noteOff(key);
+		m_pKeybd->noteOff(iNote);
 }
 
 

@@ -28,6 +28,8 @@
 #include "padthv1widget_config.h"
 #include "padthv1widget_control.h"
 
+#include "padthv1widget_keybd.h"
+
 #include "padthv1_controls.h"
 #include "padthv1_programs.h"
 
@@ -533,6 +535,11 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	QObject::connect(m_ui.TabBar, SIGNAL(currentChanged(int)),
 		m_ui.StackedWidget, SLOT(setCurrentIndex(int)));
 
+	// Direct status-bar keyboard input
+	QObject::connect(m_ui.StatusBar->keybd(),
+		SIGNAL(sendNote(int, int)),
+		SLOT(directNoteOn(int, int)));
+
 	// Menu actions
 	QObject::connect(m_ui.helpConfigureAction,
 		SIGNAL(triggered(bool)),
@@ -1021,6 +1028,19 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 	default:
 		break;
 	}
+}
+
+
+// Direct note-on/off slot.
+void padthv1widget::directNoteOn ( int iNote, int iVelocity )
+{
+#ifdef CONFIG_DEBUG
+	qDebug("padthv1widget::directNoteOn(%d, %d)", iNote, iVelocity);
+#endif
+
+	padthv1_ui *pSynthUi = ui_instance();
+	if (pSynthUi)
+		pSynthUi->directNoteOn(iNote, iVelocity); // note-on!
 }
 
 

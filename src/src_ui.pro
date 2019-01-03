@@ -18,6 +18,7 @@ HEADERS = \
 	padthv1widget_sample.h \
 	padthv1widget_wave.h \
 	padthv1widget_param.h \
+	padthv1widget_keybd.h \
 	padthv1widget_preset.h \
 	padthv1widget_status.h \
 	padthv1widget_programs.h \
@@ -33,6 +34,7 @@ SOURCES = \
 	padthv1widget_sample.cpp \
 	padthv1widget_wave.cpp \
 	padthv1widget_param.cpp \
+	padthv1widget_keybd.cpp \
 	padthv1widget_preset.cpp \
 	padthv1widget_status.cpp \
 	padthv1widget_programs.cpp \

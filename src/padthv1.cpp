@@ -942,9 +942,12 @@ private:
 	padthv1_reverb m_reverb;
 	padthv1_phasor m_phasor;
 
-	volatile int m_direct_chan;
-	volatile int m_direct_note;
-	volatile int m_direct_vel;
+	// process direct note on/off...
+	volatile uint32_t m_direct_note;
+
+	struct direct_note {
+		uint8_t status, note, vel;
+	} m_direct_notes[MAX_VOICES];
 
 	volatile bool m_running;
 };
@@ -1635,7 +1638,7 @@ void padthv1_impl::allNotesOff (void)
 
 	m_aux1.reset();
 
-	m_direct_chan = m_direct_note = m_direct_vel = -1;
+	m_direct_note = 0;
 }
 
 
@@ -1663,14 +1666,16 @@ void padthv1_impl::allSustainOff (void)
 // direct note-on triggered on next cycle...
 void padthv1_impl::directNoteOn ( int note, int vel )
 {
-	if (vel > 0) {
-		const int ch1 = int(*m_def.channel);
-		m_direct_chan = (ch1 > 0 ? ch1 - 1 : 0) & 0x0f;
-		m_direct_note = note;
-		m_direct_vel  = vel;
-	} else {
-		m_direct_vel  = 0;
-	}
+	const uint32_t i = m_direct_note;
+	if (i < MAX_VOICES) {
+ 		const int ch1 = int(*m_def.channel);
+		const int chan = (ch1 > 0 ? ch1 - 1 : 0) & 0x0f;
+		direct_note& data = m_direct_notes[i];
+		data.status = (vel > 0 ? 0x90 : 0x80) | chan;
+		data.note = note;
+		data.vel = vel;
+		++m_direct_note;
+ 	}
 }
 
 
@@ -1793,17 +1798,10 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 	}
 
 	// process direct note on/off...
-	if (m_direct_chan >= 0 && m_direct_note >= 0 && m_direct_vel >= 0) {
-		struct note_data { uint8_t status, note, vel; } data;
-		data.status = (m_direct_vel > 0 ? 0x90 : 0x80) | m_direct_chan;
-		data.note = m_direct_note;
-		data.vel = m_direct_vel;
+	while (m_direct_note > 0) {
+		const direct_note& data
+			= m_direct_notes[--m_direct_note];
 		process_midi((uint8_t *) &data, sizeof(data));
-		if (m_direct_vel == 0) {
-			m_direct_chan = -1;
-			m_direct_note = -1;
-		}
-		m_direct_vel = -1;
 	}
 
 	// controls

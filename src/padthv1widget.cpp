@@ -1,7 +1,7 @@
 // padthv1widget.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -27,6 +27,8 @@
 
 #include "padthv1widget_config.h"
 #include "padthv1widget_control.h"
+
+#include "padthv1widget_keybd.h"
 
 #include "padthv1_controls.h"
 #include "padthv1_programs.h"
@@ -89,7 +91,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	// Note names.
 	QStringList notes;
 	for (int note = 0; note < 128; ++note)
-		notes << padthv1_ui::noteName(note);
+		notes << padthv1_ui::noteName(note).remove(QRegExp("/\\S+"));
 
 	m_ui.Gen1Sample1Knob->setScale(1000.0f);
 	m_ui.Gen1Sample1Knob->insertItems(0, notes);
@@ -532,6 +534,11 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	// Direct stacked-page signal/slot
 	QObject::connect(m_ui.TabBar, SIGNAL(currentChanged(int)),
 		m_ui.StackedWidget, SLOT(setCurrentIndex(int)));
+
+	// Direct status-bar keyboard input
+	QObject::connect(m_ui.StatusBar->keybd(),
+		SIGNAL(noteOnClicked(int, int)),
+		SLOT(directNoteOn(int, int)));
 
 	// Menu actions
 	QObject::connect(m_ui.helpConfigureAction,
@@ -979,6 +986,12 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 
 	switch (padthv1_sched::Type(stype)) {
 	case padthv1_sched::MidiIn:
+		if (sid >= 0) {
+			const int key = (sid & 0x7f);
+			const int vel = (sid >> 7) & 0x7f;
+			m_ui.StatusBar->midiInNote(key, vel);
+		}
+		else
 		if (pSynthUi->midiInCount() > 0) {
 			m_ui.StatusBar->midiInLed(true);
 			QTimer::singleShot(200, this, SLOT(midiInLedTimeout()));
@@ -1015,6 +1028,19 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 	default:
 		break;
 	}
+}
+
+
+// Direct note-on/off slot.
+void padthv1widget::directNoteOn ( int iNote, int iVelocity )
+{
+#ifdef CONFIG_DEBUG
+	qDebug("padthv1widget::directNoteOn(%d, %d)", iNote, iVelocity);
+#endif
+
+	padthv1_ui *pSynthUi = ui_instance();
+	if (pSynthUi)
+		pSynthUi->directNoteOn(iNote, iVelocity); // note-on!
 }
 
 

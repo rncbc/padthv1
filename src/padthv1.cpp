@@ -1606,7 +1606,6 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 			const float pitchbend = float(key + (value << 7) - 0x2000) / 8192.0f;
 			m_ctl1.pitchbend = padthv1_pow2f(*m_def.pitchbend * pitchbend);
 		}
-
 	}
 
 	// process pending controllers...

@@ -991,7 +991,7 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 	if (pSynthUi == NULL)
 		return;
 
-#ifdef CONFIG_DEBUG
+#ifdef CONFIG_DEBUG_0
 	qDebug("padthv1widget::updateSchedNotify(%d, 0x%04x)", stype, sid);
 #endif
 

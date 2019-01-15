@@ -893,6 +893,7 @@ protected:
 		if (pv) {
 			m_free_list.remove(pv);
 			m_play_list.append(pv);
+			++m_nvoices;
 		}
 		return pv;
 	}
@@ -901,6 +902,7 @@ protected:
 	{
 		m_play_list.remove(pv);
 		m_free_list.append(pv);
+		--m_nvoices;
 	}
 
 	void alloc_sfxs(uint32_t nsize);
@@ -967,6 +969,8 @@ private:
 	struct direct_note {
 		uint8_t status, note, vel;
 	} m_direct_notes[MAX_DIRECT_NOTES];
+
+	volatile int  m_nvoices;
 
 	volatile bool m_running;
 };
@@ -1692,6 +1696,9 @@ void padthv1_impl::allSustainOff (void)
 // direct note-on triggered on next cycle...
 void padthv1_impl::directNoteOn ( int note, int vel )
 {
+	if (vel > 0 && m_nvoices >= MAX_DIRECT_NOTES)
+		return;
+
 	const uint32_t i = m_direct_note;
 	if (i < MAX_DIRECT_NOTES) {
  		const int ch1 = int(*m_def.channel);

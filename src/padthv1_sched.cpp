@@ -1,7 +1,7 @@
 // padthv1_sched.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -73,7 +73,7 @@ private:
 static padthv1_sched_thread *g_sched_thread = NULL;
 static uint32_t g_sched_refcount = 0;
 
-static QHash<padthv1 *, QList<padthv1_sched_notifier *> > g_sched_notifiers;
+static QHash<padthv1 *, QList<padthv1_sched::Notifier *> > g_sched_notifiers;
 
 
 //-------------------------------------------------------------------------
@@ -254,9 +254,9 @@ void padthv1_sched::sync_process (void)
 void padthv1_sched::sync_notify ( padthv1 *pSynth, Type stype, int sid )
 {
 	if (g_sched_notifiers.contains(pSynth)) {
-		const QList<padthv1_sched_notifier *>& list
+		const QList<Notifier *>& list
 			= g_sched_notifiers.value(pSynth);
-		QListIterator<padthv1_sched_notifier *> iter(list);
+		QListIterator<Notifier *> iter(list);
 		while (iter.hasNext())
 			iter.next()->notify(stype, sid);
 	}
@@ -264,22 +264,22 @@ void padthv1_sched::sync_notify ( padthv1 *pSynth, Type stype, int sid )
 
 
 //-------------------------------------------------------------------------
-// padthv1_sched_notifier - worker/schedule proxy decl.
+// padthv1_sched::Notifier - worker/schedule proxy decl.
 //
 
 // ctor.
-padthv1_sched_notifier::padthv1_sched_notifier ( padthv1 *pSynth )
+padthv1_sched::Notifier::Notifier ( padthv1 *pSynth )
 	: m_pSynth(pSynth)
 {
-	g_sched_notifiers[m_pSynth].append(this);
+	g_sched_notifiers[pSynth].append(this);
 }
 
 
 // dtor.
-padthv1_sched_notifier::~padthv1_sched_notifier (void)
+padthv1_sched::Notifier::~Notifier (void)
 {
 	if (g_sched_notifiers.contains(m_pSynth)) {
-		QList<padthv1_sched_notifier *>& list = g_sched_notifiers[m_pSynth];
+		QList<Notifier *>& list = g_sched_notifiers[m_pSynth];
 		list.removeAll(this);
 		if (list.isEmpty())
 			g_sched_notifiers.remove(m_pSynth);

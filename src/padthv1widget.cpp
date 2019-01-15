@@ -727,7 +727,12 @@ void padthv1widget::updateParamEx ( padthv1::ParamIndex index, float fValue )
 		break;
 	case padthv1::KEY1_HIGH:
 		m_ui.StatusBar->keybd()->setNoteHigh(int(fValue));
-		// Fall thru...
+		break;
+	case padthv1::DEF1_VELOCITY: {
+		const int vel = int(79.375f * fValue + 47.625f) & 0x7f;
+		m_ui.StatusBar->keybd()->setVelocity(vel);
+		break;
+	}
 	default:
 		break;
 	}

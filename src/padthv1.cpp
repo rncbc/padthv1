@@ -201,6 +201,8 @@ public:
 
 	padthv1_port2() : m_vtick(0.0f), m_vstep(0.0f), m_nstep(0) {}
 
+	static const uint32_t NSTEP = 32;
+
 	void set_value(float value)
 	{
 		m_vtick = padthv1_port::value();
@@ -228,8 +230,6 @@ public:
 	}
 
 private:
-
-	static const uint32_t NSTEP = 32;
 
 	float    m_vtick;
 	float    m_vstep;

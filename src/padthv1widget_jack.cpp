@@ -159,7 +159,7 @@ void padthv1widget_jack::closeEvent ( QCloseEvent *pCloseEvent )
 // Optional GUI handlers.
 void padthv1widget_jack::showEvent ( QShowEvent *pShowEvent )
 {
-	QWidget::showEvent(pShowEvent);
+	padthv1widget::showEvent(pShowEvent);
 
 	if (m_pNsmClient)
 		m_pNsmClient->visible(true);
@@ -170,7 +170,7 @@ void padthv1widget_jack::hideEvent ( QHideEvent *pHideEvent )
 	if (m_pNsmClient)
 		m_pNsmClient->visible(false);
 
-	QWidget::hideEvent(pHideEvent);
+	padthv1widget::hideEvent(pHideEvent);
 }
 
 #endif	// CONFIG_NSM

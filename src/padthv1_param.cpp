@@ -238,9 +238,9 @@ bool padthv1_param::loadPreset (
 	if (!file.open(QIODevice::ReadOnly))
 		return false;
 
-	pSynth->reset();
-
 	const bool running = pSynth->running(false);
+
+	pSynth->reset();
 
 	static QHash<QString, padthv1::ParamIndex> s_hash;
 	if (s_hash.isEmpty()) {
@@ -310,6 +310,8 @@ bool padthv1_param::savePreset (
 {
 	if (pSynth == NULL)
 		return false;
+
+	pSynth->stabilize();
 
 	const QFileInfo fi(sFilename);
 	const QDir currentDir(QDir::current());

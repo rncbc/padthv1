@@ -165,6 +165,7 @@ public:
 
 	bool running(bool on);
 
+	void stabilize();
 	void reset();
 
 	padthv1_controls *controls() const;

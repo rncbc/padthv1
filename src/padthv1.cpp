@@ -858,6 +858,7 @@ public:
 	void process_midi(uint8_t *data, uint32_t size);
 	void process(float **ins, float **outs, uint32_t nframes);
 
+	void stabilize();
 	void reset();
 
 	void midiInEnabled(bool on);
@@ -1753,6 +1754,18 @@ void padthv1_impl::updateTuning (void)
 }
 
 
+// all stabilize
+
+void padthv1_impl::stabilize (void)
+{
+	for (int i = 0; i < padthv1::NUM_PARAMS; ++i) {
+		padthv1_port *pParamPort = paramPort(padthv1::ParamIndex(i));
+		if (pParamPort)
+			pParamPort->tick(padthv1_port2::NSTEP);
+	}
+}
+
+
 // all reset clear
 
 void padthv1_impl::reset (void)
@@ -2229,6 +2242,14 @@ padthv1_programs *padthv1::programs (void) const
 bool padthv1::running ( bool on )
 {
 	return m_pImpl->running(on);
+}
+
+
+// all stabilize
+
+void padthv1::stabilize (void)
+{
+	m_pImpl->stabilize();
 }
 
 

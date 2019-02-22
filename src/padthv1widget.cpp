@@ -1063,10 +1063,6 @@ void padthv1widget::directNoteOn ( int iNote, int iVelocity )
 // Keyboard note range change.
 void padthv1widget::noteRangeChanged (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
-		return;
-
 	const int iNoteLow  = m_ui.StatusBar->keybd()->noteLow();
 	const int iNoteHigh = m_ui.StatusBar->keybd()->noteHigh();
 
@@ -1074,8 +1070,8 @@ void padthv1widget::noteRangeChanged (void)
 	qDebug("padthv1widget::noteRangeChanged(%d, %d)", iNoteLow, iNoteHigh);
 #endif
 
-	pSynthUi->setParamValue(padthv1::KEY1_LOW,  float(iNoteLow));
-	pSynthUi->setParamValue(padthv1::KEY1_HIGH, float(iNoteHigh));
+	updateParam(padthv1::KEY1_LOW,  float(iNoteLow));
+	updateParam(padthv1::KEY1_HIGH, float(iNoteHigh));
 
 	m_ui.StatusBar->showMessage(QString("KEY Low: %1 (%2) High: %3 (%4)")
 		.arg(padthv1_ui::noteName(iNoteLow)).arg(iNoteLow)

@@ -123,6 +123,15 @@ static int padthv1_jack_buffer_size ( jack_nframes_t nframes, void *arg )
 }
 
 
+//----------------------------------------------------------------------
+// JACK on-shutdown callback.
+
+static void padthv1_jack_on_shutdown ( void *arg )
+{
+	static_cast<padthv1_jack *> (arg)->shutdown();
+}
+
+
 #ifdef CONFIG_JACK_SESSION
 
 #include <jack/session.h>
@@ -350,6 +359,9 @@ void padthv1_jack::open ( const char *client_id )
 
 	jack_set_buffer_size_callback(m_client,
 		padthv1_jack_buffer_size, this);
+
+	jack_on_shutdown(m_client,
+		padthv1_jack_on_shutdown, this);
 
 	// set process callbacks...
 	::jack_set_process_callback(m_client,
@@ -599,6 +611,12 @@ void padthv1_jack::sessionEvent ( void *pvSessionArg )
 void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 {
 	// nothing to do here...
+}
+
+
+void padthv1_jack::shutdown (void)
+{
+	QCoreApplication::quit();
 }
 
 

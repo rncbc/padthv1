@@ -622,6 +622,19 @@ void padthv1_jack::shutdown (void)
 }
 
 
+void padthv1_jack::shutdown_close (void)
+{
+	m_activated = false;
+
+	if (m_client) {
+		::jack_client_close(m_client);
+		m_client = NULL;
+	}
+
+	close();
+}
+
+
 //-------------------------------------------------------------------------
 // padthv1_jack_application -- Singleton application instance.
 //
@@ -991,11 +1004,18 @@ void padthv1_jack_application::shutdown (void)
 	emit shutdown_signal();
 }
 
+
 void padthv1_jack_application::shutdown_slot (void)
 {
+	bool bQuit = true;
+
+	if (m_pSynth)
+		m_pSynth->shutdown_close();
+
 	if (m_pWidget)
-		m_pWidget->close();
-	if (m_pApp)
+		bQuit = m_pWidget->queryClose();
+
+	if (m_pApp && bQuit)
 		m_pApp->quit();
 }
 

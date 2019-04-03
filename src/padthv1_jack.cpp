@@ -662,7 +662,7 @@ void padthv1_jack::shutdown_close (void)
 static int g_fdSigterm[2] = { -1, -1 };
 
 // Unix SIGTERM signal handler.
-void padthv1_sigterm_handler ( int /*signo*/ )
+static void padthv1_sigterm_handler ( int /*signo*/ )
 {
 	char c = 1;
 
@@ -703,34 +703,30 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 
 #ifdef HAVE_SIGNAL_H
 
-	// set to ignore any fatal "Broken pipe" signals.
+	// Set to ignore any fatal "Broken pipe" signals.
 	::signal(SIGPIPE, SIG_IGN);
 
-	// initialize file descriptors for SIGTERM socket notifier.
+	// Initialize file descriptors for SIGTERM socket notifier.
 	::socketpair(AF_UNIX, SOCK_STREAM, 0, g_fdSigterm);
-	m_pSigtermNotifier = new QSocketNotifier(
-		g_fdSigterm[1], QSocketNotifier::Read, this);
+	m_pSigtermNotifier
+		= new QSocketNotifier(g_fdSigterm[1], QSocketNotifier::Read, this);
 
 	QObject::connect(m_pSigtermNotifier,
 		SIGNAL(activated(int)),
-		SLOT(sigterm_handler()));
+		SLOT(handle_sigterm()));
 
-	// install SIGTERM signal handler.
-	struct sigaction term;
-	term.sa_handler = padthv1_sigterm_handler;
-	::sigemptyset(&term.sa_mask);
-	term.sa_flags = 0;
-	term.sa_flags |= SA_RESTART;
-	::sigaction(SIGTERM, &term, NULL);
-	::sigaction(SIGINT,  &term, NULL);
+	// Install SIGTERM signal handler.
+	struct sigaction sigterm;
+	sigterm.sa_handler = padthv1_sigterm_handler;
+	::sigemptyset(&sigterm.sa_mask);
+	sigterm.sa_flags = 0;
+	sigterm.sa_flags |= SA_RESTART;
+	::sigaction(SIGTERM, &sigterm, NULL);
+	::sigaction(SIGQUIT, &sigterm, NULL);
 
-	// ignore SIGHUP signal.
-	struct sigaction hup;
-	hup.sa_handler = SIG_IGN;
-	::sigemptyset(&hup.sa_mask);
-	hup.sa_flags = 0;
-	hup.sa_flags |= SA_RESTART;
-	::sigaction(SIGHUP, &hup, NULL);
+	// Ignore SIGHUP/SIGINT signals.
+	::signal(SIGHUP, SIG_IGN);
+	::signal(SIGINT, SIG_IGN);
 
 #else
 
@@ -985,7 +981,7 @@ void padthv1_jack_application::hideSession (void)
 #ifdef HAVE_SIGNAL_H
 
 // SIGTERM signal handler.
-void padthv1_jack_application::sigterm_handler (void)
+void padthv1_jack_application::handle_sigterm (void)
 {
 	char c;
 

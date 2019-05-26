@@ -296,6 +296,7 @@ bool padthv1_param::loadPreset (
 
 	file.close();
 
+	pSynth->stabilize();
 	pSynth->reset();
 	pSynth->running(running);
 

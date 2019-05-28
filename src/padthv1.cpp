@@ -1508,9 +1508,11 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				m_lfo1.env.start(&pv->lfo1_env);
 				m_dca1.env.start(&pv->dca1_env);
 				// lfos
-				const float pshift1
+				const float lfo1_pshift
 					= (*m_lfo1.sync > 0.0f ? m_phasor.pshift() : 0.0f);
-				pv->lfo1_sample = pv->lfo1.start(pshift1);
+				const float lfo1_freq
+					= get_bpm(*m_lfo1.bpm) / (60.01f - *m_lfo1.rate * 60.0f);
+				pv->lfo1_sample = pv->lfo1.start(lfo1_pshift, lfo1_freq);
 				// glides (portamentoa)
 				const float frames1
 					= uint32_t(*m_gen1.glide1 * *m_gen1.glide1 * m_srate);

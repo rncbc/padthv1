@@ -941,4 +941,72 @@ void padthv1widget_check::checkBoxValueChanged ( bool bCheckValue )
 }
 
 
+//-------------------------------------------------------------------------
+// padthv1widget_group - Custom checkable group-box widget.
+//
+
+// Constructor.
+padthv1widget_group::padthv1widget_group ( QWidget *pParent )
+: QGroupBox(pParent)
+{
+	padthv1widget_param_style::addRef();
+#if 0
+	QGroupBox::setStyleSheet(
+	//	"QGroupBox::indicator { width: 16px; height: 16px; }"
+		"QGroupBox::indicator::unchecked { image: url(:/images/ledOff.png); }"
+		"QGroupBox::indicator::checked   { image: url(:/images/ledOn.png);  }"
+		);
+#endif
+	QGroupBox::setStyle(padthv1widget_param_style::getRef());
+
+	m_pParam = new padthv1widget_param(this);
+
+	QObject::connect(m_pParam,
+		 SIGNAL(valueChanged(float)),
+		 SLOT(paramValueChanged(float)));
+
+	QObject::connect(this,
+		 SIGNAL(toggled(bool)),
+		 SLOT(groupBoxValueChanged(bool)));
+}
+
+
+// Destructor.
+padthv1widget_group::~padthv1widget_group (void)
+{
+	padthv1widget_param_style::releaseRef();
+
+	delete m_pParam;
+}
+
+
+// Accessors.
+padthv1widget_param *padthv1widget_group::param (void) const
+{
+	return m_pParam;
+}
+
+
+// Virtual accessors.
+void padthv1widget_group::paramValueChanged ( float fValue )
+{
+	const float fMaximum = m_pParam->maximum();
+	const float fMinimum = m_pParam->minimum();
+
+	const bool bGroupValue = (fValue > 0.5f * (fMaximum + fMinimum));
+	const bool bGroupBlock = QGroupBox::blockSignals(true);
+	QGroupBox::setChecked(bGroupValue);
+	QGroupBox::blockSignals(bGroupBlock);
+}
+
+
+void padthv1widget_group::groupBoxValueChanged ( bool bGroupValue )
+{
+	const float fMaximum = m_pParam->maximum();
+	const float fMinimum = m_pParam->minimum();
+
+	m_pParam->setValue(bGroupValue ? fMaximum : fMinimum);
+}
+
+
 // end of padthv1widget_param.cpp

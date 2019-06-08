@@ -298,6 +298,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	setParamKnob(padthv1::GEN1_ENVTIME, m_ui.Gen1EnvTimeKnob);
 
 	// DCF1
+	setParamKnob(padthv1::DCF1_ENABLED,	 m_ui.Dcf1GroupBox->param());
 	setParamKnob(padthv1::DCF1_CUTOFF,   m_ui.Dcf1CutoffKnob);
 	setParamKnob(padthv1::DCF1_RESO,     m_ui.Dcf1ResoKnob);
 	setParamKnob(padthv1::DCF1_TYPE,     m_ui.Dcf1TypeKnob);
@@ -358,6 +359,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 		m_ui.Dcf1Env, SLOT(setRelease(float)));
 
 	// LFO1
+	setParamKnob(padthv1::LFO1_ENABLED,	m_ui.Lfo1GroupBox->param());
 	setParamKnob(padthv1::LFO1_SHAPE,   m_ui.Lfo1ShapeKnob);
 	setParamKnob(padthv1::LFO1_WIDTH,   m_ui.Lfo1WidthKnob);
 	setParamKnob(padthv1::LFO1_BPM,     m_ui.Lfo1BpmKnob);

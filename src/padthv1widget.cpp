@@ -722,7 +722,8 @@ void padthv1widget::updateParamEx ( padthv1::ParamIndex index, float fValue )
 
 	switch (index) {
 	case padthv1::DCF1_SLOPE:
-		m_ui.Dcf1TypeKnob->setEnabled(int(fValue) != 3); // !Formant
+		if (m_ui.Dcf1GroupBox->isChecked())
+			m_ui.Dcf1TypeKnob->setEnabled(int(fValue) != 3); // !Formant
 		break;
 	case padthv1::LFO1_SHAPE:
 		m_ui.Lfo1Wave->setWaveShape(fValue);

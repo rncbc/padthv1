@@ -393,7 +393,7 @@
        <item row="1" column="0" rowspan="2" colspan="5">
         <widget class="padthv1widget_group" name="Dcf1GroupBox">
          <property name="toolTip">
-          <string>DCF1 Enabled</string>
+          <string>DCF Enabled</string>
          </property>
          <property name="title">
           <string>DCF</string>
@@ -520,7 +520,7 @@
        <item row="1" column="5" rowspan="2" colspan="8">
         <widget class="padthv1widget_group" name="Lfo1GroupBox">
          <property name="toolTip">
-          <string>LFO1 Enabled</string>
+          <string>LFO Enabled</string>
          </property>
          <property name="title">
           <string>LFO</string>
@@ -891,7 +891,7 @@
           <item>
            <widget class="padthv1widget_combo" name="Def1ChannelKnob">
             <property name="toolTip">
-             <string>DEF1 Channel</string>
+             <string>DEF Channel</string>
             </property>
             <property name="text">
              <string>Channel</string>
@@ -901,7 +901,7 @@
           <item>
            <widget class="padthv1widget_radio" name="Def1MonoKnob">
             <property name="toolTip">
-             <string>DEF1 Mono</string>
+             <string>DEF Mono</string>
             </property>
             <property name="text">
              <string>Mono</string>
@@ -953,7 +953,7 @@
           <item>
            <widget class="padthv1widget_spin" name="Out1FxSendKnob">
             <property name="toolTip">
-             <string>OUT1 FX Send</string>
+             <string>OUT FX Send</string>
             </property>
             <property name="text">
              <string>Effects</string>

@@ -298,6 +298,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	setParamKnob(padthv1::GEN1_ENVTIME, m_ui.Gen1EnvTimeKnob);
 
 	// DCF1
+	setParamKnob(padthv1::DCF1_ENABLED, m_ui.Dcf1GroupBox->param());
 	setParamKnob(padthv1::DCF1_CUTOFF,   m_ui.Dcf1CutoffKnob);
 	setParamKnob(padthv1::DCF1_RESO,     m_ui.Dcf1ResoKnob);
 	setParamKnob(padthv1::DCF1_TYPE,     m_ui.Dcf1TypeKnob);
@@ -358,6 +359,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 		m_ui.Dcf1Env, SLOT(setRelease(float)));
 
 	// LFO1
+	setParamKnob(padthv1::LFO1_ENABLED, m_ui.Lfo1GroupBox->param());
 	setParamKnob(padthv1::LFO1_SHAPE,   m_ui.Lfo1ShapeKnob);
 	setParamKnob(padthv1::LFO1_WIDTH,   m_ui.Lfo1WidthKnob);
 	setParamKnob(padthv1::LFO1_BPM,     m_ui.Lfo1BpmKnob);
@@ -719,8 +721,26 @@ void padthv1widget::updateParamEx ( padthv1::ParamIndex index, float fValue )
 	++m_iUpdate;
 
 	switch (index) {
+	case padthv1::DCF1_ENABLED:
+		if (m_ui.Lfo1GroupBox->isChecked()) {
+			const bool bDcf1Enabled = (fValue > 0.5f);
+			m_ui.Lfo1CutoffKnob->setEnabled(bDcf1Enabled);
+			m_ui.Lfo1ResoKnob->setEnabled(bDcf1Enabled);
+		}
+		break;
+	case padthv1::LFO1_ENABLED:
+		if (fValue > 0.5f) {
+			const bool bDcf1Enabled = m_ui.Dcf1GroupBox->isChecked();
+			m_ui.Lfo1CutoffKnob->setEnabled(bDcf1Enabled);
+			m_ui.Lfo1ResoKnob->setEnabled(bDcf1Enabled);
+		}
+		break;
 	case padthv1::DCF1_SLOPE:
-		m_ui.Dcf1TypeKnob->setEnabled(int(fValue) != 3); // !Formant
+		if (m_ui.Dcf1GroupBox->isChecked())
+			m_ui.Dcf1TypeKnob->setEnabled(int(fValue) != 3); // !Formant
+		break;
+	case padthv1::LFO1_SHAPE:
+		m_ui.Lfo1Wave->setWaveShape(fValue);
 		break;
 	case padthv1::KEY1_LOW:
 		m_ui.StatusBar->keybd()->setNoteLow(int(fValue));

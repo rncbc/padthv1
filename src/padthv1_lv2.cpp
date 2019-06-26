@@ -361,6 +361,8 @@ static LV2_State_Status padthv1_lv2_state_save ( LV2_Handle instance,
 	if (pPlugin == NULL)
 		return LV2_STATE_ERR_UNKNOWN;
 
+	// Save state as XML chunk...
+	//
 	const uint32_t key = pPlugin->urid_map(PADTHV1_LV2_PREFIX "state");
 	if (key == 0)
 		return LV2_STATE_ERR_NO_PROPERTY;
@@ -376,9 +378,14 @@ static LV2_State_Status padthv1_lv2_state_save ( LV2_Handle instance,
 #endif
 
 	QDomDocument doc(PADTHV1_TITLE);
+
 	QDomElement eSamples = doc.createElement("samples");
 	padthv1_param::saveSamples(pPlugin, doc, eSamples);
 	doc.appendChild(eSamples);
+
+	QDomElement eTuning = doc.createElement("tuning");
+	padthv1_param::saveTuning(pPlugin, doc, eTuning);
+	doc.appendChild(eTuning);
 
 	const QByteArray data(doc.toByteArray());
 	const char *value = data.constData();
@@ -396,6 +403,8 @@ static LV2_State_Status padthv1_lv2_state_restore ( LV2_Handle instance,
 	if (pPlugin == NULL)
 		return LV2_STATE_ERR_UNKNOWN;
 
+	// Retrieve state as XML chunk...
+	//
 	const uint32_t key = pPlugin->urid_map(PADTHV1_LV2_PREFIX "state");
 	if (key == 0)
 		return LV2_STATE_ERR_NO_PROPERTY;
@@ -425,9 +434,18 @@ static LV2_State_Status padthv1_lv2_state_restore ( LV2_Handle instance,
 
 	QDomDocument doc(PADTHV1_TITLE);
 	if (doc.setContent(QByteArray(value, size))) {
-		QDomElement eSamples = doc.documentElement();
-		if (eSamples.tagName() == "samples")
-			padthv1_param::loadSamples(pPlugin, eSamples);
+		for (QDomNode nChild = doc.documentElement();
+				!nChild.isNull();
+					nChild = nChild.nextSibling()) {
+			QDomElement eChild = nChild.toElement();
+			if (eChild.isNull())
+				continue;
+			if (eChild.tagName() == "samples")
+				padthv1_param::loadSamples(pPlugin, eChild);
+			else
+			if (eChild.tagName() == "tuning")
+				padthv1_param::loadTuning(pPlugin, eChild);
+		}
 	}
 
 	pPlugin->reset();

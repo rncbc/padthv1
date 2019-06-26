@@ -58,6 +58,9 @@ namespace padthv1_param
 	float paramValue(padthv1::ParamIndex index, float fScale);
 	float paramScale(padthv1::ParamIndex index, float fValue);
 	bool paramFloat(padthv1::ParamIndex index);
+
+	// Save and convert into absolute filename helper.
+	QString saveFilename(const QString& sFilename, bool bSymLink);
 };
 
 

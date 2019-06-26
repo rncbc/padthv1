@@ -37,6 +37,13 @@ class QDomDocument;
 
 namespace padthv1_param
 {
+	// Preset serialization methods.
+	bool loadPreset(padthv1 *pSynth,
+		const QString& sFilename);
+	bool savePreset(padthv1 *pSynth,
+		const QString& sFilename,
+		bool bSymLink = false);
+
 	// Sample serialization methods.
 	void loadSamples(padthv1 *pSynth,
 		const QDomElement& eSamples);
@@ -44,11 +51,11 @@ namespace padthv1_param
 		QDomDocument& doc, QDomElement& eSamples,
 		bool bSymLink = false);
 
-	// Preset serialization methods.
-	bool loadPreset(padthv1 *pSynth,
-		const QString& sFilename);
-	bool savePreset(padthv1 *pSynth,
-		const QString& sFilename,
+	// Tuning serialization methods.
+	void loadTuning(padthv1 *pSynth,
+		const QDomElement& eTuning);
+	void saveTuning(padthv1 *pSynth,
+		QDomDocument& doc, QDomElement& eTuning,
 		bool bSymLink = false);
 
 	// Default parameter name/value helpers.
@@ -59,7 +66,8 @@ namespace padthv1_param
 	float paramScale(padthv1::ParamIndex index, float fValue);
 	bool paramFloat(padthv1::ParamIndex index);
 
-	// Save and convert into absolute filename helper.
+	// Load/save and convert canonical/absolute filename helpers.
+	QString loadFilename(const QString& sFilename);
 	QString saveFilename(const QString& sFilename, bool bSymLink);
 };
 

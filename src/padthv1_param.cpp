@@ -292,6 +292,10 @@ bool padthv1_param::loadPreset (
 				if (eChild.tagName() == "samples") {
 					padthv1_param::loadSamples(pSynth, eChild);
 				}
+				else
+				if (eChild.tagName() == "tuning") {
+					padthv1_param::loadTuning(pSynth, eChild);
+				}
 			}
 		}
 	}
@@ -340,6 +344,10 @@ bool padthv1_param::savePreset (
 		eParams.appendChild(eParam);
 	}
 	ePreset.appendChild(eParams);
+
+	QDomElement eTuning = doc.createElement("tuning");
+	padthv1_param::saveTuning(pSynth, doc, eTuning, bSymLink);
+	ePreset.appendChild(eTuning);
 
 	doc.appendChild(ePreset);
 
@@ -439,7 +447,102 @@ void padthv1_param::saveSamples (
 }
 
 
-// Save and convert into absolute filename helper.
+// Tuning serialization methods.
+void padthv1_param::loadTuning (
+	padthv1 *pSynth, const QDomElement& eTuning )
+{
+	if (pSynth == NULL)
+		return;
+
+	for (QDomNode nChild = eTuning.firstChild();
+			!nChild.isNull();
+				nChild = nChild.nextSibling()) {
+		QDomElement eChild = nChild.toElement();
+		if (eChild.isNull())
+			continue;
+		if (eChild.tagName() == "ref-pitch") {
+			pSynth->setTuningRefPitch(eChild.text().toFloat());
+		}
+		else
+		if (eChild.tagName() == "ref-note") {
+			pSynth->setTuningRefNote(eChild.text().toInt());
+		}
+		else
+		if (eChild.tagName() == "scale-file") {
+			const QString& sScaleFile
+				= eChild.text();
+			const QByteArray aScaleFile
+				= padthv1_param::loadFilename(sScaleFile).toUtf8();
+			pSynth->setTuningScaleFile(aScaleFile.constData());
+		}
+		else
+		if (eChild.tagName() == "keymap-file") {
+			const QString& sKeyMapFile
+				= eChild.text();
+			const QByteArray aKeyMapFile
+				= padthv1_param::loadFilename(sKeyMapFile).toUtf8();
+			pSynth->setTuningScaleFile(aKeyMapFile.constData());
+		}
+	}
+	// Consolidate tuning scale...
+	pSynth->updateTuning();
+}
+
+
+void padthv1_param::saveTuning (
+	padthv1 *pSynth, QDomDocument& doc, QDomElement& eTuning, bool bSymLink )
+{
+	if (pSynth == NULL)
+		return;
+
+	QDomElement eRefPitch = doc.createElement("ref-pitch");
+	eRefPitch.appendChild(doc.createTextNode(
+		QString::number(pSynth->tuningRefPitch())));
+	eTuning.appendChild(eRefPitch);
+
+	QDomElement eRefNote = doc.createElement("ref-note");
+	eRefNote.appendChild(doc.createTextNode(
+		QString::number(pSynth->tuningRefNote())));
+	eTuning.appendChild(eRefNote);
+
+	const char *pszScaleFile = pSynth->tuningScaleFile();
+	if (pszScaleFile) {
+		const QString& sScaleFile
+			= QString::fromUtf8(pszScaleFile);
+		if (!sScaleFile.isEmpty()) {
+			QDomElement eScaleFile = doc.createElement("scale-file");
+			eScaleFile.appendChild(doc.createTextNode(
+				QDir::current().relativeFilePath(
+					padthv1_param::saveFilename(sScaleFile, bSymLink))));
+			eTuning.appendChild(eScaleFile);
+		}
+	}
+
+	const char *pszKeyMapFile = pSynth->tuningKeyMapFile();
+	if (pszKeyMapFile) {
+		const QString& sKeyMapFile
+			= QString::fromUtf8(pszKeyMapFile);
+		if (!sKeyMapFile.isEmpty()) {
+			QDomElement eKeyMapFile = doc.createElement("keymap-file");
+			eKeyMapFile.appendChild(doc.createTextNode(
+				QDir::current().relativeFilePath(
+					padthv1_param::saveFilename(sKeyMapFile, bSymLink))));
+			eTuning.appendChild(eKeyMapFile);
+		}
+	}
+}
+
+
+// Load/save and convert canonical/absolute filename helpers.
+QString padthv1_param::loadFilename ( const QString& sFilename )
+{
+	QFileInfo fi(sFilename);
+	if (fi.isSymLink())
+		fi.setFile(fi.symLinkTarget());
+	return fi.canonicalFilePath();
+}
+
+
 QString padthv1_param::saveFilename ( const QString& sFilename, bool bSymLink )
 {
 	QFileInfo fi(sFilename);

@@ -1,7 +1,7 @@
 // padthv1_lv2.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -86,20 +86,26 @@ protected:
 
 	bool state_changed();
 
+#ifdef CONFIG_LV2_PATCH
+	bool patch_put(uint32_t ndelta);
+#endif
+
 private:
 
 	LV2_URID_Map *m_urid_map;
 
 	struct lv2_urids
 	{
-		LV2_URID gen1_sample;
-		LV2_URID gen1_loop_start;
-		LV2_URID gen1_loop_end;
-		LV2_URID gen1_update;
+		LV2_URID t101_ref_pitch;
+		LV2_URID t102_ref_note;
+		LV2_URID t103_scale_file;
+		LV2_URID t104_keymap_file;
+		LV2_URID tun1_update;
 		LV2_URID atom_Blank;
 		LV2_URID atom_Object;
 		LV2_URID atom_Float;
 		LV2_URID atom_Int;
+		LV2_URID atom_Bool;
 		LV2_URID atom_Path;
 		LV2_URID time_Position;
 		LV2_URID time_beatsPerMinute;
@@ -108,6 +114,14 @@ private:
 		LV2_URID bufsz_maxBlockLength;
 		LV2_URID bufsz_nominalBlockLength;
 		LV2_URID state_StateChanged;
+	#ifdef CONFIG_LV2_PATCH
+		LV2_URID patch_Get;
+		LV2_URID patch_Set;
+		LV2_URID patch_Put;
+		LV2_URID patch_body;
+		LV2_URID patch_property;
+		LV2_URID patch_value;
+	#endif
 	} m_urids;
 
 	LV2_Atom_Forge m_forge;

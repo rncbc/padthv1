@@ -839,16 +839,11 @@ private:
 
 // micro-tuning/instance implementation
 
-class padthv1_tun : public padthv1_sched
+class padthv1_tun
 {
 public:
 
-	// ctor.
-	padthv1_tun(padthv1 *pSynth) : padthv1_sched(pSynth, Tuning),
-		enabled(false), refPitch(440.0f), refNote(69) {}
-
-	// processor.
-	void process(int) { instance()->updateTuning(); }
+	padthv1_tun() : enabled(false), refPitch(440.0f), refNote(69) {}
 
 	bool    enabled;
 	float   refPitch;
@@ -904,7 +899,7 @@ public:
 	void setTuningKeyMapFile(const char *pszKeyMapFile);
 	const char *tuningKeyMapFile() const;
 
-	void updateTuning();
+	void resetTuning();
 
 	void process_midi(uint8_t *data, uint32_t size);
 	void process(float **ins, float **outs, uint32_t nframes);
@@ -1054,9 +1049,9 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 
 padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate )
-		: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
-			m_controls(pSampl), m_programs(pSampl),
-			m_midi_in(pSampl), m_tun(pSampl), m_bpm(180.0f), m_running(false)
+	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
+		m_controls(pSampl), m_programs(pSampl),
+		m_midi_in(pSampl), m_bpm(180.0f), m_running(false)
 {
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;
@@ -1096,7 +1091,7 @@ padthv1_impl::padthv1_impl (
 	m_comp = NULL;
 
 	// Micro-tuning support, if any...
-	updateTuning();
+	resetTuning();
 
 	// load controllers & programs database...
 	m_config.loadControls(&m_controls);
@@ -1846,7 +1841,7 @@ const char *padthv1_impl::tuningKeyMapFile (void) const
 }
 
 
-void padthv1_impl::updateTuning (void)
+void padthv1_impl::resetTuning (void)
 {
 	if (m_tun.enabled) {
 		// Instance micro-tuning, possibly from Scala keymap and scale files...
@@ -2483,9 +2478,9 @@ const char *padthv1::tuningKeyMapFile (void) const
 }
 
 
-void padthv1::updateTuning (void)
+void padthv1::resetTuning (void)
 {
-	m_pImpl->updateTuning();
+	m_pImpl->resetTuning();
 }
 
 

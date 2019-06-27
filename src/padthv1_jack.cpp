@@ -614,6 +614,12 @@ void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 }
 
 
+void padthv1_jack::updateTuning (void)
+{
+	padthv1::resetTuning();
+}
+
+
 void padthv1_jack::shutdown (void)
 {
 	padthv1_jack_application *pApp = padthv1_jack_application::getInstance();

@@ -845,19 +845,16 @@ public:
 
 	// ctor.
 	padthv1_tun(padthv1 *pSynth) : padthv1_sched(pSynth, Tuning),
-		refPitch(440.0f), refNote(69), enabled0(false) {}
+		enabled(false), refPitch(440.0f), refNote(69) {}
 
 	// processor.
 	void process(int) { instance()->updateTuning(); }
 
-	padthv1_port enabled;
-
+	bool    enabled;
 	float   refPitch;
 	int     refNote;
 	QString scaleFile;
 	QString keyMapFile;
-
-	bool    enabled0;
 };
 
 
@@ -891,6 +888,9 @@ public:
 
 	padthv1_controls *controls();
 	padthv1_programs *programs();
+
+	void setTuningEnabled(bool enabled);
+	bool isTuningEnabled() const;
 
 	void setTuningRefPitch(float refPitch);
 	float tuningRefPitch() const;
@@ -1407,7 +1407,6 @@ padthv1_port *padthv1_impl::paramPort ( padthv1::ParamIndex index )
 	case padthv1::REV1_WIDTH:     pParamPort = &m_rev.width;        break;
 	case padthv1::DYN1_COMPRESS:  pParamPort = &m_dyn.compress;     break;
 	case padthv1::DYN1_LIMITER:   pParamPort = &m_dyn.limiter;      break;
-	case padthv1::TUN1_ENABLED:   pParamPort = &m_tun.enabled;      break;
 	case padthv1::KEY1_LOW:       pParamPort = &m_key.low;          break;
 	case padthv1::KEY1_HIGH:      pParamPort = &m_key.high;         break;
 	default: break;
@@ -1792,6 +1791,17 @@ padthv1_programs *padthv1_impl::programs (void)
 
 // Micro-tuning support
 
+void padthv1_impl::setTuningEnabled ( bool enabled )
+{
+	m_tun.enabled = enabled;
+}
+
+bool padthv1_impl::isTuningEnabled (void) const
+{
+	return m_tun.enabled;
+}
+
+
 void padthv1_impl::setTuningRefPitch ( float refPitch )
 {
 	m_tun.refPitch = refPitch;
@@ -1801,6 +1811,7 @@ float padthv1_impl::tuningRefPitch (void) const
 {
 	return m_tun.refPitch;
 }
+
 
 void padthv1_impl::setTuningRefNote ( int refNote )
 {
@@ -1837,7 +1848,7 @@ const char *padthv1_impl::tuningKeyMapFile (void) const
 
 void padthv1_impl::updateTuning (void)
 {
-	if (m_tun.enabled0) {
+	if (m_tun.enabled) {
 		// Instance micro-tuning, possibly from Scala keymap and scale files...
 		padthv1_tuning tuning(
 			m_tun.refPitch,
@@ -2006,11 +2017,6 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 	if (lfo1_enabled) {
 		lfo1_wave.reset_test(
 			padthv1_wave::Shape(*m_lfo1.shape), *m_lfo1.width);
-	}
-
-	if (m_tun.enabled0 != *m_tun.enabled) {
-		m_tun.enabled0  = *m_tun.enabled;
-		m_tun.schedule();
 	}
 
 	// per voice
@@ -2422,6 +2428,17 @@ void padthv1::directNoteOn ( int note, int vel )
 
 
 // Micro-tuning support
+void padthv1::setTuningEnabled ( bool enabled )
+{
+	m_pImpl->setTuningEnabled(enabled);
+}
+
+bool padthv1::isTuningEnabled (void) const
+{
+	return m_pImpl->isTuningEnabled();
+}
+
+
 void padthv1::setTuningRefPitch ( float refPitch )
 {
 	m_pImpl->setTuningRefPitch(refPitch);
@@ -2431,6 +2448,7 @@ float padthv1::tuningRefPitch (void) const
 {
 	return m_pImpl->tuningRefPitch();
 }
+
 
 void padthv1::setTuningRefNote ( int refNote )
 {

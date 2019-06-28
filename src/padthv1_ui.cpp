@@ -117,9 +117,64 @@ void padthv1_ui::directNoteOn ( int note, int vel )
 }
 
 
-void padthv1_ui::updateTuning (void)
+void padthv1_ui::setTuningEnabled ( bool enabled )
 {
-	m_pSynth->updateTuning();
+	m_pSynth->setTuningEnabled(enabled);
+}
+
+bool padthv1_ui::isTuningEnabled (void) const
+{
+	return m_pSynth->isTuningEnabled();
+}
+
+
+void padthv1_ui::setTuningRefPitch ( float refPitch )
+{
+	m_pSynth->setTuningRefPitch(refPitch);
+}
+
+float padthv1_ui::tuningRefPitch (void) const
+{
+	return m_pSynth->tuningRefPitch();
+}
+
+
+void padthv1_ui::setTuningRefNote ( int refNote )
+{
+	m_pSynth->setTuningRefNote(refNote);
+}
+
+int padthv1_ui::tuningRefNote (void) const
+{
+	return m_pSynth->tuningRefNote();
+}
+
+
+void padthv1_ui::setTuningScaleFile ( const char *pszScaleFile )
+{
+	m_pSynth->setTuningScaleFile(pszScaleFile);
+}
+
+const char *padthv1_ui::tuningScaleFile (void) const
+{
+	return m_pSynth->tuningScaleFile();
+}
+
+
+void padthv1_ui::setTuningKeyMapFile ( const char *pszKeyMapFile )
+{
+	m_pSynth->setTuningKeyMapFile(pszKeyMapFile);
+}
+
+const char *padthv1_ui::tuningKeyMapFile (void) const
+{
+	return m_pSynth->tuningKeyMapFile();
+}
+
+
+void padthv1_ui::resetTuning (void)
+{
+	m_pSynth->resetTuning();
 }
 
 

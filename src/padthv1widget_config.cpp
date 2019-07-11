@@ -90,6 +90,7 @@ padthv1widget_config::padthv1widget_config (
 		m_ui.CustomStyleThemeComboBox->setCurrentIndex(iCustomStyleTheme);
 		m_ui.CustomStyleThemeTextLabel->setEnabled(!bPlugin);
 		m_ui.CustomStyleThemeComboBox->setEnabled(!bPlugin);
+		m_ui.RandomizePercentSpinBox->setValue(pConfig->fRandomizePercent);
 		// Load controllers database...
 		padthv1_controls *pControls = m_pSynthUi->controls();
 		if (pControls) {
@@ -218,6 +219,9 @@ padthv1widget_config::padthv1widget_config (
 		SLOT(optionsChanged()));
 	QObject::connect(m_ui.CustomStyleThemeComboBox,
 		SIGNAL(activated(int)),
+		SLOT(optionsChanged()));
+	QObject::connect(m_ui.RandomizePercentSpinBox,
+		SIGNAL(valueChanged(double)),
 		SLOT(optionsChanged()));
 
 	// Dialog commands...
@@ -736,6 +740,7 @@ void padthv1widget_config::accept (void)
 			pConfig->sCustomStyleTheme = m_ui.CustomStyleThemeComboBox->currentText();
 		else
 			pConfig->sCustomStyleTheme.clear();
+		pConfig->fRandomizePercent = float(m_ui.RandomizePercentSpinBox->value());
 		int iNeedRestart = 0;
  		if (pConfig->sCustomStyleTheme != sOldCustomStyleTheme) {
 			if (pConfig->sCustomStyleTheme.isEmpty()) {

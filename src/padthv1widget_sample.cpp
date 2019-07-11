@@ -1,7 +1,7 @@
 // padthv1widget_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -392,7 +392,7 @@ void padthv1widget_sample::contextMenuEvent ( QContextMenuEvent *pContextMenuEve
 {
 	QMenu menu(this);
 
-	QMenu resetMenu(tr("&Reset"));
+	QMenu resetMenu(tr("Re&set"));
 	resetMenu.addAction(tr("&Default"),     this, SLOT(resetDefault()));
 	resetMenu.addSeparator();
 	resetMenu.addAction(tr("&Normal"),      this, SLOT(resetNormal()));
@@ -405,6 +405,8 @@ void padthv1widget_sample::contextMenuEvent ( QContextMenuEvent *pContextMenuEve
 	resetMenu.addSeparator();
 	resetMenu.addAction(tr("S&inc"),        this, SLOT(resetSinc()));
 	menu.addMenu(&resetMenu);
+	menu.addSeparator();
+	menu.addAction(tr("&Randomize"),        this, SLOT(randomize()));
 
 	menu.exec(pContextMenuEvent->globalPos());
 }
@@ -591,5 +593,27 @@ void padthv1widget_sample::resetSinc (void)
 	emit sampleChanged();
 }
 
+
+// Randomize all current partials.
+void padthv1widget_sample::randomize (void)
+{
+	if (m_pSample == NULL)
+		return;
+
+	float p = 1.0f;
+
+	padthv1_config *pConfig = padthv1_config::getInstance();
+	if (pConfig)
+		p = 0.01f * pConfig->fRandomizePercent;
+
+	const int nh = m_pSample->nh();
+	for (int n = 0; n < nh; ++n) {
+		const float v = m_pSample->harmonic(n);
+		const float r = 0.001f * float(::rand() % 1000);
+		m_pSample->setHarmonic(n, v + p * (r - v));
+	}
+
+	emit sampleChanged();
+}
 
 // end of padthv1widget_sample.cpp

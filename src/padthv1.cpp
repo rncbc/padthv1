@@ -837,6 +837,22 @@ private:
 };
 
 
+// micro-tuning/instance implementation
+
+class padthv1_tun
+{
+public:
+
+	padthv1_tun() : enabled(false), refPitch(440.0f), refNote(69) {}
+
+	bool    enabled;
+	float   refPitch;
+	int     refNote;
+	QString scaleFile;
+	QString keyMapFile;
+};
+
+
 // polyphonic synth implementation
 
 class padthv1_impl
@@ -868,7 +884,22 @@ public:
 	padthv1_controls *controls();
 	padthv1_programs *programs();
 
-	void updateTuning();
+	void setTuningEnabled(bool enabled);
+	bool isTuningEnabled() const;
+
+	void setTuningRefPitch(float refPitch);
+	float tuningRefPitch() const;
+
+	void setTuningRefNote(int refNote);
+	int tuningRefNote() const;
+
+	void setTuningScaleFile(const char *pszScaleFile);
+	const char *tuningScaleFile() const;
+
+	void setTuningKeyMapFile(const char *pszKeyMapFile);
+	const char *tuningKeyMapFile() const;
+
+	void resetTuning();
 
 	void process_midi(uint8_t *data, uint32_t size);
 	void process(float **ins, float **outs, uint32_t nframes);
@@ -932,6 +963,7 @@ private:
 	padthv1_controls m_controls;
 	padthv1_programs m_programs;
 	padthv1_midi_in  m_midi_in;
+	padthv1_tun      m_tun;
 
 	uint16_t m_nchannels;
 	float    m_srate;
@@ -1017,9 +1049,9 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 
 padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate )
-		: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
-			m_controls(pSampl), m_programs(pSampl),
-			m_midi_in(pSampl), m_bpm(180.0f), m_running(false)
+	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
+		m_controls(pSampl), m_programs(pSampl),
+		m_midi_in(pSampl), m_bpm(180.0f), m_running(false)
 {
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;
@@ -1059,7 +1091,7 @@ padthv1_impl::padthv1_impl (
 	m_comp = NULL;
 
 	// Micro-tuning support, if any...
-	updateTuning();
+	resetTuning();
 
 	// load controllers & programs database...
 	m_config.loadControls(&m_controls);
@@ -1753,11 +1785,81 @@ padthv1_programs *padthv1_impl::programs (void)
 
 
 // Micro-tuning support
-void padthv1_impl::updateTuning (void)
-{
 
+void padthv1_impl::setTuningEnabled ( bool enabled )
+{
+	m_tun.enabled = enabled;
+}
+
+bool padthv1_impl::isTuningEnabled (void) const
+{
+	return m_tun.enabled;
+}
+
+
+void padthv1_impl::setTuningRefPitch ( float refPitch )
+{
+	m_tun.refPitch = refPitch;
+}
+
+float padthv1_impl::tuningRefPitch (void) const
+{
+	return m_tun.refPitch;
+}
+
+
+void padthv1_impl::setTuningRefNote ( int refNote )
+{
+	m_tun.refNote = refNote;
+}
+
+int padthv1_impl::tuningRefNote (void) const
+{
+	return m_tun.refNote;
+}
+
+
+void padthv1_impl::setTuningScaleFile ( const char *pszScaleFile )
+{
+	m_tun.scaleFile = QString::fromUtf8(pszScaleFile);
+}
+
+const char *padthv1_impl::tuningScaleFile (void) const
+{
+	return m_tun.scaleFile.toUtf8().constData();
+}
+
+
+void padthv1_impl::setTuningKeyMapFile ( const char *pszKeyMapFile )
+{
+	m_tun.keyMapFile = QString::fromUtf8(pszKeyMapFile);
+}
+
+const char *padthv1_impl::tuningKeyMapFile (void) const
+{
+	return m_tun.keyMapFile.toUtf8().constData();
+}
+
+
+void padthv1_impl::resetTuning (void)
+{
+	if (m_tun.enabled) {
+		// Instance micro-tuning, possibly from Scala keymap and scale files...
+		padthv1_tuning tuning(
+			m_tun.refPitch,
+			m_tun.refNote);
+		if (m_tun.keyMapFile.isEmpty())
+		if (!m_tun.keyMapFile.isEmpty())
+			tuning.loadKeyMapFile(m_tun.keyMapFile);
+		if (!m_tun.scaleFile.isEmpty())
+			tuning.loadScaleFile(m_tun.scaleFile);
+		for (int note = 0; note < MAX_NOTES; ++note)
+			m_freqs[note] = tuning.noteToPitch(note);
+		// Done instance tuning.
+	}
+	else
 	if (m_config.bTuningEnabled) {
-		// Custom micro-tuning, possibly from Scala keymap and scale files...
+		// Global/config micro-tuning, possibly from Scala keymap and scale files...
 		padthv1_tuning tuning(
 			m_config.fTuningRefPitch,
 			m_config.iTuningRefNote);
@@ -1767,12 +1869,12 @@ void padthv1_impl::updateTuning (void)
 			tuning.loadScaleFile(m_config.sTuningScaleFile);
 		for (int note = 0; note < MAX_NOTES; ++note)
 			m_freqs[note] = tuning.noteToPitch(note);
-		// Done custom tuning.
+		// Done global/config tuning.
 	} else {
-		// Native tuning, 12-tone equal temperament western standard...
+		// Native/default tuning, 12-tone equal temperament western standard...
 		for (int note = 0; note < MAX_NOTES; ++note)
 			m_freqs[note] = padthv1_freq(note);
-		// Done native tuning.
+		// Done native/default tuning.
 	}
 }
 
@@ -2321,9 +2423,64 @@ void padthv1::directNoteOn ( int note, int vel )
 
 
 // Micro-tuning support
-void padthv1::updateTuning (void)
+void padthv1::setTuningEnabled ( bool enabled )
 {
-	m_pImpl->updateTuning();
+	m_pImpl->setTuningEnabled(enabled);
+}
+
+bool padthv1::isTuningEnabled (void) const
+{
+	return m_pImpl->isTuningEnabled();
+}
+
+
+void padthv1::setTuningRefPitch ( float refPitch )
+{
+	m_pImpl->setTuningRefPitch(refPitch);
+}
+
+float padthv1::tuningRefPitch (void) const
+{
+	return m_pImpl->tuningRefPitch();
+}
+
+
+void padthv1::setTuningRefNote ( int refNote )
+{
+	m_pImpl->setTuningRefNote(refNote);
+}
+
+int padthv1::tuningRefNote (void) const
+{
+	return m_pImpl->tuningRefNote();
+}
+
+
+void padthv1::setTuningScaleFile ( const char *pszScaleFile )
+{
+	m_pImpl->setTuningScaleFile(pszScaleFile);
+}
+
+const char *padthv1::tuningScaleFile (void) const
+{
+	return m_pImpl->tuningScaleFile();
+}
+
+
+void padthv1::setTuningKeyMapFile ( const char *pszKeyMapFile )
+{
+	m_pImpl->setTuningKeyMapFile(pszKeyMapFile);
+}
+
+const char *padthv1::tuningKeyMapFile (void) const
+{
+	return m_pImpl->tuningKeyMapFile();
+}
+
+
+void padthv1::resetTuning (void)
+{
+	m_pImpl->resetTuning();
 }
 
 

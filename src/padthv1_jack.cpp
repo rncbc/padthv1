@@ -614,6 +614,12 @@ void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 }
 
 
+void padthv1_jack::updateTuning (void)
+{
+	padthv1::resetTuning();
+}
+
+
 void padthv1_jack::shutdown (void)
 {
 	padthv1_jack_application *pApp = padthv1_jack_application::getInstance();
@@ -697,7 +703,7 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 	else
 		m_pApp = new QCoreApplication(argc, argv);
 
-#if QT_VERSION >= 0x050600
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
 	if (m_bGui) m_pApp->setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 

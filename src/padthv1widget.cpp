@@ -829,6 +829,14 @@ void padthv1widget::randomParams (void)
 	if (pConfig)
 		p = 0.01f * pConfig->fRandomizePercent;
 
+	if (QMessageBox::warning(this,
+		tr("Warning") + " - " PADTHV1_TITLE,
+		tr("About to randomize current parameter values:\n\n"
+		"-/+ %1%.\n\n"
+		"Are you sure?").arg(100.0f * p),
+		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
+		return;
+
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
 		// Filter out some non-randomizable parameters!...

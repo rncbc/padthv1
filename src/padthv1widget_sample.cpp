@@ -619,7 +619,7 @@ void padthv1widget_sample::randomize (void)
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
 		const float v = m_pSample->harmonic(n);
-		const float r = 0.001f * float(::rand() % 1000);
+		const float r = 0.001f * float(::rand() % 1001);
 		m_pSample->setHarmonic(n, v + p * (r - v));
 	}
 

@@ -831,7 +831,15 @@ void padthv1widget::randomParams (void)
 
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
-		// TODO: Filter non-randomizable parameters!...
+		// Filter out some non-randomizable parameters!...
+		if (index == padthv1::GEN1_OCTAVE  ||
+		    index == padthv1::GEN1_TUNING  ||
+		    index == padthv1::GEN1_ENVTIME ||
+			index == padthv1::DCF1_ENABLED ||
+			index == padthv1::LFO1_ENABLED) 
+			continue;
+		if (index >= padthv1::OUT1_WIDTH)
+			break;
 		padthv1widget_param *pParam = paramKnob(index);
 		if (pParam) {
 			const float v = pParam->value();

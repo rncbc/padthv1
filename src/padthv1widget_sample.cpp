@@ -31,6 +31,8 @@
 #include <QMenu>
 #include <QToolTip>
 
+#include <QMessageBox>
+
 #include <math.h>
 
 
@@ -606,10 +608,18 @@ void padthv1widget_sample::randomize (void)
 	if (pConfig)
 		p = 0.01f * pConfig->fRandomizePercent;
 
+	if (QMessageBox::warning(this,
+		tr("Warning") + " - " PADTHV1_TITLE,
+		tr("About to randomize current partials magnitudes:\n\n"
+		"-/+ %2%.\n\n"
+		"Are you sure?").arg(100.0f * p),
+		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
+		return;
+
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
 		const float v = m_pSample->harmonic(n);
-		const float r = 0.001f * float(::rand() % 1000);
+		const float r = 0.001f * float(::rand() % 1001);
 		m_pSample->setHarmonic(n, v + p * (r - v));
 	}
 

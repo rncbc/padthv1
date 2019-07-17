@@ -4,17 +4,16 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+0.9.9  2019-07-18  A Summer'19 Release.
 
 - Randomization of current parameters and partials is
   now available through a new top-level push-button and
-  the context-menu respectively. (EXPERIMENTAL)
+  the context-menu respectively.
 - Updated for the newer Qt5 development tools (>= 5.13).
 - Per instance custom tuning (micro-tonal) option has
   been added to the previously existing global settings
   (cf. Help > Configure... > Tuning > Global, Instance).
-  (EXPERIMENTAL)
-- New DCF and LFO Enabled parameters. (EXPERIMENTAL)
+- New DCF and LFO Enabled parameters.
 - Configure updated to check for qtchooser availability.
 
 

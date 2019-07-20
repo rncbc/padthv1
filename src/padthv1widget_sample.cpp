@@ -35,6 +35,8 @@
 
 #include <math.h>
 
+#include <random>
+
 
 // Safe value capping.
 inline float safe_value ( float x )
@@ -616,11 +618,18 @@ void padthv1widget_sample::randomize (void)
 		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
+	std::default_random_engine re(::time(NULL));
+
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		const float v = m_pSample->harmonic(n);
-		const float r = 0.001f * float(::rand() % 1001);
-		m_pSample->setHarmonic(n, v + p * (r - v));
+		std::normal_distribution<float> nd;
+		float v = m_pSample->harmonic(n) + 0.5f * p * nd(re);
+		if (v < 0.0f)
+			v = 0.0f;
+		else
+		if (v > 1.0f)
+			v = 1.0f;
+		m_pSample->setHarmonic(n, v);
 	}
 
 	emit sampleChanged();

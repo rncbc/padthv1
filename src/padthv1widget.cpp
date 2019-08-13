@@ -79,7 +79,7 @@ padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
 	m_ui.setupUi(this);
 
 	// Init sched notifier.
-	m_sched_notifier = NULL;
+	m_sched_notifier = nullptr;
 
 	// Init swapable params A/B to default.
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i)
@@ -602,7 +602,7 @@ void padthv1widget::openSchedNotifier (void)
 		return;
 
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	m_sched_notifier = new padthv1widget_sched(pSynthUi->instance(), this);
@@ -619,7 +619,7 @@ void padthv1widget::closeSchedNotifier (void)
 {
 	if (m_sched_notifier) {
 		delete m_sched_notifier;
-		m_sched_notifier = NULL;
+		m_sched_notifier = nullptr;
 	}
 
 	padthv1_ui *pSynthUi = ui_instance();
@@ -666,7 +666,7 @@ void padthv1widget::setParamKnob ( padthv1::ParamIndex index, padthv1widget_para
 
 padthv1widget_param *padthv1widget::paramKnob ( padthv1::ParamIndex index ) const
 {
-	return m_paramKnobs.value(index, NULL);
+	return m_paramKnobs.value(index, nullptr);
 }
 
 
@@ -724,7 +724,7 @@ void padthv1widget::paramChanged ( float fValue )
 void padthv1widget::updateParamEx ( padthv1::ParamIndex index, float fValue )
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	++m_iUpdate;
@@ -794,7 +794,7 @@ void padthv1widget::updateSchedParam ( padthv1::ParamIndex index, float fValue )
 void padthv1widget::resetParams (void)
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	pSynthUi->reset();
@@ -822,7 +822,7 @@ void padthv1widget::resetParams (void)
 void padthv1widget::randomParams (void)
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	float p = 1.0f;
@@ -839,7 +839,7 @@ void padthv1widget::randomParams (void)
 		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
-	std::default_random_engine re(::time(NULL));
+	std::default_random_engine re(::time(nullptr));
 
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
@@ -1031,7 +1031,7 @@ void padthv1widget::savePreset ( const QString& sFilename )
 void padthv1widget::clearSample ( int sid )
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	if (sid & 1)
@@ -1045,7 +1045,7 @@ void padthv1widget::clearSample ( int sid )
 void padthv1widget::updateSample ( int sid )
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	if (sid & 1)
@@ -1078,7 +1078,7 @@ void padthv1widget::updateLoadPreset ( const QString& sPreset )
 void padthv1widget::updateSchedNotify ( int stype, int sid )
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 #ifdef CONFIG_DEBUG_0
@@ -1177,7 +1177,7 @@ void padthv1widget::midiInLedTimeout (void)
 void padthv1widget::helpConfigure (void)
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	padthv1widget_config(pSynthUi, this).exec();
@@ -1256,15 +1256,15 @@ void padthv1widget::paramContextMenu ( const QPoint& pos )
 {
 	padthv1widget_param *pParam
 		= qobject_cast<padthv1widget_param *> (sender());
-	if (pParam == NULL)
+	if (pParam == nullptr)
 		return;
 
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == NULL)
+	if (pSynthUi == nullptr)
 		return;
 
 	padthv1_controls *pControls = pSynthUi->controls();
-	if (pControls == NULL)
+	if (pControls == nullptr)
 		return;
 
 	if (!pControls->enabled())

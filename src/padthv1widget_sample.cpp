@@ -51,8 +51,8 @@ inline float safe_value ( float x )
 // Constructor.
 padthv1widget_sample::padthv1widget_sample (
 	QWidget *pParent, Qt::WindowFlags wflags )
-	: QFrame(pParent, wflags), m_pSample(NULL),
-		m_pPolyg(NULL), m_nrects(0), m_pRects(NULL)
+	: QFrame(pParent, wflags), m_pSample(nullptr),
+		m_pPolyg(nullptr), m_nrects(0), m_pRects(nullptr)
 {
 	setMouseTracking(true);
 	QFrame::setMinimumSize(QSize(240, 100));
@@ -74,7 +74,7 @@ padthv1widget_sample::padthv1widget_sample (
 // Destructor.
 padthv1widget_sample::~padthv1widget_sample (void)
 {
-	setSample(NULL);
+	setSample(nullptr);
 }
 
 
@@ -83,12 +83,12 @@ void padthv1widget_sample::setSample ( padthv1_sample *pSample )
 {
 	if (m_pPolyg) {
 		delete m_pPolyg;
-		m_pPolyg = NULL;
+		m_pPolyg = nullptr;
 	}
 
 	if (m_pRects) {
 		delete [] m_pRects;
-		m_pRects = NULL;
+		m_pRects = nullptr;
 		m_nrects = 0;
 	}
 
@@ -242,10 +242,10 @@ int padthv1widget_sample::nodeIndex ( const QPoint& pos ) const
 
 void padthv1widget_sample::dragSelect ( const QPoint& pos )
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
-	if (m_pRects == NULL)
+	if (m_pRects == nullptr)
 		return;
 
 	const int h = height();
@@ -272,10 +272,10 @@ void padthv1widget_sample::dragSelect ( const QPoint& pos )
 
 void padthv1widget_sample::dragNode ( const QPoint& pos )
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
-	if (m_pRects == NULL)
+	if (m_pRects == nullptr)
 		return;
 
 	const int h  = height();
@@ -419,7 +419,7 @@ void padthv1widget_sample::contextMenuEvent ( QContextMenuEvent *pContextMenuEve
 // Harmonic value tool-tip.
 void padthv1widget_sample::showToolTip ( const QPoint& pos, int n )
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const float v = m_pSample->harmonic(n);
@@ -478,7 +478,7 @@ QSize padthv1widget_sample::sizeHint (void) const
 // Wavetable reset options.
 void padthv1widget_sample::resetDefault (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	m_pSample->reset_nh();
@@ -490,7 +490,7 @@ void padthv1widget_sample::resetDefault (void)
 
 void padthv1widget_sample::resetNormal (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -505,7 +505,7 @@ void padthv1widget_sample::resetNormal (void)
 
 void padthv1widget_sample::resetNormalOdd (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -520,7 +520,7 @@ void padthv1widget_sample::resetNormalOdd (void)
 
 void padthv1widget_sample::resetNormalEven (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -536,7 +536,7 @@ void padthv1widget_sample::resetNormalEven (void)
 
 void padthv1widget_sample::resetSquare (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -551,7 +551,7 @@ void padthv1widget_sample::resetSquare (void)
 
 void padthv1widget_sample::resetSquareOdd (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -566,7 +566,7 @@ void padthv1widget_sample::resetSquareOdd (void)
 
 void padthv1widget_sample::resetSquareEven (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	const int nh = m_pSample->nh();
@@ -582,7 +582,7 @@ void padthv1widget_sample::resetSquareEven (void)
 
 void padthv1widget_sample::resetSinc (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 
@@ -601,7 +601,7 @@ void padthv1widget_sample::resetSinc (void)
 // Randomize all current partials.
 void padthv1widget_sample::randomize (void)
 {
-	if (m_pSample == NULL)
+	if (m_pSample == nullptr)
 		return;
 
 	float p = 1.0f;
@@ -618,7 +618,7 @@ void padthv1widget_sample::randomize (void)
 		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
-	std::default_random_engine re(::time(NULL));
+	std::default_random_engine re(::time(nullptr));
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {

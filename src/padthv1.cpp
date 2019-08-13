@@ -157,7 +157,7 @@ class padthv1_port
 {
 public:
 
-	padthv1_port() : m_port(NULL), m_value(0.0f), m_vport(0.0f) {}
+	padthv1_port() : m_port(nullptr), m_value(0.0f), m_vport(0.0f) {}
 
 	virtual ~padthv1_port() {}
 
@@ -948,7 +948,7 @@ protected:
 	void free_voice ( padthv1_voice *pv )
 	{
 		if (m_lfo1.psync == pv)
-			m_lfo1.psync = NULL;
+			m_lfo1.psync = nullptr;
 
 		m_play_list.remove(pv);
 		m_free_list.append(pv);
@@ -1072,23 +1072,23 @@ padthv1_impl::padthv1_impl (
 	}
 
 	for (int note = 0; note < MAX_NOTES; ++note)
-		m_notes[note] = NULL;
+		m_notes[note] = nullptr;
 
 	// local buffers none yet
-	m_sfxs = NULL;
+	m_sfxs = nullptr;
 	m_nsize = 0;
 
 	// flangers none yet
-	m_flanger = NULL;
+	m_flanger = nullptr;
 
 	// phasers none yet
-	m_phaser = NULL;
+	m_phaser = nullptr;
 
 	// delays none yet
-	m_delay = NULL;
+	m_delay = nullptr;
 
 	// compressors none yet
-	m_comp = NULL;
+	m_comp = nullptr;
 
 	// Micro-tuning support, if any...
 	resetTuning();
@@ -1142,25 +1142,25 @@ void padthv1_impl::setChannels ( uint16_t nchannels )
 	// deallocate flangers
 	if (m_flanger) {
 		delete [] m_flanger;
-		m_flanger = NULL;
+		m_flanger = nullptr;
 	}
 
 	// deallocate phasers
 	if (m_phaser) {
 		delete [] m_phaser;
-		m_phaser = NULL;
+		m_phaser = nullptr;
 	}
 
 	// deallocate delays
 	if (m_delay) {
 		delete [] m_delay;
-		m_delay = NULL;
+		m_delay = nullptr;
 	}
 
 	// deallocate compressors
 	if (m_comp) {
 		delete [] m_comp;
-		m_comp = NULL;
+		m_comp = nullptr;
 	}
 }
 
@@ -1226,7 +1226,7 @@ void padthv1_impl::alloc_sfxs ( uint32_t nsize )
 		for (uint16_t k = 0; k < m_nchannels; ++k)
 			delete [] m_sfxs[k];
 		delete [] m_sfxs;
-		m_sfxs = NULL;
+		m_sfxs = nullptr;
 		m_nsize = 0;
 	}
 
@@ -1274,7 +1274,7 @@ void padthv1_impl::setParamPort ( padthv1::ParamIndex index, float *pfParam )
 {
 	static float s_fDummy = 0.0f;
 
-	if (pfParam == NULL)
+	if (pfParam == nullptr)
 		pfParam = &s_fDummy;
 
 	padthv1_port *pParamPort = paramPort(index);
@@ -1311,7 +1311,7 @@ void padthv1_impl::setParamPort ( padthv1::ParamIndex index, float *pfParam )
 
 padthv1_port *padthv1_impl::paramPort ( padthv1::ParamIndex index )
 {
-	padthv1_port *pParamPort = NULL;
+	padthv1_port *pParamPort = nullptr;
 
 	switch (index) {
 	case padthv1::GEN1_SAMPLE1:   pParamPort = &m_gen1.sample1;     break;
@@ -1491,7 +1491,7 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 						m_lfo1.env.note_off_fast(&pv->lfo1_env);
 						m_dca1.env.note_off_fast(&pv->dca1_env);
 						if (++n > 1) { // there shall be only one
-							m_notes[pv->note] = NULL;
+							m_notes[pv->note] = nullptr;
 							pv->note = -1;
 						}
 					}
@@ -1503,7 +1503,7 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				m_dcf1.env.note_off_fast(&pv->dcf1_env);
 				m_lfo1.env.note_off_fast(&pv->lfo1_env);
 				m_dca1.env.note_off_fast(&pv->dca1_env);
-				m_notes[pv->note] = NULL;
+				m_notes[pv->note] = nullptr;
 				pv->note = -1;
 			}
 			// find free voice
@@ -1558,7 +1558,7 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				const float lfo1_pshift
 					= (m_lfo1.psync ? m_lfo1.psync->lfo1.pshift() : 0.0f);
 				pv->lfo1_sample = pv->lfo1.start(lfo1_pshift);
-				if (*m_lfo1.sync > 0.0f && m_lfo1.psync == NULL)
+				if (*m_lfo1.sync > 0.0f && m_lfo1.psync == nullptr)
 					m_lfo1.psync = pv;
 				// glides (portamentoa)
 				const float gen1_frames1
@@ -1594,7 +1594,7 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 					m_dcf1.env.note_off(&pv->dcf1_env);
 					m_lfo1.env.note_off(&pv->lfo1_env);
 				}
-				m_notes[pv->note] = NULL;
+				m_notes[pv->note] = nullptr;
 				pv->note = -1;
 				// mono legato?
 				if (*m_def.mono > 0.0f) {
@@ -1715,14 +1715,14 @@ void padthv1_impl::allNotesOff (void)
 	padthv1_voice *pv = m_play_list.next();
 	while (pv) {
 		if (pv->note >= 0)
-			m_notes[pv->note] = NULL;
+			m_notes[pv->note] = nullptr;
 		free_voice(pv);
 		pv = m_play_list.next();
 	}
 
 	gen1_last1 = gen1_last2 = 0.0f;
 
-	m_lfo1.psync = NULL;
+	m_lfo1.psync = nullptr;
 
 	m_direct_note = 0;
 }
@@ -1740,7 +1740,7 @@ void padthv1_impl::allSustainOff (void)
 				m_dca1.env.note_off(&pv->dca1_env);
 				m_dcf1.env.note_off(&pv->dcf1_env);
 				m_lfo1.env.note_off(&pv->lfo1_env);
-				m_notes[pv->note] = NULL;
+				m_notes[pv->note] = nullptr;
 				pv->note = -1;
 			}
 		}
@@ -1906,19 +1906,19 @@ void padthv1_impl::reset (void)
 		m_out1.width.value_ptr());
 
 	// flangers
-	if (m_flanger == NULL)
+	if (m_flanger == nullptr)
 		m_flanger = new padthv1_fx_flanger [m_nchannels];
 
 	// phasers
-	if (m_phaser == NULL)
+	if (m_phaser == nullptr)
 		m_phaser = new padthv1_fx_phaser [m_nchannels];
 
 	// delays
-	if (m_delay == NULL)
+	if (m_delay == nullptr)
 		m_delay = new padthv1_fx_delay [m_nchannels];
 
 	// compressors
-	if (m_comp == NULL)
+	if (m_comp == nullptr)
 		m_comp = new padthv1_fx_comp [m_nchannels];
 
 	// reverbs
@@ -2291,7 +2291,7 @@ padthv1_sample *padthv1::sample ( int sid ) const
 	if (sid == 2)
 		return &(m_pImpl->gen1_sample2);
 	else
-		return NULL;
+		return nullptr;
 }
 
 

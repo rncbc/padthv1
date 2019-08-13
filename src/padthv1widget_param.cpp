@@ -111,7 +111,7 @@ public:
 		{ if (++g_iRefCount == 1) g_pStyle = new padthv1widget_param_style(); }
 
 	static void releaseRef ()
-		{ if (--g_iRefCount == 0) { delete g_pStyle; g_pStyle = NULL; } }
+		{ if (--g_iRefCount == 0) { delete g_pStyle; g_pStyle = nullptr; } }
 
 	static padthv1widget_param_style *getRef ()
 		{ return g_pStyle; }
@@ -125,7 +125,7 @@ private:
 };
 
 
-padthv1widget_param_style *padthv1widget_param_style::g_pStyle = NULL;
+padthv1widget_param_style *padthv1widget_param_style::g_pStyle = nullptr;
 unsigned int padthv1widget_param_style::g_iRefCount = 0;
 
 

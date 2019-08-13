@@ -32,7 +32,7 @@
 //
 
 // Singleton instance accessor (static).
-padthv1_config *padthv1_config::g_pSettings = NULL;
+padthv1_config *padthv1_config::g_pSettings = nullptr;
 
 padthv1_config *padthv1_config::getInstance (void)
 {
@@ -55,7 +55,7 @@ padthv1_config::~padthv1_config (void)
 {
 	save();
 
-	g_pSettings = NULL;
+	g_pSettings = nullptr;
 }
 
 

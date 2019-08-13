@@ -1,7 +1,7 @@
 // padthv1widget_jack.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2018, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@
 padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	: padthv1widget(), m_pSynth(pSynth)
 	#ifdef CONFIG_NSM
-		, m_pNsmClient(NULL)
+		, m_pNsmClient(nullptr)
 	#endif
 {
 	// Special style paths...

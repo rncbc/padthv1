@@ -219,7 +219,7 @@ bool padthv1_param::paramFloat ( padthv1::ParamIndex index )
 bool padthv1_param::loadPreset (
 	padthv1 *pSynth, const QString& sFilename )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return false;
 
 	QFileInfo fi(sFilename);
@@ -316,7 +316,7 @@ bool padthv1_param::loadPreset (
 bool padthv1_param::savePreset (
 	padthv1 *pSynth, const QString& sFilename, bool bSymLink )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return false;
 
 	pSynth->stabilize();
@@ -371,7 +371,7 @@ bool padthv1_param::savePreset (
 void padthv1_param::loadSamples (
 	padthv1 *pSynth, const QDomElement& eSamples )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return;
 
 	QHash<int, padthv1_sample *> list;
@@ -386,8 +386,8 @@ void padthv1_param::loadSamples (
 			continue;
 		if (eSample.tagName() == "sample") {
 			const int index = eSample.attribute("index").toInt();
-			padthv1_sample *sample = list.value(index, NULL);
-			if (sample == NULL)
+			padthv1_sample *sample = list.value(index, nullptr);
+			if (sample == nullptr)
 				continue;
 			sample->reset_nh(eSample.attribute("nh").toUInt());
 			for (QDomNode nChild = eSample.firstChild();
@@ -419,7 +419,7 @@ void padthv1_param::loadSamples (
 void padthv1_param::saveSamples (
 	padthv1 *pSynth, QDomDocument& doc, QDomElement& eSamples, bool /*bSymLink*/ )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return;
 
 	QHash<int, padthv1_sample *> list;
@@ -430,7 +430,7 @@ void padthv1_param::saveSamples (
 	const QHash<int, padthv1_sample *>::ConstIterator& iter_end = list.constEnd();
 	for ( ; iter != iter_end; ++iter) {
 		padthv1_sample *sample = iter.value();
-		if (sample == NULL)
+		if (sample == nullptr)
 			continue;
 		const int index = iter.key();
 		QDomElement eSample = doc.createElement("sample");
@@ -454,7 +454,7 @@ void padthv1_param::saveSamples (
 void padthv1_param::loadTuning (
 	padthv1 *pSynth, const QDomElement& eTuning )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return;
 
 	pSynth->setTuningEnabled(eTuning.attribute("enabled").toInt() > 0);
@@ -501,7 +501,7 @@ void padthv1_param::loadTuning (
 void padthv1_param::saveTuning (
 	padthv1 *pSynth, QDomDocument& doc, QDomElement& eTuning, bool bSymLink )
 {
-	if (pSynth == NULL)
+	if (pSynth == nullptr)
 		return;
 
 	eTuning.setAttribute("enabled", int(pSynth->isTuningEnabled()));

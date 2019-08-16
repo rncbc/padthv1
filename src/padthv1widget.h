@@ -189,7 +189,7 @@ class padthv1widget_sched : public QObject
 public:
 
 	// ctor.
-	padthv1widget_sched(padthv1 *pSampl, QObject *pParent = NULL)
+	padthv1widget_sched(padthv1 *pSampl, QObject *pParent = nullptr)
 		: QObject(pParent), m_notifier(pSampl, this) {}
 
 signals:

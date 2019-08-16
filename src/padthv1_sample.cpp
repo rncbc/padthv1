@@ -1,8 +1,7 @@
-//-----------------------------------------------------------------------------
 // padthv1_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2017, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -95,7 +94,7 @@ private:
 // ctor.
 padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0), m_sid(sid),
-		m_nh_max(0), m_ah(NULL), m_nsize(nsize), m_srate(44100.0f),
+		m_nh_max(0), m_ah(nullptr), m_nsize(nsize), m_srate(44100.0f),
 		m_phase0(0.0f), m_apod(Gauss), m_srand(0)
 {
 	const uint32_t nsize2 = (m_nsize >> 1);

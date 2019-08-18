@@ -618,14 +618,12 @@ void padthv1widget_sample::randomize (void)
 		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
 
-	const float q = 0.5f * p;
 	std::default_random_engine re(::time(nullptr));
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
-		float v = m_pSample->harmonic(n);
-		std::normal_distribution<float> nd(v, q);
-		v = nd(re);
+		std::normal_distribution<float> nd;
+		float v = m_pSample->harmonic(n) + p * nd(re);
 		if (v < 0.0f)
 			v = 0.0f;
 		else

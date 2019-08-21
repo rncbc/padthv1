@@ -623,7 +623,7 @@ void padthv1widget_sample::randomize (void)
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
 		std::normal_distribution<float> nd;
-		float v = m_pSample->harmonic(n) + 0.5f * p * nd(re);
+		float v = m_pSample->harmonic(n) + 0.25f * p * nd(re);
 		if (v < 0.0f)
 			v = 0.0f;
 		else

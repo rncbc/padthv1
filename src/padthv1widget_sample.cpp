@@ -611,7 +611,7 @@ void padthv1widget_sample::randomize (void)
 		p = 0.01f * pConfig->fRandomizePercent;
 
 	if (QMessageBox::warning(this,
-		tr("Warning") + " - " PADTHV1_TITLE,
+		tr("Warning"),
 		tr("About to randomize current partials magnitudes:\n\n"
 		"-/+ %2%.\n\n"
 		"Are you sure?").arg(100.0f * p),

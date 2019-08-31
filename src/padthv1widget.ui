@@ -22,9 +22,6 @@
  </comment>
  <class>padthv1widget</class>
  <widget class="QWidget" name="padthv1widget">
-  <property name="windowTitle">
-   <string>padthv1</string>
-  </property>
   <property name="windowIcon" >
    <iconset resource="padthv1.qrc" >:/images/padthv1.png</iconset>
   </property>

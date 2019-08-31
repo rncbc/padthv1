@@ -704,8 +704,8 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 	#endif
 		QApplication *pApp = new QApplication(argc, argv);
 	#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-		pApp->setApplicationDisplayName(
-			PADTHV1_TITLE " - " + QObject::tr(PADTHV1_SUBTITLE));
+		pApp->setApplicationDisplayName(PADTHV1_TITLE);
+		//	PADTHV1_TITLE " - " + QObject::tr(PADTHV1_SUBTITLE));
 	#endif
 		m_pApp = pApp;
 	} else {

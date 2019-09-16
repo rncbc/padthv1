@@ -22,7 +22,6 @@ Architecture: any
 Depends: padthv1-common (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends},
-Provides: padthv1_lv2, padthv1_lv2ui
 Description: An old-school polyphonic additive synthesizer  - LV2 plugin
   An old-school all-digital polyphonic additive synthesizer with stereo fx.
   .
@@ -33,7 +32,6 @@ Architecture: any
 Depends: padthv1-common (= ${binary:Version}),
  ${misc:Depends},
  ${shlibs:Depends},
-Provides: padthv1_core, padthv1_ui
 Description: An old-school polyphonic additive synthesizer - Common files
   An old-school all-digital polyphonic additive synthesizer with stereo fx.
   .

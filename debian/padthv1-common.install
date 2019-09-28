@@ -1,6 +1,0 @@
-debian/tmp/usr/lib*/libpadthv1.so*
-debian/tmp/usr/lib*/libpadthv1_ui.so*
-debian/tmp/usr/share/mime/packages/padthv1.xml
-debian/tmp/usr/share/applications/padthv1.desktop
-debian/tmp/usr/share/icons/hicolor/32x32/mimetypes/application-x-padthv1*.png
-debian/tmp/usr/share/icons/hicolor/scalable/mimetypes/application-x-padthv1*.svg

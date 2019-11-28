@@ -365,6 +365,42 @@ uint32_t padthv1_lv2::urid_map ( const char *uri ) const
 
 
 //-------------------------------------------------------------------------
+// padthv1_lv2 - Instantiation and cleanup.
+//
+
+QApplication *padthv1_lv2::g_qapp_instance = nullptr;
+unsigned int  padthv1_lv2::g_qapp_refcount = 0;
+
+
+void padthv1_lv2::qapp_instantiate (void)
+{
+	if (qApp == nullptr && g_qapp_instance == nullptr) {
+		static int s_argc = 1;
+		static const char *s_argv[] = { __func__, nullptr };
+		g_qapp_instance = new QApplication(s_argc, (char **) s_argv);
+	}
+
+	if (g_qapp_instance)
+		g_qapp_refcount++;
+}
+
+
+void padthv1_lv2::qapp_cleanup (void)
+{
+	if (g_qapp_instance && --g_qapp_refcount == 0) {
+		delete g_qapp_instance;
+		g_qapp_instance = nullptr;
+	}
+}
+
+
+QApplication *padthv1_lv2::qapp_instance (void)
+{
+	return g_qapp_instance;
+}
+
+
+//-------------------------------------------------------------------------
 // padthv1_lv2 - LV2 State interface.
 //
 
@@ -662,21 +698,11 @@ bool padthv1_lv2::patch_put ( uint32_t ndelta, uint32_t type )
 // padthv1_lv2 - LV2 desc.
 //
 
-static QApplication *padthv1_lv2_qapp_instance = nullptr;
-static unsigned int  padthv1_lv2_qapp_refcount = 0;
-
 static LV2_Handle padthv1_lv2_instantiate (
 	const LV2_Descriptor *, double sample_rate, const char *,
 	const LV2_Feature *const *host_features )
 {
-	if (qApp == nullptr && padthv1_lv2_qapp_instance == nullptr) {
-		static int s_argc = 1;
-		static const char *s_argv[] = { __func__, nullptr };
-		padthv1_lv2_qapp_instance = new QApplication(s_argc, (char **) s_argv);
-	}
-
-	if (padthv1_lv2_qapp_instance)
-		padthv1_lv2_qapp_refcount++;
+	padthv1_lv2::qapp_instantiate();
 
 	return new padthv1_lv2(sample_rate, host_features);
 }
@@ -721,10 +747,7 @@ static void padthv1_lv2_cleanup ( LV2_Handle instance )
 	if (pPlugin)
 		delete pPlugin;
 
-	if (padthv1_lv2_qapp_instance && --padthv1_lv2_qapp_refcount == 0) {
-		delete padthv1_lv2_qapp_instance;
-		padthv1_lv2_qapp_instance = nullptr;
-	}
+	padthv1_lv2::qapp_cleanup();
 }
 
 

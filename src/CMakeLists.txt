@@ -55,6 +55,7 @@ set (HEADERS_UI
   padthv1widget_programs.h
   padthv1widget_controls.h
   padthv1widget_control.h
+  padthv1widget_palette.h
   padthv1widget_config.h
 )
 
@@ -72,6 +73,7 @@ set (SOURCES_UI
   padthv1widget_programs.cpp
   padthv1widget_controls.cpp
   padthv1widget_control.cpp
+  padthv1widget_palette.cpp
   padthv1widget_config.cpp
 )
 

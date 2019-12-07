@@ -21,6 +21,8 @@
 
 #include "padthv1widget_jack.h"
 
+#include "padthv1widget_palette.h"
+
 #include "padthv1_jack.h"
 
 #ifdef CONFIG_NSM
@@ -65,10 +67,20 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	if (QDir(CONFIG_PLUGINSDIR).exists())
 		QApplication::addLibraryPath(CONFIG_PLUGINSDIR);
 
-	// Custom style theme...
+	// Custom color/style theme...
 	padthv1_config *pConfig = padthv1_config::getInstance();
-	if (pConfig && !pConfig->sCustomStyleTheme.isEmpty())
-		QApplication::setStyle(QStyleFactory::create(pConfig->sCustomStyleTheme));
+	if (pConfig) {
+		if (!pConfig->sCustomColorTheme.isEmpty()) {
+			QPalette pal;
+			if (padthv1widget_palette::namedPalette(
+					pConfig, pConfig->sCustomColorTheme, pal))
+				QApplication::setPalette(pal);
+		}
+		if (!pConfig->sCustomStyleTheme.isEmpty()) {
+			QApplication::setStyle(
+				QStyleFactory::create(pConfig->sCustomStyleTheme));
+		}
+	}
 
 	// Initialize (user) interface stuff...
 	m_pSynthUi = new padthv1_ui(m_pSynth, false);

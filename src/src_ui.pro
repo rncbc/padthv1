@@ -28,6 +28,7 @@ HEADERS = \
 	padthv1widget_programs.h \
 	padthv1widget_controls.h \
 	padthv1widget_control.h \
+	padthv1widget_palette.h \
 	padthv1widget_config.h
 
 SOURCES = \
@@ -44,11 +45,13 @@ SOURCES = \
 	padthv1widget_programs.cpp \
 	padthv1widget_controls.cpp \
 	padthv1widget_control.cpp \
+	padthv1widget_palette.cpp \
 	padthv1widget_config.cpp
 
 FORMS = \
 	padthv1widget.ui \
 	padthv1widget_control.ui \
+	padthv1widget_palette.ui \
 	padthv1widget_config.ui
 
 RESOURCES += padthv1.qrc

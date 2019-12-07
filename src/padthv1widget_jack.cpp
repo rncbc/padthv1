@@ -67,7 +67,7 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	if (QDir(CONFIG_PLUGINSDIR).exists())
 		QApplication::addLibraryPath(CONFIG_PLUGINSDIR);
 
-	// Custom color/style theme...
+	// Custom color/style themes...
 	padthv1_config *pConfig = padthv1_config::getInstance();
 	if (pConfig) {
 		if (!pConfig->sCustomColorTheme.isEmpty()) {

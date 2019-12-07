@@ -82,16 +82,8 @@ padthv1widget_config::padthv1widget_config (
 		m_ui.KnobEditModeComboBox->setCurrentIndex(pConfig->iKnobEditMode);
 		m_ui.RandomizePercentSpinBox->setValue(pConfig->fRandomizePercent);
 		// Custom display options (only for no-plugin forms)...
-		if (bPlugin) {
-			m_ui.CustomColorThemeTextLabel->setEnabled(false);
-			m_ui.CustomColorThemeComboBox->setEnabled(false);
-			m_ui.CustomColorThemeToolButton->setEnabled(false);
-			m_ui.CustomStyleThemeTextLabel->setEnabled(false);
-			m_ui.CustomStyleThemeComboBox->setEnabled(false);
-		} else {
-			resetCustomColorThemes(pConfig->sCustomColorTheme);
-			resetCustomStyleThemes(pConfig->sCustomStyleTheme);
-		}
+		resetCustomColorThemes(pConfig->sCustomColorTheme);
+		resetCustomStyleThemes(pConfig->sCustomStyleTheme);
 		// Load controllers database...
 		padthv1_controls *pControls = m_pSynthUi->controls();
 		if (pControls) {

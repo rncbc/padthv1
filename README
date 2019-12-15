@@ -6,7 +6,7 @@ padthv1 - an old-school polyphonic additive synthesizer
   based on the PADsynth algorithm, by Paul Nasca, as a special
   variant of additive synthesis.
 
-  cf. http://zynaddsubfx.sourceforge.net/doc/PADsynth/PADsynth.htm
+  cf. https://zynaddsubfx.sourceforge.net/doc/PADsynth/PADsynth.htm
 
 features:
 
@@ -23,23 +23,23 @@ license:
 
 website:
 
-  http://padthv1.sourceforge.net
   https://padthv1.sourceforge.io
+  http://padthv1.sourceforge.net
 
 project page:
 
-  http://sourceforge.net/projects/padthv1
+  https://sourceforge.net/projects/padthv1
 
 git repos:
 
-  http://git.code.sf.net/p/padthv1/code
+  https://git.code.sf.net/p/padthv1/code
   https://github.com/rncbc/padthv1.git
   https://gitlab.com/rncbc/padthv1.git
   https://bitbucket.org/rncbc/padthv1.git
 
 weblog:
 
-  http://www.rncbc.org
+  https://www.rncbc.org
 
 
 requirements:
@@ -48,7 +48,7 @@ requirements:
 
   - Qt framework, C++ class library and tools for
     cross-platform application and UI development
-    http://qt.io/
+    https://qt.io/
 
   - FFTW3, a C library for computing the discrete
     Fourier transform (DFT) in one or more dimensions
@@ -57,10 +57,10 @@ requirements:
   optional (opted-in at build time),
 
   - JACK Audio Connection Kit
-    http://jackaudio.org/
+    https://jackaudio.org/
 
   - ALSA, Advanced Linux Sound Architecture
-    http://www.alsa-project.org/
+    https://www.alsa-project.org/
 
   - LV2, Audio Plugin Standard, the extensible successor of LADSPA
     http://lv2plug.in/
@@ -98,4 +98,4 @@ cheers && enjoy.
 --
 rncbc aka. Rui Nuno Capela
 rncbc at rncbc dot org
-http://www.rncbc.org
+https://www.rncbc.org

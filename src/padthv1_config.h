@@ -1,7 +1,7 @@
 // padthv1_config.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@
 
 #define PADTHV1_SUBTITLE    "an old-school polyphonic additive synthesizer."
 #define PADTHV1_WEBSITE     "https://padthv1.sourceforge.io"
-#define PADTHV1_COPYRIGHT   "Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved."
+#define PADTHV1_COPYRIGHT   "Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved."
 
 #define PADTHV1_DOMAIN      "rncbc.org"
 

@@ -35,7 +35,7 @@ class padthv1widget_env : public QFrame
 public:
 
 	// Constructor.
-	padthv1widget_env(QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+	padthv1widget_env(QWidget *pParent = nullptr);
 	// Destructor.
 	~padthv1widget_env();
 

@@ -1,7 +1,7 @@
 // padthv1widget_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -49,9 +49,8 @@ inline float safe_value ( float x )
 // padthv1widget_sample -- Custom widget
 
 // Constructor.
-padthv1widget_sample::padthv1widget_sample (
-	QWidget *pParent, Qt::WindowFlags wflags )
-	: QFrame(pParent, wflags), m_pSample(nullptr),
+padthv1widget_sample::padthv1widget_sample ( QWidget *pParent )
+	: QFrame(pParent), m_pSample(nullptr),
 		m_pPolyg(nullptr), m_nrects(0), m_pRects(nullptr)
 {
 	setMouseTracking(true);

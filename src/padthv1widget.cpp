@@ -52,8 +52,8 @@
 //
 
 // Constructor.
-padthv1widget::padthv1widget ( QWidget *pParent, Qt::WindowFlags wflags )
-	: QWidget(pParent, wflags), p_ui(new Ui::padthv1widget), m_ui(*p_ui)
+padthv1widget::padthv1widget ( QWidget *pParent )
+	: QWidget(pParent), p_ui(new Ui::padthv1widget), m_ui(*p_ui)
 {
 	Q_INIT_RESOURCE(padthv1);
 

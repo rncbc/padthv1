@@ -39,9 +39,8 @@ inline float safe_value ( float x )
 // padthv1widget_env -- Custom widget
 
 // Constructor.
-padthv1widget_env::padthv1widget_env (
-	QWidget *pParent, Qt::WindowFlags wflags )
-	: QFrame(pParent, wflags),
+padthv1widget_env::padthv1widget_env ( QWidget *pParent )
+	: QFrame(pParent),
 		m_fAttack(0.0f), m_fDecay(0.0f), m_fSustain(0.0f), m_fRelease(0.0f),
 		m_poly(7), m_iDragNode(-1)
 {

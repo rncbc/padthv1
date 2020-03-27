@@ -50,7 +50,7 @@ public:
 	// Pseudo-constructor.
 	static void showInstance(
 		padthv1_controls *pControls, padthv1::ParamIndex index,
-		const QString& sTitle, QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+		const QString& sTitle, QWidget *pParent = nullptr);
 
 	// Control accessors.
 	void setControls(padthv1_controls *pControls, padthv1::ParamIndex index);
@@ -79,7 +79,7 @@ protected slots:
 protected:
 
 	// Constructor.
-	padthv1widget_control(QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+	padthv1widget_control(QWidget *pParent = nullptr);
 
 	// Destructor.
 	~padthv1widget_control();

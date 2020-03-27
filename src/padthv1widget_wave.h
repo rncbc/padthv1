@@ -39,7 +39,7 @@ class padthv1widget_wave : public QFrame
 public:
 
 	// Constructor.
-	padthv1widget_wave(QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+	padthv1widget_wave(QWidget *pParent = nullptr);
 	// Destructor.
 	~padthv1widget_wave();
 

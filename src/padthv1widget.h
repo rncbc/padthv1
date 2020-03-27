@@ -48,7 +48,7 @@ class padthv1widget : public QWidget
 public:
 
 	// Constructor
-	padthv1widget(QWidget *pParent = 0, Qt::WindowFlags wflags = 0);
+	padthv1widget(QWidget *pParent = nullptr);
 
 	// Destructor.
 	virtual ~padthv1widget();

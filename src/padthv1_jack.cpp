@@ -614,6 +614,18 @@ void padthv1_jack::updatePreset ( bool /*bDirty*/ )
 }
 
 
+void padthv1_jack::updateParam ( padthv1::ParamIndex /*index*/ )
+{
+	// nothing to do here...
+}
+
+
+void padthv1_jack::updateParams (void)
+{
+	// nothing to do here...
+}
+
+
 void padthv1_jack::updateTuning (void)
 {
 	padthv1::resetTuning();

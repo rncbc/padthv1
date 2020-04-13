@@ -1,7 +1,7 @@
 // padthv1_lv2.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -53,6 +53,10 @@
 #define LV2_STATE__StateChanged LV2_STATE_PREFIX "StateChanged"
 #endif
 
+#ifndef LV2_ATOM__portEvent
+#define LV2_ATOM__portEvent LV2_ATOM_PREFIX "portEvent"
+#endif
+
 #include <stdlib.h>
 #include <math.h>
 
@@ -67,6 +71,10 @@
 // atom-like message used internally with worker/schedule
 typedef struct {
 	LV2_Atom atom;
+	union {
+		uint32_t    key;
+		const char *path;	// not used
+	} data;
 } padthv1_lv2_worker_message;
 
 
@@ -113,6 +121,8 @@ padthv1_lv2::padthv1_lv2 (
 					m_urid_map->handle, LV2_ATOM__Bool);
 				m_urids.atom_Path = m_urid_map->map(
 					m_urid_map->handle, LV2_ATOM__Path);
+				m_urids.atom_portEvent = m_urid_map->map(
+					m_urid_map->handle, LV2_ATOM__portEvent);
 				m_urids.time_Position = m_urid_map->map(
 					m_urid_map->handle, LV2_TIME__Position);
 				m_urids.time_beatsPerMinute = m_urid_map->map(
@@ -577,6 +587,31 @@ void padthv1_lv2::updatePreset ( bool /*bDirty*/ )
 }
 
 
+void padthv1_lv2::updateParam ( padthv1::ParamIndex index )
+{
+	if (m_schedule) {
+		padthv1_lv2_worker_message mesg;
+		mesg.atom.type = m_urids.atom_portEvent;
+		mesg.atom.size = sizeof(mesg.data.key);
+		mesg.data.key  = uint32_t(index);
+		m_schedule->schedule_work(
+			m_schedule->handle, sizeof(mesg), &mesg);
+	}
+}
+
+
+void padthv1_lv2::updateParams (void)
+{
+	if (m_schedule) {
+		padthv1_lv2_worker_message mesg;
+		mesg.atom.type = m_urids.atom_portEvent;
+		mesg.atom.size = 0; // nothing else matters.
+		m_schedule->schedule_work(
+			m_schedule->handle, sizeof(mesg), &mesg);
+	}
+}
+
+
 void padthv1_lv2::updateTuning (void)
 {
 	if (m_schedule) {
@@ -597,6 +632,9 @@ bool padthv1_lv2::worker_work ( const void *data, uint32_t size )
 	const padthv1_lv2_worker_message *mesg
 		= (const padthv1_lv2_worker_message *) data;
 
+	if (mesg->atom.type == m_urids.atom_portEvent)
+		return true;
+	else
 	if (mesg->atom.type == m_urids.state_StateChanged)
 		return true;
 	else
@@ -617,6 +655,13 @@ bool padthv1_lv2::worker_response ( const void *data, uint32_t size )
 	const padthv1_lv2_worker_message *mesg
 		= (const padthv1_lv2_worker_message *) data;
 
+	if (mesg->atom.type == m_urids.atom_portEvent) {
+		if (mesg->atom.size > 0)
+			return port_event(padthv1::ParamIndex(mesg->data.key));
+		else
+			return port_events();
+	}
+	else
 	if (mesg->atom.type == m_urids.state_StateChanged)
 		return state_changed();
 
@@ -692,6 +737,41 @@ bool padthv1_lv2::patch_put ( uint32_t ndelta, uint32_t type )
 }
 
 #endif	// CONFIG_LV2_PATCH
+
+
+bool padthv1_lv2::port_event ( padthv1::ParamIndex index )
+{
+	lv2_atom_forge_frame_time(&m_forge, m_ndelta);
+
+	LV2_Atom_Forge_Frame frame;
+	lv2_atom_forge_object(&m_forge, &frame, 0, m_urids.atom_portEvent);
+
+	lv2_atom_forge_key(&m_forge, uint32_t(ParamBase + index));
+	lv2_atom_forge_float(&m_forge, padthv1::paramValue(index));
+
+	lv2_atom_forge_pop(&m_forge, &frame);
+
+	return true;
+}
+
+
+bool padthv1_lv2::port_events (void)
+{
+	lv2_atom_forge_frame_time(&m_forge, m_ndelta);
+
+	LV2_Atom_Forge_Frame frame;
+	lv2_atom_forge_object(&m_forge, &frame, 0, m_urids.atom_portEvent);
+
+	for (int i = 0; i < padthv1::NUM_PARAMS; ++i) {
+		padthv1::ParamIndex index = padthv1::ParamIndex(i);
+		lv2_atom_forge_key(&m_forge, uint32_t(ParamBase + index));
+		lv2_atom_forge_float(&m_forge, padthv1::paramValue(index));
+	}
+
+	lv2_atom_forge_pop(&m_forge, &frame);
+
+	return true;
+}
 
 
 //-------------------------------------------------------------------------

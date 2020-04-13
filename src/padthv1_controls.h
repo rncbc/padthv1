@@ -1,7 +1,7 @@
 // padthv1_controls.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -26,6 +26,8 @@
 #include "padthv1_sched.h"
 
 #include <QMap>
+
+#include <math.h>
 
 
 //-------------------------------------------------------------------------
@@ -179,17 +181,29 @@ protected:
 
 		// ctor.
 		SchedOut (padthv1 *pSynth)
-			: padthv1_sched(pSynth, Controls) {}
+			: padthv1_sched(pSynth, Controls), m_value(0.0f) {}
 
-		void schedule_event(padthv1::ParamIndex index, float fValue)
+		void schedule_event(padthv1::ParamIndex index, float value)
 		{
-			instance()->setParamValue(index, fValue);
-
-			schedule(int(index));
+			if (::fabsf(value - m_value) > 0.001f) {
+				m_value = value;
+				schedule(int(index));
+			}
 		}
 
 		// process (virtual stub).
-		void process(int) {}
+		void process(int sid)
+		{
+			padthv1 *pSynth = instance();
+			padthv1::ParamIndex index = padthv1::ParamIndex(sid);
+			pSynth->setParamValue(index, m_value);
+			pSynth->updateParam(index);
+		}
+
+	private:
+
+		// instance variables
+		float m_value;
 	};
 
 private:

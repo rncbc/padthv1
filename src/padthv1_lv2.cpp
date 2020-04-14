@@ -771,7 +771,7 @@ bool padthv1_lv2::port_events (void)
 	LV2_Atom_Forge_Frame tup_frame;
 	lv2_atom_forge_tuple(&m_forge, &tup_frame);
 
-	for (int i = 0; i < padthv1::NUM_PARAMS; ++i) {
+	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		padthv1::ParamIndex index = padthv1::ParamIndex(i);
 		lv2_atom_forge_int(&m_forge, int32_t(ParamBase + index));
 		lv2_atom_forge_float(&m_forge, padthv1::paramValue(index));

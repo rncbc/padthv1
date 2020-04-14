@@ -743,13 +743,18 @@ bool padthv1_lv2::port_event ( padthv1::ParamIndex index )
 {
 	lv2_atom_forge_frame_time(&m_forge, m_ndelta);
 
-	LV2_Atom_Forge_Frame frame;
-	lv2_atom_forge_object(&m_forge, &frame, 0, m_urids.atom_portEvent);
+	LV2_Atom_Forge_Frame obj_frame;
+	lv2_atom_forge_object(&m_forge, &obj_frame, 0, m_urids.atom_portEvent);
+	lv2_atom_forge_key(&m_forge, m_forge.Tuple);
 
-	lv2_atom_forge_key(&m_forge, uint32_t(ParamBase + index));
+	LV2_Atom_Forge_Frame tup_frame;
+	lv2_atom_forge_tuple(&m_forge, &tup_frame);
+
+	lv2_atom_forge_int(&m_forge, int32_t(ParamBase + index));
 	lv2_atom_forge_float(&m_forge, padthv1::paramValue(index));
 
-	lv2_atom_forge_pop(&m_forge, &frame);
+	lv2_atom_forge_pop(&m_forge, &tup_frame);
+	lv2_atom_forge_pop(&m_forge, &obj_frame);
 
 	return true;
 }
@@ -759,16 +764,21 @@ bool padthv1_lv2::port_events (void)
 {
 	lv2_atom_forge_frame_time(&m_forge, m_ndelta);
 
-	LV2_Atom_Forge_Frame frame;
-	lv2_atom_forge_object(&m_forge, &frame, 0, m_urids.atom_portEvent);
+	LV2_Atom_Forge_Frame obj_frame;
+	lv2_atom_forge_object(&m_forge, &obj_frame, 0, m_urids.atom_portEvent);
+	lv2_atom_forge_key(&m_forge, m_forge.Tuple);
+
+	LV2_Atom_Forge_Frame tup_frame;
+	lv2_atom_forge_tuple(&m_forge, &tup_frame);
 
 	for (int i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		padthv1::ParamIndex index = padthv1::ParamIndex(i);
-		lv2_atom_forge_key(&m_forge, uint32_t(ParamBase + index));
+		lv2_atom_forge_int(&m_forge, int32_t(ParamBase + index));
 		lv2_atom_forge_float(&m_forge, padthv1::paramValue(index));
 	}
 
-	lv2_atom_forge_pop(&m_forge, &frame);
+	lv2_atom_forge_pop(&m_forge, &tup_frame);
+	lv2_atom_forge_pop(&m_forge, &obj_frame);
 
 	return true;
 }

@@ -19,7 +19,7 @@
  <launchable type="desktop-id">padthv1.desktop</launchable>
  <provides>
 ​  <binary>padthv1_jack</binary>
-​ </provides>
+ </provides>
  <screenshots>
   <screenshot type="default">
    <image>https://padthv1.sourceforge.io/image/padthv1-screenshot9.png</image>

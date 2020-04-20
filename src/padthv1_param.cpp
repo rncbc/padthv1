@@ -494,7 +494,7 @@ void padthv1_param::loadTuning (
 	}
 
 	// Consolidate tuning state...
-	pSynth->resetTuning();
+	pSynth->updateTuning();
 }
 
 

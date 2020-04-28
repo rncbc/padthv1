@@ -394,7 +394,7 @@ void padthv1_lv2::qapp_instantiate (void)
 {
 	if (qApp == nullptr && g_qapp_instance == nullptr) {
 		static int s_argc = 1;
-		static const char *s_argv[] = { __func__, nullptr };
+		static const char *s_argv[] = { PADTHV1_TITLE, nullptr };
 		g_qapp_instance = new QApplication(s_argc, (char **) s_argv);
 	}
 

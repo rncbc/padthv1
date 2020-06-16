@@ -95,7 +95,7 @@ padthv1widget::padthv1widget ( QWidget *pParent )
 	// Note names.
 	QStringList notes;
 	for (int note = 0; note < 128; ++note)
-		notes << padthv1_ui::noteName(note).remove(QRegExp("/\\S+"));
+		notes << padthv1_ui::noteName(note).remove(QRegularExpression("/\\S+"));
 
 	m_ui.Gen1Sample1Knob->setScale(1000.0f);
 	m_ui.Gen1Sample1Knob->insertItems(0, notes);

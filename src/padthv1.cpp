@@ -2084,8 +2084,8 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 				// filters
 
 				if (dcf1_enabled) {
-					const float env1 = 0.5f * (1.0f + vel1
-						* *m_dcf1.envelope * pv->dcf1_env.tick());
+					const float env1 = 0.5f
+						* (1.0f + *m_dcf1.envelope * pv->dcf1_env.tick());
 					const float cutoff1 = padthv1_sigmoid_1(*m_dcf1.cutoff
 						* env1 * (1.0f + *m_lfo1.cutoff * lfo1));
 					const float reso1 = padthv1_sigmoid_1(*m_dcf1.reso

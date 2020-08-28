@@ -1051,7 +1051,7 @@ padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate )
 	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
 		m_controls(pSampl), m_programs(pSampl),
-		m_midi_in(pSampl), m_bpm(180.0f), m_running(false)
+		m_midi_in(pSampl), m_bpm(180.0f), m_nvoices(0), m_running(false)
 {
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;

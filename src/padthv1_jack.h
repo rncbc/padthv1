@@ -43,13 +43,13 @@ class padthv1_jack : public padthv1
 {
 public:
 
-	padthv1_jack();
+	padthv1_jack(const char *client_name);
 
 	~padthv1_jack();
 
 	jack_client_t *client() const;
 
-	void open(const char *client_id);
+	void open(const char *client_name);
 	void close();
 
 	void activate();
@@ -181,6 +181,7 @@ private:
 	QCoreApplication *m_pApp;
 	bool m_bGui;
 
+	QString m_sClientName;
 	QStringList m_presets;
 
 	padthv1_jack *m_pSynth;

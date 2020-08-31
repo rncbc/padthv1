@@ -110,8 +110,8 @@ padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	m_freq_cos = new float [nsize2];
 
 	// data plan
-	m_fftw_data = new double [m_nsize];
-	m_fftw_plan = ::fftw_plan_r2r_1d(
+	m_fftw_data = new float [m_nsize];
+	m_fftw_plan = ::fftwf_plan_r2r_1d(
 		m_nsize, m_fftw_data, m_fftw_data, FFTW_HC2R, FFTW_ESTIMATE);
 
 	m_sample_sched = new padthv1_sample_sched(pSynth, this);
@@ -127,7 +127,7 @@ padthv1_sample::~padthv1_sample (void)
 
 	delete m_sample_sched;
 
-	::fftw_destroy_plan(m_fftw_plan);
+	::fftwf_destroy_plan(m_fftw_plan);
 
 	delete [] m_fftw_data;
 
@@ -375,7 +375,7 @@ void padthv1_sample::reset_table (void)
 	};
 
 	// process IFFT
-	m_fftw_data[nsize2] = 0.0;
+	m_fftw_data[nsize2] = 0.0f;
 
 	for (i = 0; i < nsize2; ++i) {
 		m_fftw_data[i] = m_freq_cos[i];
@@ -383,7 +383,7 @@ void padthv1_sample::reset_table (void)
 			m_fftw_data[m_nsize - i] = m_freq_sin[i];
 	}
 
-	::fftw_execute(m_fftw_plan);
+	::fftwf_execute(m_fftw_plan);
 
 	for (i = 0; i < m_nsize; ++i)
 		m_table[i] = m_fftw_data[i];

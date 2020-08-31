@@ -402,7 +402,7 @@ AC_CHECK_LIB(Xext, main)
 ac_cflags="-ffast-math $ac_cflags"
 
 # Check for core FFTW3 library.
-PKG_CHECK_MODULES([FFTW3], [fftw3], [ac_fftw3="yes"], [ac_fftw3="no"])
+PKG_CHECK_MODULES([FFTW3], [fftw3f], [ac_fftw3="yes"], [ac_fftw3="no"])
 if test "x$ac_fftw3" = "xyes"; then
    AC_DEFINE(CONFIG_FFTW3, 1, [Define if FFTW3 library is available.])
    ac_cflags="$ac_cflags $FFTW3_CFLAGS"

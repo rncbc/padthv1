@@ -194,8 +194,8 @@ private:
 	float    *m_freq_amp;
 	float    *m_freq_sin;
 	float    *m_freq_cos;
-	double   *m_fftw_data;
-	fftw_plan m_fftw_plan;
+	float    *m_fftw_data;
+	fftwf_plan m_fftw_plan;
 
 	uint32_t  m_srand;
 

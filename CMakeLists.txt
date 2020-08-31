@@ -124,7 +124,7 @@ endif ()
 find_package (PkgConfig REQUIRED)
 
 # Check for FFTW3 libraries.
-pkg_check_modules (FFTW3 REQUIRED fftw3)
+pkg_check_modules (FFTW3 REQUIRED fftw3f)
 if (FFTW3_FOUND)
   set (CONFIG_FFTW3 1)
   include_directories (${FFTW3_INCLUDE_DIRS})

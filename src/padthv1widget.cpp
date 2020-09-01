@@ -854,8 +854,8 @@ void padthv1widget::randomParams (void)
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
 		// Filter out some non-randomizable parameters!...
 		if (index == padthv1::GEN1_OCTAVE  ||
-		    index == padthv1::GEN1_TUNING  ||
-		    index == padthv1::GEN1_ENVTIME ||
+			index == padthv1::GEN1_TUNING  ||
+			index == padthv1::GEN1_ENVTIME ||
 			index == padthv1::DCF1_ENABLED ||
 			index == padthv1::LFO1_ENABLED) 
 			continue;

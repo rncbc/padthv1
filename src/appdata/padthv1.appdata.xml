@@ -18,7 +18,7 @@
  </description>
  <launchable type="desktop-id">padthv1.desktop</launchable>
  <provides>
-​  <binary>padthv1_jack</binary>
+  <binary>padthv1_jack</binary>
  </provides>
  <screenshots>
   <screenshot type="default">

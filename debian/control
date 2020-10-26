@@ -8,10 +8,10 @@ Build-Depends: debhelper (>= 9), automake, pkg-config,
   lv2-dev, liblo-dev, fftw3-dev
 Standards-Version: 3.9.7
 
-Package: padthv1
+Package: padthv1-jack
 Architecture: any
 Depends: libjack0 | libjack-jackd2-0, ${misc:Depends}, ${shlibs:Depends}
-Replaces: padthv1-common (<= ${source:Version})
+Replaces: padthv1-common (<= ${source:Version}), padthv1 (<= ${source:Version})
 Description: An old-school polyphonic additive synthesizer - JACK standalone
   An old-school all-digital polyphonic additive synthesizer with stereo fx.
   .

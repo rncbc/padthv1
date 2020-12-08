@@ -1,4 +1,4 @@
-project(PADTHV1)
+project(padthv1)
 
 cmake_minimum_required(VERSION 3.1)
 

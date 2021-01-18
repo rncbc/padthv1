@@ -18,3 +18,4 @@ qrc_*.cpp
 .ui_*
 padthv1_ui.ttl
 padthv1_jack
+build/

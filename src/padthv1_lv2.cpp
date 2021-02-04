@@ -175,14 +175,14 @@ padthv1_lv2::padthv1_lv2 (
 		if (host_option->type == m_urids.atom_Int) {
 			uint32_t block_length = 0;
 			if (host_option->key == m_urids.bufsz_minBlockLength)
-				block_length = *(int *) host_option->value;
+				block_length = *(int32_t *) host_option->value;
 			else
 			if (host_option->key == m_urids.bufsz_maxBlockLength)
-				block_length = *(int *) host_option->value;
+				block_length = *(int32_t *) host_option->value;
 		#ifdef LV2_BUF_SIZE__nominalBlockLength
 			else
 			if (host_option->key == m_urids.bufsz_nominalBlockLength)
-				block_length = *(int *) host_option->value;
+				block_length = *(int32_t *) host_option->value;
 		#endif
 			// choose the lengthier...
 			if (buffer_size < block_length)
@@ -302,8 +302,8 @@ void padthv1_lv2::run ( uint32_t nframes )
 						const LV2_URID type = value->type;
 						if (key == m_urids.p201_tuning_enabled
 							&& type == m_urids.atom_Bool) {
-							const uint32_t enabled
-								= *(uint32_t *) LV2_ATOM_BODY_CONST(value);
+							const int32_t enabled
+								= *(int32_t *) LV2_ATOM_BODY_CONST(value);
 							padthv1::setTuningEnabled(enabled > 0);
 							updateTuning();
 						}
@@ -318,8 +318,8 @@ void padthv1_lv2::run ( uint32_t nframes )
 						else
 						if (key == m_urids.p203_tuning_refNote
 							&& type == m_urids.atom_Int) {
-							const uint32_t refNote
-								= *(uint32_t *) LV2_ATOM_BODY_CONST(value);
+							const int32_t refNote
+								= *(int32_t *) LV2_ATOM_BODY_CONST(value);
 							padthv1::setTuningRefNote(refNote);
 							updateTuning();
 						}

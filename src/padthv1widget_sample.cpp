@@ -172,7 +172,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	const bool bDark = (pal.window().color().value() < 0x7f);
 	const QColor& rgbLite = (isEnabled()
 		? (bDark ? Qt::darkYellow : Qt::yellow) : pal.mid().color());
-	const QColor& rgbDark = pal.window().color().darker(180);
+	const QColor& rgbDark = pal.window().color().darker(220);
 
 	painter.fillRect(rect, rgbDark);
 
@@ -191,7 +191,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 		QLinearGradient grad1(0, 0, w2, h);
 		grad1.setColorAt(0.0f, rgbLite1);
 		grad1.setColorAt(1.0f, rgbDark1);
-		painter.setPen(rgbLine1);
+		painter.setPen(rgbDrop1);
 		painter.setBrush(grad1);
 		painter.drawPolygon(*m_pPolyg);
 		// Sample harmonics...
@@ -220,7 +220,6 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	}
 
 	painter.end();
-
 
 	QFrame::paintEvent(pPaintEvent);
 }

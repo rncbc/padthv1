@@ -169,9 +169,8 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	const int w = rect.width();
 
 	const QPalette& pal = palette();
-	const bool bDark = (pal.window().color().value() < 0x7f);
-	const QColor& rgbLite = (isEnabled()
-		? (bDark ? Qt::darkYellow : Qt::yellow) : pal.mid().color());
+//	const bool bDark = (pal.window().color().value() < 0x7f);
+	const QColor& rgbLite = (isEnabled() ? Qt::darkYellow : pal.mid().color());
 	const QColor& rgbDark = pal.window().color().darker(220);
 
 	painter.fillRect(rect, rgbDark);
@@ -179,10 +178,10 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	if (m_pPolyg && m_pRects) {
 		QColor rgbLite1(rgbLite);
 		QColor rgbDark1(rgbDark);
-		QColor rgbLine1(bDark ? Qt::gray : Qt::darkGray);
+		QColor rgbLine1(Qt::gray);
 		QColor rgbDrop1(Qt::black);
-		rgbLite1.setAlpha(120);
-		rgbDark1.setAlpha(120);
+		rgbLite1.setAlpha(160);
+		rgbDark1.setAlpha(160);
 		rgbLine1.setAlpha(80);
 		rgbDrop1.setAlpha(80);
 		const int w2 = (w << 1);

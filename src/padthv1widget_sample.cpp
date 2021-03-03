@@ -191,7 +191,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 		QLinearGradient grad1(0, 0, w2, h);
 		grad1.setColorAt(0.0f, rgbLite1);
 		grad1.setColorAt(1.0f, rgbDark1);
-		painter.setPen(rgbDrop1);
+		painter.setPen(rgbLite1.darker());
 		painter.setBrush(grad1);
 		painter.drawPolygon(*m_pPolyg);
 		// Sample harmonics...

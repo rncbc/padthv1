@@ -172,7 +172,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 	const bool bDark = (pal.window().color().value() < 0x7f);
 	const QColor& rgbLite = (isEnabled()
 		? (bDark ? Qt::darkYellow : Qt::yellow) : pal.mid().color());
-	const QColor& rgbDark = pal.window().color().darker(220);
+	const QColor& rgbDark = pal.window().color().darker();
 
 	painter.fillRect(rect, rgbDark);
 

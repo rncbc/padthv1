@@ -25,13 +25,16 @@
 #include "padthv1_sample.h"
 
 #include <QPainter>
-#include <QMouseEvent>
+
+#include <QLinearGradient>
 
 #include <QApplication>
-#include <QMenu>
-#include <QToolTip>
-
 #include <QMessageBox>
+#include <QMenu>
+
+#include <QMouseEvent>
+
+#include <QToolTip>
 
 #include <cmath>
 
@@ -181,7 +184,7 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 		QColor rgbDark1(rgbDark);
 		QColor rgbLine1(bDark ? Qt::gray : Qt::darkGray);
 		QColor rgbDrop1(Qt::black);
-		rgbLite1.setAlpha(120);
+		rgbLite1.setAlpha(bDark ? 120 : 180);
 		rgbDark1.setAlpha(120);
 		rgbLine1.setAlpha(80);
 		rgbDrop1.setAlpha(80);

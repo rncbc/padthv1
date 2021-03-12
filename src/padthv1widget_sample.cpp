@@ -173,37 +173,34 @@ void padthv1widget_sample::paintEvent ( QPaintEvent *pPaintEvent )
 
 	const QPalette& pal = palette();
 	const bool bDark = (pal.window().color().value() < 0x7f);
-	const QColor& rgbLite = (isEnabled()
-		? (bDark ? Qt::darkYellow : Qt::yellow) : pal.mid().color());
+	const QColor& rgbLite = (isEnabled() ? Qt::yellow : pal.mid().color());
 	const QColor& rgbDark = pal.window().color().darker();
 
 	painter.fillRect(rect, rgbDark);
 
 	if (m_pPolyg && m_pRects) {
 		QColor rgbLite1(rgbLite);
-		QColor rgbDark1(rgbDark);
-		QColor rgbLine1(bDark ? Qt::gray : Qt::darkGray);
 		QColor rgbDrop1(Qt::black);
-		rgbLite1.setAlpha(bDark ? 120 : 180);
-		rgbDark1.setAlpha(120);
-		rgbLine1.setAlpha(80);
+		QColor rgbDark1(rgbDark);
+		rgbLite1.setAlpha(bDark ? 60 : 80);
 		rgbDrop1.setAlpha(80);
+		rgbDark1.setAlpha(120);
 		const int w2 = (w << 1);
 		painter.setRenderHint(QPainter::Antialiasing, true);
 		// Sample waveform...
-		QLinearGradient grad1(0, 0, w2, h);
-		grad1.setColorAt(0.0f, rgbLite1);
-		grad1.setColorAt(1.0f, rgbDark1);
+		QLinearGradient grad(0, 0, w2, h);
+		grad.setColorAt(0.0f, rgbLite1);
+		grad.setColorAt(1.0f, rgbDark1);
 		painter.setPen(rgbLite1.darker());
-		painter.setBrush(grad1);
+		painter.setBrush(grad);
 		painter.drawPolygon(*m_pPolyg);
 		// Sample harmonics...
-		QLinearGradient grad2(0, 0, w2, h);
-		grad2.setColorAt(0.0f, rgbLite);
-		grad2.setColorAt(1.0f, rgbDark);
+		QLinearGradient grad1(0, 0, w2, h);
+		grad1.setColorAt(0.0f, rgbLite.darker(bDark ? 160 : 120));
+		grad1.setColorAt(1.0f, rgbDark);
 		const QPen pen1(rgbDrop1, 5);
 		const QBrush brush1(rgbDrop1);
-		const QPen pen2(grad2, 3);
+		const QPen pen2(grad1, 3);
 		const QBrush brush2(rgbLite.lighter(140));
 		for (int n = 0; n < m_nrects; ++n) {
 			const QRect& rect = m_pRects[n];

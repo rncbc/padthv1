@@ -23,6 +23,7 @@
 #define __padthv1widget_env_h
 
 #include <QFrame>
+#include <QPolygon>
 
 
 //----------------------------------------------------------------------------

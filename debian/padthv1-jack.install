@@ -6,4 +6,4 @@ debian/tmp/usr/share/icons/hicolor/32x32/apps/padthv1.png
 debian/tmp/usr/share/icons/hicolor/32x32/mimetypes/application-x-padthv1*.png
 debian/tmp/usr/share/icons/hicolor/scalable/apps/padthv1.svg
 debian/tmp/usr/share/icons/hicolor/scalable/mimetypes/application-x-padthv1*.svg
-debian/tmp/usr/share/man/man1/padthv1*.1.gz
+debian/tmp/usr/share/man/man1/padthv1*.*

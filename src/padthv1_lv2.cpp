@@ -454,6 +454,18 @@ static LV2_State_Status padthv1_lv2_state_save ( LV2_Handle instance,
 	padthv1_param::saveSamples(pPlugin, doc, eSamples);
 	eState.appendChild(eSamples);
 
+	QDomElement eParams = doc.createElement("params");
+	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
+		QDomElement eParam = doc.createElement("param");
+		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
+		eParam.setAttribute("index", QString::number(i));
+		eParam.setAttribute("name", padthv1_param::paramName(index));
+		const float fValue = pPlugin->paramValue(index);
+		eParam.appendChild(doc.createTextNode(QString::number(fValue)));
+		eParams.appendChild(eParam);
+	}
+	eState.appendChild(eParams);
+
 	if (pPlugin->isTuningEnabled()) {
 		QDomElement eTuning = doc.createElement("tuning");
 		padthv1_param::saveTuning(pPlugin, doc, eTuning);
@@ -507,6 +519,14 @@ static LV2_State_Status padthv1_lv2_state_restore ( LV2_Handle instance,
 	if (value == nullptr)
 		return LV2_STATE_ERR_UNKNOWN;
 
+	static QHash<QString, padthv1::ParamIndex> s_hash;
+	if (s_hash.isEmpty()) {
+		for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
+			const padthv1::ParamIndex index = padthv1::ParamIndex(i);
+			s_hash.insert(padthv1_param::paramName(index), index);
+		}
+	}
+
 	QDomDocument doc(PADTHV1_TITLE);
 	if (doc.setContent(QByteArray(value, size))) {
 		QDomElement eState = doc.documentElement();
@@ -522,6 +542,29 @@ static LV2_State_Status padthv1_lv2_state_restore ( LV2_Handle instance,
 				QDomElement eChild = nChild.toElement();
 				if (eChild.isNull())
 					continue;
+				if (eChild.tagName() == "params") {
+					for (QDomNode nParam = eChild.firstChild();
+							!nParam.isNull();
+								nParam = nParam.nextSibling()) {
+						QDomElement eParam = nParam.toElement();
+						if (eParam.isNull())
+							continue;
+						if (eParam.tagName() == "param") {
+							padthv1::ParamIndex index = padthv1::ParamIndex(
+								eParam.attribute("index").toULong());
+							const QString& sName = eParam.attribute("name");
+							if (!sName.isEmpty()) {
+								if (!s_hash.contains(sName))
+									continue;
+								index = s_hash.value(sName);
+							}
+							const float fValue = eParam.text().toFloat();
+							pPlugin->setParamValue(index,
+								padthv1_param::paramSafeValue(index, fValue));
+						}
+					}
+				}
+				else
 				if (eChild.tagName() == "samples")
 					padthv1_param::loadSamples(pPlugin, eChild);
 				else

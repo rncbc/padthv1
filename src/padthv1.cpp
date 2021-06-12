@@ -930,6 +930,7 @@ protected:
 	void allControllersOff();
 	void allNotesOff();
 	void allSustainOff();
+	void allSustainOn();
 
 	float get_bpm ( float bpm ) const
 		{ return (bpm > 0.0f ? bpm : m_bpm); }
@@ -1040,6 +1041,8 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 	dcf18(&pImpl->dcf1_formant),
 	gen1_glide1(pImpl->gen1_last1),
 	gen1_glide2(pImpl->gen1_last2),
+	out1_volume(1.0f),
+	out1_panning(0.0f),
 	sustain(false)
 {
 }
@@ -1586,9 +1589,10 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				continue;
 			padthv1_voice *pv = m_notes[key];
 			if (pv && pv->note >= 0) {
-				if (m_ctl1.sustain) {
+				if (m_ctl1.sustain)
 					pv->sustain = true;
-				} else {
+				else
+				if (!pv->sustain) {
 					if (pv->dca1_env.stage != padthv1_env::Release) {
 						m_dca1.env.note_off(&pv->dca1_env);
 						m_dcf1.env.note_off(&pv->dcf1_env);
@@ -1647,6 +1651,13 @@ void padthv1_impl::process_midi ( uint8_t *data, uint32_t size )
 				if (m_ctl1.sustain && value <  64)
 					allSustainOff();
 				m_ctl1.sustain = bool(value >= 64);
+				break;
+			case 0x42:
+				// sustenuto pedal (cc#66)
+				if (value < 64)
+					allSustainOff();
+				else
+					allSustainOn();
 				break;
 			case 0x78:
 				// all sound off (cc#120)
@@ -1745,6 +1756,19 @@ void padthv1_impl::allSustainOff (void)
 				pv->note = -1;
 			}
 		}
+		pv = pv->next();
+	}
+}
+
+
+// sustain all notes on (sustenuto)
+
+void padthv1_impl::allSustainOn (void)
+{
+	padthv1_voice *pv = m_play_list.next();
+	while (pv) {
+		if (pv->note >= 0 && !pv->sustain)
+			pv->sustain = true;
 		pv = pv->next();
 	}
 }

@@ -752,13 +752,6 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 	#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 		pApp->setApplicationDisplayName(PADTHV1_TITLE);
 		//	PADTHV1_TITLE " - " + QObject::tr(PADTHV1_SUBTITLE));
-		QString sVersion(CONFIG_BUILD_VERSION);
-		sVersion += '\n';
-		sVersion += QString("Qt: %1").arg(qVersion());
-	#if defined(QT_STATIC)
-		sVersion += "-static";
-	#endif
-		QApplication::setApplicationVersion(sVersion);
 	#endif
 		m_pApp = pApp;
 	} else {
@@ -767,6 +760,13 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 	m_pApp->setApplicationName(PADTHV1_TITLE);
+	QString sVersion(CONFIG_BUILD_VERSION);
+	sVersion += '\n';
+	sVersion += QString("Qt: %1").arg(qVersion());
+#if defined(QT_STATIC)
+	sVersion += "-static";
+#endif
+	m_pApp->setApplicationVersion(sVersion);
 #endif
 
 #ifdef HAVE_SIGNAL_H

@@ -1,7 +1,7 @@
 // padthv1.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2022, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -860,7 +860,7 @@ class padthv1_impl
 {
 public:
 
-	padthv1_impl(padthv1 *pSampl, uint16_t nchannels, float srate);
+	padthv1_impl(padthv1 *pSampl, uint16_t nchannels, float srate, uint32_t nsize);
 
 	~padthv1_impl();
 
@@ -1052,7 +1052,7 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 // engine constructor
 
 padthv1_impl::padthv1_impl (
-	padthv1 *pSampl, uint16_t nchannels, float srate )
+	padthv1 *pSampl, uint16_t nchannels, float srate, uint32_t nsize )
 	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
 		m_controls(pSampl), m_programs(pSampl),
 		m_midi_in(pSampl), m_bpm(180.0f), m_nvoices(0), m_running(false)
@@ -1106,6 +1106,9 @@ padthv1_impl::padthv1_impl (
 
 	// set default sample rate
 	setSampleRate(srate);
+
+	// set default buffer size
+	setBufferSize(nsize);
 
 	// reset all voices
 	allControllersOff();
@@ -2273,9 +2276,9 @@ bool padthv1_impl::running ( bool on )
 // padthv1 - decl.
 //
 
-padthv1::padthv1 ( uint16_t nchannels, float srate )
+padthv1::padthv1 ( uint16_t nchannels, float srate, uint32_t nsize )
 {
-	m_pImpl = new padthv1_impl(this, nchannels, srate);
+	m_pImpl = new padthv1_impl(this, nchannels, srate, nsize);
 }
 
 

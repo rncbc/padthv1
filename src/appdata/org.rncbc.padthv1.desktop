@@ -7,6 +7,7 @@ Comment[fr]=padthv1 est un synthétiseur polyphonique additif à l'ancienne
 Exec=padthv1_jack
 Icon=padthv1
 Categories=Audio;AudioVideo;Midi;X-Alsa;X-Jack;Qt;
+MimeType=application/x-padthv1-preset;
 Keywords=Audio;MIDI;ALSA;JACK;Synthesizer;LV2;Qt;
 Terminal=false
 Type=Application

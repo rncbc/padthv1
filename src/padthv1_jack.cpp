@@ -752,6 +752,10 @@ padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 	#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 		pApp->setApplicationDisplayName(PADTHV1_TITLE);
 		//	PADTHV1_TITLE " - " + QObject::tr(PADTHV1_SUBTITLE));
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+		pApp->setDesktopFileName(
+			QString("org.rncbc.%1").arg(PACKAGE_TARNAME));
+	#endif
 	#endif
 		m_pApp = pApp;
 	} else {

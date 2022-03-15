@@ -312,10 +312,10 @@ endif ()
 add_subdirectory (src)
 
 
-configure_file (padthv1.spec.in padthv1.spec IMMEDIATE @ONLY)
+if (UNIX AND NOT APPLE)
+  configure_file (${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec IMMEDIATE @ONLY)
+endif ()
 
-install (FILES padthv1.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-install (FILES padthv1.fr.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/fr/man1 RENAME padthv1.1)
 
 # Configuration status
 macro (SHOW_OPTION text value)

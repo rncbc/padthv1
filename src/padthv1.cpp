@@ -1042,8 +1042,8 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 	dcf18(&pImpl->dcf1_formant),
 	gen1_glide1(pImpl->gen1_last1),
 	gen1_glide2(pImpl->gen1_last2),
-	out1_volume(1.0f),
 	out1_panning(0.0f),
+	out1_volume(1.0f),
 	sustain(false)
 {
 }

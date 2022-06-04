@@ -611,7 +611,7 @@ struct padthv1_glide
 			m_freq = m_last;
 			m_step = (m_last - freq) / float(m_frames);
 		} else {
-			m_freq = freq;
+			m_freq = 0.0f;
 			m_step = 0.0f;
 		}
 

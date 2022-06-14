@@ -21,8 +21,6 @@
 
 %define _prefix	@ac_prefix@
 
-%define qt_path	/opt/qt6.2-static
-
 %if %{defined fedora}
 %define debug_package %{nil}
 %endif

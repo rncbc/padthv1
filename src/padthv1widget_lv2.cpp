@@ -1,7 +1,7 @@
 // padthv1widget_lv2.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2022, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -63,19 +63,20 @@ padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pSampl,
 		// Special style paths...
 		if (QDir(CONFIG_PLUGINSDIR).exists())
 			pApp->addLibraryPath(CONFIG_PLUGINSDIR);
-		// Custom color/style themes...
-		padthv1_config *pConfig = padthv1_config::getInstance();
-		if (pConfig) {
-			if (!pConfig->sCustomColorTheme.isEmpty()) {
-				QPalette pal;
-				if (padthv1widget_palette::namedPalette(
-						pConfig, pConfig->sCustomColorTheme, pal))
-					pApp->setPalette(pal);
-			}
-			if (!pConfig->sCustomStyleTheme.isEmpty()) {
-				pApp->setStyle(
-					QStyleFactory::create(pConfig->sCustomStyleTheme));
-			}
+	}
+
+	// Custom color/style themes...
+	padthv1_config *pConfig = padthv1_config::getInstance();
+	if (pConfig) {
+		if (!pConfig->sCustomColorTheme.isEmpty()) {
+			QPalette pal;
+			if (padthv1widget_palette::namedPalette(
+					pConfig, pConfig->sCustomColorTheme, pal))
+				padthv1widget::setPalette(pal);
+		}
+		if (!pConfig->sCustomStyleTheme.isEmpty()) {
+			padthv1widget::setStyle(
+				QStyleFactory::create(pConfig->sCustomStyleTheme));
 		}
 	}
 

@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.15)
 
 project (padthv1
-  VERSION 0.9.27
+  VERSION 0.9.28
   DESCRIPTION "an old-school polyphonic additive synthesizer"
   LANGUAGES C CXX)
 

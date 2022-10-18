@@ -605,7 +605,7 @@ void padthv1_jack::sessionEvent ( void *pvSessionArg )
 
 	QStringList args;
 	args << QCoreApplication::applicationFilePath();
-	args << QString("\"${SESSION_DIR}%1\"").arg(sSessionFile);
+	args << QString("${SESSION_DIR}%1").arg(sSessionFile);
 
 	padthv1_param::savePreset(this,
 		QFileInfo(sSessionDir, sSessionFile).absoluteFilePath(), true);

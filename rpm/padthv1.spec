@@ -17,7 +17,7 @@
 
 %define name    padthv1
 %define version 0.9.28
-%define release 69.1
+%define release 69.2
 
 %define _prefix	/usr
 

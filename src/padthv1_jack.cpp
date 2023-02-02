@@ -1,7 +1,7 @@
 // padthv1_jack.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2022, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -693,6 +693,8 @@ void padthv1_jack::shutdown_close (void)
 #endif
 #endif
 
+#include <QTimer>
+
 #ifdef CONFIG_NSM
 #include "padthv1_nsm.h"
 #endif
@@ -1019,6 +1021,9 @@ bool padthv1_jack_application::setup (void)
 	if (m_pWidget)
 		m_pWidget->show();
 
+	// Start watchdog timer...
+	watchdog_start();
+
 	return true;
 }
 
@@ -1169,6 +1174,29 @@ void padthv1_jack_application::handle_sigterm (void)
 #endif	// HAVE_SIGNAL_H
 
 
+// Simple watchdog (3 minute cycle).
+void padthv1_jack_application::watchdog_slot (void)
+{
+	if (m_pSynth && m_pSynth->client() == nullptr) {
+		const QByteArray aClientName
+			= m_sClientName.toLocal8Bit();
+		const char *client_name
+			= aClientName.constData();
+		m_pSynth->open(client_name);
+		m_pSynth->activate();
+	}
+
+	watchdog_start();
+}
+
+
+void padthv1_jack_application::watchdog_start (void)
+{
+	if (g_pInstance)
+		QTimer::singleShot(180000, this, SLOT(watchdog_slot()));
+}
+
+
 // JACK shutdown handlers.
 void padthv1_jack_application::shutdown (void)
 {
@@ -1178,16 +1206,18 @@ void padthv1_jack_application::shutdown (void)
 
 void padthv1_jack_application::shutdown_slot (void)
 {
-	bool bQuit = true;
-
 	if (m_pSynth)
 		m_pSynth->shutdown_close();
+
+#if 0//Don't quit anymore; let watchdog handle auto re-activation...
+	bool bQuit = true;
 
 	if (m_pWidget)
 		bQuit = m_pWidget->queryClose();
 
 	if (m_pApp && bQuit)
 		m_pApp->quit();
+#endif
 }
 
 

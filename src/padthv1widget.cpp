@@ -1,7 +1,7 @@
 // padthv1widget.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2022, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -1230,15 +1230,15 @@ void padthv1widget::helpAbout (void)
 	list << tr("LV2 plug-in build disabled.");
 #endif
 
-	QString sText = "<p>\n";
-	sText += "<b>" PADTHV1_TITLE "</b> - " + tr(PADTHV1_SUBTITLE) + "<br />\n";
+	QString sText = "<h1>" PADTHV1_TITLE "</h1>\n";
+	sText += "<p>" + tr(PADTHV1_SUBTITLE) + "<br />\n";
 	sText += "<br />\n";
 	sText += tr("Version") + ": <b>" CONFIG_BUILD_VERSION "</b><br />\n";
 //	sText += "<small>" + tr("Build") + ": " CONFIG_BUILD_DATE "</small><br />\n";
 	if (!list.isEmpty()) {
 		sText += "<small><font color=\"red\">";
 		sText += list.join("<br />\n");
-		sText += "</font></small><br />\n";
+		sText += "</font></small>\n";
 	}
 	sText += "<br />\n";
 	sText += tr("Using: Qt %1").arg(qVersion());

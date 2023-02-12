@@ -1066,19 +1066,23 @@ void padthv1_jack_application::openSession (void)
 	if (!dir.exists())
 		dir.mkpath(path_name);
 
+	bool bOpen = false;
+
 	QFileInfo fi(path_name, "session." PADTHV1_TITLE);
 	if (!fi.exists())
 		fi.setFile(path_name, display_name + '.' + PADTHV1_TITLE);
 	if (fi.exists()) {
 		const QString& sFilename = fi.absoluteFilePath();
 		if (m_pWidget) {
-			m_pWidget->loadPreset(sFilename);
+			bOpen = m_pWidget->loadPreset(sFilename);
 		} else {
-			padthv1_param::loadPreset(m_pSynth, sFilename);
+			bOpen = padthv1_param::loadPreset(m_pSynth, sFilename);
 		}
 	}
 
-	m_pNsmClient->open_reply();
+	m_pNsmClient->open_reply(bOpen
+		? padthv1_nsm::ERR_OK
+		: padthv1_nsm::ERR_GENERAL);
 	m_pNsmClient->dirty(false);
 
 	if (m_pWidget)
@@ -1106,9 +1110,12 @@ void padthv1_jack_application::saveSession (void)
 //	const QFileInfo fi(path_name, display_name + '.' + PADTHV1_TITLE);
 	const QFileInfo fi(path_name, "session." PADTHV1_TITLE);
 
-	padthv1_param::savePreset(m_pSynth, fi.absoluteFilePath(), true);
+	const bool bSave
+		= padthv1_param::savePreset(m_pSynth, fi.absoluteFilePath(), true);
 
-	m_pNsmClient->save_reply();
+	m_pNsmClient->save_reply(bSave
+		? padthv1_nsm::ERR_OK
+		: padthv1_nsm::ERR_GENERAL);
 	m_pNsmClient->dirty(false);
 }
 

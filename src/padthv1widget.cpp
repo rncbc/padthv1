@@ -1013,7 +1013,7 @@ void padthv1widget::newPreset (void)
 
 
 // Preset file I/O slots.
-void padthv1widget::loadPreset ( const QString& sFilename )
+bool padthv1widget::loadPreset ( const QString& sFilename )
 {
 #ifdef CONFIG_DEBUG
 	qDebug("padthv1widget::loadPreset(\"%s\")", sFilename.toUtf8().constData());
@@ -1024,29 +1024,41 @@ void padthv1widget::loadPreset ( const QString& sFilename )
 	resetParamKnobs();
 	resetParamValues();
 
+	bool bLoad = false;
+
 	padthv1_ui *pSynthUi = ui_instance();
 	if (pSynthUi)
-		pSynthUi->loadPreset(sFilename);
+		bLoad = pSynthUi->loadPreset(sFilename);
 
-	updateLoadPreset(QFileInfo(sFilename).completeBaseName());
+	if (bLoad)
+		updateLoadPreset(QFileInfo(sFilename).completeBaseName());
+	else
+		updateDirtyPreset(true);
+
+	return bLoad;
 }
 
 
-void padthv1widget::savePreset ( const QString& sFilename )
+bool padthv1widget::savePreset ( const QString& sFilename )
 {
 #ifdef CONFIG_DEBUG
 	qDebug("padthv1widget::savePreset(\"%s\")", sFilename.toUtf8().constData());
 #endif
 
+	bool bSave = false;
+
 	padthv1_ui *pSynthUi = ui_instance();
 	if (pSynthUi)
-		pSynthUi->savePreset(sFilename);
+		bSave = pSynthUi->savePreset(sFilename);
 
-	const QString& sPreset
-		= QFileInfo(sFilename).completeBaseName();
+	if (bSave) {
+		const QString& sPreset
+			= QFileInfo(sFilename).completeBaseName();
+		m_ui.StatusBar->showMessage(tr("Save preset: %1").arg(sPreset), 5000);
+	}
+	updateDirtyPreset(!bSave);
 
-	m_ui.StatusBar->showMessage(tr("Save preset: %1").arg(sPreset), 5000);
-	updateDirtyPreset(false);
+	return bSave;
 }
 
 

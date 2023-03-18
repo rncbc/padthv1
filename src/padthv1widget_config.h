@@ -30,6 +30,7 @@
 // forward decls.
 namespace Ui { class padthv1widget_config; }
 
+class padthv1widget;
 class padthv1_ui;
 
 class QComboBox;
@@ -46,7 +47,7 @@ class padthv1widget_config : public QDialog
 public:
 
 	// ctor.
-	padthv1widget_config(padthv1_ui *pSynthUi, QWidget *pParent = nullptr);
+	padthv1widget_config(padthv1widget *pParent, padthv1_ui *pSynthUi);
 
 	// dtor.
 	~padthv1widget_config();

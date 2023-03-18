@@ -1212,10 +1212,8 @@ void padthv1widget::midiInLedTimeout (void)
 void padthv1widget::helpConfigure (void)
 {
 	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
-		return;
-
-	padthv1widget_config(pSynthUi, this).exec();
+	if (pSynthUi)
+		padthv1widget_config(this, pSynthUi).exec();
 }
 
 

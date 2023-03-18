@@ -55,7 +55,7 @@ static const char *g_pszDefName = QT_TRANSLATE_NOOP("padthv1widget_config", "(de
 
 // ctor.
 padthv1widget_config::padthv1widget_config (
-	padthv1_ui *pSynthUi, QWidget *pParent )
+	padthv1widget *pParent, padthv1_ui *pSynthUi )
 	: QDialog(pParent), p_ui(new Ui::padthv1widget_config), m_ui(*p_ui),
 		m_pSynthUi(pSynthUi)
 {
@@ -450,10 +450,17 @@ void padthv1widget_config::programsChanged (void)
 
 void padthv1widget_config::programsActivated (void)
 {
-	if (m_pSynthUi) {
-		padthv1_programs *pPrograms = m_pSynthUi->programs();
-		if (m_ui.ProgramsPreviewCheckBox->isChecked() && pPrograms)
-			m_ui.ProgramsTreeWidget->selectProgram(pPrograms);
+	padthv1_config *pConfig = padthv1_config::getInstance();
+	if (pConfig == nullptr)
+		return;
+
+	if (m_ui.ProgramsPreviewCheckBox->isChecked()) {
+		const QString& sPresetFile
+			= pConfig->presetFile(m_ui.ProgramsTreeWidget->currentProgramName());
+		padthv1widget *pParentWidget
+			= qobject_cast<padthv1widget *> (parentWidget());
+		if (pParentWidget && !sPresetFile.isEmpty())
+			pParentWidget->loadPreset(sPresetFile);
 	}
 
 	stabilize();

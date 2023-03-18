@@ -39,7 +39,7 @@ class padthv1widget_programs : public QTreeWidget
 public:
 
 	// ctor.
-	padthv1widget_programs(QWidget *pParent = 0);
+	padthv1widget_programs(QWidget *pParent = nullptr);
 	// dtor.
 	~padthv1widget_programs();
 
@@ -47,7 +47,7 @@ public:
 	void loadPrograms(padthv1_programs *pPrograms);
 	void savePrograms(padthv1_programs *pPrograms);
 
-	void selectProgram(padthv1_programs *pPrograms);
+	QString currentProgramName() const;
 
 public slots:
 

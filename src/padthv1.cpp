@@ -1,7 +1,7 @@
 // padthv1.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2022, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -907,6 +907,27 @@ public:
 
 	void stabilize();
 	void reset();
+
+	void reset_test()
+	{
+		if (m_gen1.sample1_0 != *m_gen1.sample1) {
+			m_gen1.sample1_0  = *m_gen1.sample1;
+			m_gen1.freq1 = padthv1_freq(m_gen1.sample1_0);
+		}
+
+		gen1_sample1.reset_test(m_gen1.freq1,
+			*m_gen1.width1, *m_gen1.scale1, uint16_t(*m_gen1.nh1),
+			padthv1_sample::Apodizer(*m_gen1.apod1));
+
+		if (m_gen1.sample2_0 != *m_gen1.sample2) {
+			m_gen1.sample2_0  = *m_gen1.sample2;
+			m_gen1.freq2 = padthv1_freq(m_gen1.sample2_0);
+		}
+
+		gen1_sample2.reset_test(m_gen1.freq2,
+			*m_gen1.width2, *m_gen1.scale2, uint16_t(*m_gen1.nh2),
+			padthv1_sample::Apodizer(*m_gen1.apod2));
+	}
 
 	void midiInEnabled(bool on);
 	uint32_t midiInCount();
@@ -2016,22 +2037,7 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 	
 	const float fxsend1 = *m_out1.fxsend * *m_out1.fxsend;
 
-	if (m_gen1.sample1_0 != *m_gen1.sample1) {
-		m_gen1.sample1_0  = *m_gen1.sample1;
-		m_gen1.freq1 = padthv1_freq(m_gen1.sample1_0);
-	}
-
-	if (m_gen1.sample2_0 != *m_gen1.sample2) {
-		m_gen1.sample2_0  = *m_gen1.sample2;
-		m_gen1.freq2 = padthv1_freq(m_gen1.sample2_0);
-	}
-
-	gen1_sample1.reset_test(m_gen1.freq1,
-		*m_gen1.width1, *m_gen1.scale1, uint16_t(*m_gen1.nh1),
-		padthv1_sample::Apodizer(*m_gen1.apod1));
-	gen1_sample2.reset_test(m_gen1.freq2,
-		*m_gen1.width2, *m_gen1.scale2, uint16_t(*m_gen1.nh2),
-		padthv1_sample::Apodizer(*m_gen1.apod2));
+	reset_test(); // inline...
 
 	if (m_gen1.envtime0 != *m_gen1.envtime) {
 		m_gen1.envtime0  = *m_gen1.envtime;
@@ -2418,6 +2424,14 @@ bool padthv1::running ( bool on )
 void padthv1::stabilize (void)
 {
 	m_pImpl->stabilize();
+}
+
+
+// all/test reset samples
+
+void padthv1::reset_test (void)
+{
+	m_pImpl->reset_test();
 }
 
 

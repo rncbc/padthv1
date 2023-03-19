@@ -1,7 +1,7 @@
 // padthv1_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -183,7 +183,7 @@ void padthv1_sample::reset (void)
 	m_freq0 = 0.0f;
 	m_width = 0.0f;
 	m_scale = 0.0f;
-	m_nh    = 0;
+//	m_nh    = 0;
 }
 
 

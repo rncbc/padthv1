@@ -1,7 +1,7 @@
 // padthv1_param.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -305,6 +305,7 @@ bool padthv1_param::loadPreset (
 
 	pSynth->stabilize();
 	pSynth->reset();
+	pSynth->reset_test();
 	pSynth->running(running);
 
 	QDir::setCurrent(currentDir.absolutePath());
@@ -389,6 +390,7 @@ void padthv1_param::loadSamples (
 			padthv1_sample *sample = list.value(index, nullptr);
 			if (sample == nullptr)
 				continue;
+			sample->reset();
 			sample->reset_nh(eSample.attribute("nh").toUInt());
 			for (QDomNode nChild = eSample.firstChild();
 					!nChild.isNull();

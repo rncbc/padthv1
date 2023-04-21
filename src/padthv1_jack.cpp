@@ -1200,7 +1200,7 @@ void padthv1_jack_application::watchdog_slot (void)
 void padthv1_jack_application::watchdog_start (void)
 {
 	if (g_pInstance)
-		QTimer::singleShot(180000, this, SLOT(watchdog_slot()));
+		QTimer::singleShot(60000, this, SLOT(watchdog_slot()));
 }
 
 

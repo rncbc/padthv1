@@ -4,7 +4,7 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+0.9.33  2023-12-20  An End-of-Autumn'23 Release.
 
 - Minor optimization to denormal avoidance on some fx's.
 - Bumping into next development cycle (Qt >= 6.6)

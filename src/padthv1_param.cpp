@@ -256,7 +256,7 @@ bool padthv1_param::loadPreset (
 	const QDir currentDir(QDir::current());
 	QDir::setCurrent(fi.absolutePath());
 
-	QDomDocument doc(PADTHV1_TITLE);
+	QDomDocument doc(PROJECT_NAME);
 	if (doc.setContent(&file)) {
 		QDomElement ePreset = doc.documentElement();
 		if (ePreset.tagName() == "preset") {
@@ -326,7 +326,7 @@ bool padthv1_param::savePreset (
 	const QDir currentDir(QDir::current());
 	QDir::setCurrent(fi.absolutePath());
 
-	QDomDocument doc(PADTHV1_TITLE);
+	QDomDocument doc(PROJECT_NAME);
 	QDomElement ePreset = doc.createElement("preset");
 	ePreset.setAttribute("name", fi.completeBaseName());
 	ePreset.setAttribute("version", PROJECT_VERSION);

@@ -42,7 +42,7 @@ padthv1_config *padthv1_config::getInstance (void)
 
 // Constructor.
 padthv1_config::padthv1_config (void)
-	: QSettings(PADTHV1_DOMAIN, PADTHV1_TITLE)
+	: QSettings(PROJECT_DOMAIN, PROJECT_NAME)
 {
 	g_pSettings = this;
 

@@ -93,6 +93,10 @@ padthv1_lv2::padthv1_lv2 (
 	m_schedule = nullptr;
 	m_ndelta   = 0;
 
+#ifdef CONFIG_LV2_PORT_CHANGE_REQUEST
+	m_port_change_request = nullptr;
+#endif
+
 	const LV2_Options_Option *host_options = nullptr;
 
 	for (int i = 0; host_features && host_features[i]; ++i) {
@@ -166,6 +170,11 @@ padthv1_lv2::padthv1_lv2 (
 		else
 		if (::strcmp(host_feature->URI, LV2_OPTIONS__options) == 0)
 			host_options = (const LV2_Options_Option *) host_feature->data;
+	#ifdef CONFIG_LV2_PORT_CHANGE_REQUEST
+		else
+		if (::strcmp(host_feature->URI, LV2_CONTROL_INPUT_PORT_CHANGE_REQUEST_URI) == 0)
+			m_port_change_request = (LV2_ControlInputPort_Change_Request *) host_feature->data;
+	#endif
 	}
 
 	uint32_t buffer_size = 1024; // maybe some safe default?
@@ -610,6 +619,11 @@ void padthv1_lv2::updatePreset ( bool /*bDirty*/ )
 
 void padthv1_lv2::updateParam ( padthv1::ParamIndex index )
 {
+#ifdef CONFIG_LV2_PORT_CHANGE_REQUEST
+	if (port_change_request(index))
+		return;
+#endif
+
 #ifdef CONFIG_LV2_PORT_EVENT
 	if (m_schedule) {
 		padthv1_lv2_worker_message mesg;
@@ -619,14 +633,17 @@ void padthv1_lv2::updateParam ( padthv1::ParamIndex index )
 		m_schedule->schedule_work(
 			m_schedule->handle, sizeof(mesg), &mesg);
 	}
-#else
-	(void) index; // STFU dang compiler!
 #endif
 }
 
 
 void padthv1_lv2::updateParams (void)
 {
+#ifdef CONFIG_LV2_PORT_CHANGE_REQUEST
+	if (port_change_requests())
+		return;
+#endif
+
 #ifdef CONFIG_LV2_PORT_EVENT
 	if (m_schedule) {
 		padthv1_lv2_worker_message mesg;
@@ -816,6 +833,48 @@ bool padthv1_lv2::port_events (void)
 }
 
 #endif	// CONFIG_LV2_PORT_EVENT
+
+
+#ifdef CONFIG_LV2_PORT_EVENT
+
+bool padthv1_lv2::port_change_request ( padthv1::ParamIndex index )
+{
+	if (m_port_change_request == nullptr)
+		return false;
+	if (m_port_change_request->handle == nullptr)
+		return false;
+	if (m_port_change_request->request_change == nullptr)
+		return false;
+
+	return m_port_change_request->request_change(
+		m_port_change_request->handle,
+		uint32_t(ParamBase + index),
+		padthv1::paramValue(index))
+		== LV2_CONTROL_INPUT_PORT_CHANGE_SUCCESS;
+}
+
+
+bool padthv1_lv2::port_change_requests (void)
+{
+	if (m_port_change_request == nullptr)
+		return false;
+	if (m_port_change_request->handle == nullptr)
+		return false;
+	if (m_port_change_request->request_change == nullptr)
+		return false;
+
+	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
+		padthv1::ParamIndex index = padthv1::ParamIndex(i);
+		m_port_change_request->request_change(
+			m_port_change_request->handle,
+			uint32_t(ParamBase + index),
+			padthv1::paramValue(index));
+	}
+
+	return true;
+}
+
+#endif	// CONFIG_LV2_PORT_CHANGE_REQUESTS
 
 
 //-------------------------------------------------------------------------

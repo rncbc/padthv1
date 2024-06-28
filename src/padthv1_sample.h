@@ -1,7 +1,7 @@
 // padthv1_sample.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -93,7 +93,7 @@ public:
 		{ return (n < m_nh_max) ? m_ah[n] : 0.0f; }
 
 	// init.
-	void reset_test(
+	bool reset_test(
 		float freq0, float width, float scale, uint16_t nh, Apodizer apod);
 	void reset(
 		float freq0, float width, float scale, uint16_t nh, Apodizer apod);

@@ -910,23 +910,32 @@ public:
 
 	void reset_test()
 	{
+		int updated = 0;
+
 		if (m_gen1.sample1_0 != *m_gen1.sample1) {
 			m_gen1.sample1_0  = *m_gen1.sample1;
 			m_gen1.freq1 = padthv1_freq(m_gen1.sample1_0);
 		}
 
-		gen1_sample1.reset_test(m_gen1.freq1,
+		if (gen1_sample1.reset_test(m_gen1.freq1,
 			*m_gen1.width1, *m_gen1.scale1, uint16_t(*m_gen1.nh1),
-			padthv1_sample::Apodizer(*m_gen1.apod1));
+			padthv1_sample::Apodizer(*m_gen1.apod1)))
+			++updated;
 
 		if (m_gen1.sample2_0 != *m_gen1.sample2) {
 			m_gen1.sample2_0  = *m_gen1.sample2;
 			m_gen1.freq2 = padthv1_freq(m_gen1.sample2_0);
 		}
 
-		gen1_sample2.reset_test(m_gen1.freq2,
+		if (gen1_sample2.reset_test(m_gen1.freq2,
 			*m_gen1.width2, *m_gen1.scale2, uint16_t(*m_gen1.nh2),
-			padthv1_sample::Apodizer(*m_gen1.apod2));
+			padthv1_sample::Apodizer(*m_gen1.apod2)))
+			++updated;
+
+		if (updated > 0) {
+			allNotesOff();
+		//	allSoundOff();
+		}
 	}
 
 	void midiInEnabled(bool on);

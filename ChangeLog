@@ -4,6 +4,12 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
+GIT HEAD
+
+- Shut-off all voices/notes whenever any wavetable parameter is
+  reset or changed. (EXPERIMENTAL) (mitigates GH Issue #12)
+
+
 1.0.0  2024-06-20  An Unthinkable Release.
 
 - Making up the unthinkable (aka. v1.0.0)

@@ -1,7 +1,7 @@
 // padthv1_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2023, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -66,10 +66,15 @@ public:
 	// process reset (virtual).
 	void process(int)
 	{
-		padthv1_sched::instance()->reset();
+		padthv1 *pSynth = padthv1_sched::instance();
+		const bool running = pSynth->running(false);
+
+		pSynth->reset();
 
 		m_sample->reset(m_freq0, m_width, m_scale, m_nh, m_apod);
 		m_sync = 0;
+
+		pSynth->running(running);
 	}
 
 private:
@@ -141,7 +146,7 @@ padthv1_sample::~padthv1_sample (void)
 
 
 // init.
-void padthv1_sample::reset_test (
+bool padthv1_sample::reset_test (
 	float freq0, float width, float scale, uint16_t nh, Apodizer apod )
 {
 	int updated = 0;
@@ -159,6 +164,8 @@ void padthv1_sample::reset_test (
 
 	if (updated > 0)
 		m_sample_sched->schedule(freq0, width, scale, nh, apod, m_sid);
+
+	return (updated > 0);
 }
 
 

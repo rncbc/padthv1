@@ -6,6 +6,8 @@ ChangeLog
 
 GIT HEAD
 
+- LV2 Plug-in Control Input Port-Change Request extension is not
+  tagged experimental anymore.
 - Shut-off all voices/notes whenever any wavetable parameter is
   reset or changed. (EXPERIMENTAL) (mitigates GH Issue #12)
 

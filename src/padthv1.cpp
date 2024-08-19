@@ -599,8 +599,10 @@ struct padthv1_key
 
 // glide (portamento)
 
-struct padthv1_glide
+class padthv1_glide
 {
+public:
+
 	padthv1_glide(float& last) : m_last(last) { reset(); }
 
 	void reset( uint32_t frames = 0, float freq = 0.0f )

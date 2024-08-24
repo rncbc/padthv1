@@ -23,6 +23,7 @@
 #include "padthv1_config.h"
 
 #include "padthv1_sample.h"
+#include "padthv1_sched.h"
 
 #include <QHash>
 
@@ -242,6 +243,8 @@ bool padthv1_param::loadPreset (
 
 	const bool running = pSynth->running(false);
 
+	padthv1_sched::sync_reset();
+
 	pSynth->setTuningEnabled(false);
 	pSynth->reset();
 
@@ -306,6 +309,7 @@ bool padthv1_param::loadPreset (
 	pSynth->stabilize();
 	pSynth->reset();
 	pSynth->reset_test();
+	padthv1_sched::sync_pending();
 	pSynth->running(running);
 
 	QDir::setCurrent(currentDir.absolutePath());

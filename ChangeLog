@@ -6,10 +6,11 @@ ChangeLog
 
 GIT HEAD
 
+- Smooth and seamless voice/note deferred switching, whenever any
+  wavetable parameter is reset or changed. (EXPERIMENTAL) (solves
+  GH Issue #12)
 - LV2 Plug-in Control Input Port-Change Request extension is not
   tagged experimental anymore.
-- Shut-off all voices/notes whenever any wavetable parameter is
-  reset or changed. (EXPERIMENTAL) (mitigates GH Issue #12)
 
 
 1.0.0  2024-06-20  An Unthinkable Release.

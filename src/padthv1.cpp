@@ -912,32 +912,37 @@ public:
 
 	void reset_test()
 	{
-		int updated = 0;
-
 		if (m_gen1.sample1_0 != *m_gen1.sample1) {
 			m_gen1.sample1_0  = *m_gen1.sample1;
 			m_gen1.freq1 = padthv1_freq(m_gen1.sample1_0);
 		}
 
-		if (gen1_sample1.reset_test(m_gen1.freq1,
+		gen1_sample1.prev()->reset_test(m_gen1.freq1,
 			*m_gen1.width1, *m_gen1.scale1, uint16_t(*m_gen1.nh1),
-			padthv1_sample::Apodizer(*m_gen1.apod1)))
-			++updated;
+			padthv1_sample::Apodizer(*m_gen1.apod1));
 
 		if (m_gen1.sample2_0 != *m_gen1.sample2) {
 			m_gen1.sample2_0  = *m_gen1.sample2;
 			m_gen1.freq2 = padthv1_freq(m_gen1.sample2_0);
 		}
 
-		if (gen1_sample2.reset_test(m_gen1.freq2,
+		gen1_sample2.prev()->reset_test(m_gen1.freq2,
 			*m_gen1.width2, *m_gen1.scale2, uint16_t(*m_gen1.nh2),
-			padthv1_sample::Apodizer(*m_gen1.apod2)))
-			++updated;
+			padthv1_sample::Apodizer(*m_gen1.apod2));
+	}
 
-		if (updated > 0) {
-			allNotesOff();
-		//	allSoundOff();
-		}
+	void reset_sync(
+		float freq0, float width, float scale,
+		uint16_t nh, int apod, int sid)
+	{
+		padthv1_sample_ref& ref = (sid == 1 ? gen1_sample1 : gen1_sample2);
+		padthv1_sample *prev = ref.prev();
+		padthv1_sample *next = new padthv1_sample(*prev);
+		next->reset_sync(freq0, width, scale, nh,
+			padthv1_sample::Apodizer(apod));
+		ref.append(next);
+		ref.free_refs();
+		ref.clear_refs();
 	}
 
 	void midiInEnabled(bool on);
@@ -947,7 +952,7 @@ public:
 
 	bool running(bool on);
 
-	padthv1_sample gen1_sample1, gen1_sample2;
+	padthv1_sample_ref gen1_sample1, gen1_sample2;
 
 	padthv1_wave_lf lfo1_wave;
 
@@ -973,6 +978,10 @@ protected:
 		padthv1_voice *pv = m_free_list.next();
 		if (pv) {
 			m_free_list.remove(pv);
+			gen1_sample1.acquire();
+			gen1_sample2.acquire();
+			pv->gen1_osc1.reset(gen1_sample1.next());
+			pv->gen1_osc2.reset(gen1_sample2.next());
 			m_play_list.append(pv);
 			++m_nvoices;
 		}
@@ -981,6 +990,9 @@ protected:
 
 	void free_voice ( padthv1_voice *pv )
 	{
+		gen1_sample1.release();
+		gen1_sample2.release();
+
 		if (m_lfo1.psync == pv)
 			m_lfo1.psync = nullptr;
 
@@ -1064,8 +1076,8 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 	note(-1),
 	vel(0.0f),
 	pre(0.0f),
-	gen1_osc1(&pImpl->gen1_sample1),
-	gen1_osc2(&pImpl->gen1_sample2),
+	gen1_osc1(nullptr),
+	gen1_osc2(nullptr),
 	gen1_freq1(0.0f), gen1_sample1(0.0f),
 	gen1_freq2(0.0f), gen1_sample2(0.0f),
 	lfo1(&pImpl->lfo1_wave),
@@ -1085,10 +1097,13 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 
 padthv1_impl::padthv1_impl (
 	padthv1 *pSampl, uint16_t nchannels, float srate, uint32_t nsize )
-	: gen1_sample1(pSampl, 1), gen1_sample2(pSampl, 2),
-		m_controls(pSampl), m_programs(pSampl),
+	: m_controls(pSampl), m_programs(pSampl),
 		m_midi_in(pSampl), m_bpm(180.0f), m_nvoices(0), m_running(false)
 {
+	// initialize sample lists.
+	gen1_sample1.append(new padthv1_sample(pSampl, 1));
+	gen1_sample2.append(new padthv1_sample(pSampl, 2));
+
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;
 	m_gen1.freq1 = m_gen1.freq2 = 0.0f;
@@ -1166,6 +1181,9 @@ padthv1_impl::~padthv1_impl (void)
 
 	delete [] m_voices;
 
+	gen1_sample1.clear_refs(true);
+	gen1_sample2.clear_refs(true);
+
 	// deallocate local buffers
 	alloc_sfxs(0);
 
@@ -1216,8 +1234,8 @@ void padthv1_impl::setSampleRate ( float srate )
 	m_srate = srate;
 
 	// update waves sample rate
-	gen1_sample1.setSampleRate(m_srate);
-	gen1_sample2.setSampleRate(m_srate);
+	gen1_sample1.next()->setSampleRate(m_srate);
+	gen1_sample2.next()->setSampleRate(m_srate);
 	lfo1_wave.setSampleRate(m_srate);
 
 	updateEnvTimes();
@@ -1285,9 +1303,9 @@ void padthv1_impl::updateEnvTimes (void)
 
 	float envtime_msecs = 10000.0f * m_gen1.envtime0;
 	if (envtime_msecs < MIN_ENV_MSECS)
-		envtime_msecs = (gen1_sample1.size() >> 1) / srate_ms;
+		envtime_msecs = (gen1_sample1.next()->size() >> 1) / srate_ms;
 	if (envtime_msecs < MIN_ENV_MSECS)
-		envtime_msecs = (gen1_sample2.size() >> 1) / srate_ms;
+		envtime_msecs = (gen1_sample2.next()->size() >> 1) / srate_ms;
 	if (envtime_msecs < MIN_ENV_MSECS)
 		envtime_msecs = MIN_ENV_MSECS * 4.0f;
 
@@ -2332,10 +2350,10 @@ float padthv1::sampleRate (void) const
 padthv1_sample *padthv1::sample ( int sid ) const
 {
 	if (sid == 1)
-		return &(m_pImpl->gen1_sample1);
+		return m_pImpl->gen1_sample1.prev();
 	else
 	if (sid == 2)
-		return &(m_pImpl->gen1_sample2);
+		return m_pImpl->gen1_sample2.prev();
 	else
 		return nullptr;
 }
@@ -2443,6 +2461,13 @@ void padthv1::stabilize (void)
 void padthv1::reset_test (void)
 {
 	m_pImpl->reset_test();
+}
+
+
+void padthv1::reset_sync (
+	float freq0, float width, float scale, uint16_t nh, int apod, int sid )
+{
+	m_pImpl->reset_sync(freq0, width, scale, nh, apod, sid);
 }
 
 

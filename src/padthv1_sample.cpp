@@ -26,6 +26,9 @@
  */
 
 #include "padthv1_sample.h"
+#include "padthv1_sched.h"
+
+#include "padthv1.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -34,23 +37,19 @@
 
 
 //-------------------------------------------------------------------------
-// padthv1_sample_sched - local module schedule thread stuff.
+// padthv1_sample::sched - local module schedule thread stuff.
 //
 
-#include "padthv1_sched.h"
-#include "padthv1.h"
-
-
-class padthv1_sample_sched : public padthv1_sched
+class padthv1_sample::sched : public padthv1_sched
 {
 public:
 
 	// ctor.
-	padthv1_sample_sched (padthv1 *pSynth, padthv1_sample *sample)
-		: padthv1_sched(pSynth, Sample), m_sample(sample), m_sync(0) {}
+	sched(padthv1 *pSynth, int sid)
+		: padthv1_sched(pSynth, Sample), m_sid(sid), m_sync(0) {}
 
-	void schedule(float freq0, float width, float scale, uint16_t nh,
-		padthv1_sample::Apodizer apod, int sid = 0)
+	void schedule(float freq0, float width, float scale,
+		uint16_t nh, padthv1_sample::Apodizer apod)
 	{
 		m_freq0 = freq0;
 		m_width = width;
@@ -60,27 +59,21 @@ public:
 		m_apod  = apod;
 
 		if (++m_sync == 1)
-			padthv1_sched::schedule(sid);
+			padthv1_sched::schedule(m_sid);
 	}
 
 	// process reset (virtual).
 	void process(int)
 	{
 		padthv1 *pSynth = padthv1_sched::instance();
-		const bool running = pSynth->running(false);
-
-		pSynth->reset();
-
-		m_sample->reset(m_freq0, m_width, m_scale, m_nh, m_apod);
+		pSynth->reset_sync(m_freq0, m_width, m_scale, m_nh, m_apod, m_sid);
 		m_sync = 0;
-
-		pSynth->running(running);
 	}
 
 private:
 
 	// instance variables.
-	padthv1_sample *m_sample;
+	int m_sid;
 
 	volatile uint32_t m_sync;
 
@@ -101,7 +94,7 @@ private:
 padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0), m_sid(sid),
 		m_nh_max(0), m_ah(nullptr), m_nsize(nsize), m_srate(44100.0f),
-		m_phase0(0.0f), m_apod(Gauss), m_srand(0)
+		m_phase0(0.0f), m_apod(Gauss), m_srand(0), m_reset(0)
 {
 	const uint32_t nsize2 = (m_nsize >> 1);
 
@@ -120,9 +113,24 @@ padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	m_fftw_plan = ::fftwf_plan_r2r_1d(
 		m_nsize, m_fftw_data, m_fftw_data, FFTW_HC2R, FFTW_ESTIMATE);
 
-	m_sample_sched = new padthv1_sample_sched(pSynth, this);
+	m_sched = new sched(pSynth, sid);
 
 	reset_nh_max(DEFAULT_NH);
+}
+
+
+// copy ctor.
+padthv1_sample::padthv1_sample ( const padthv1_sample& sample )
+	: padthv1_sample(
+		  sample.m_sched->instance(),
+		  sample.m_sid, sample.m_nsize)
+{
+	m_srate = sample.m_srate;
+
+	reset_nh_max(sample.m_nh_max);
+
+	for (uint16_t n = 0; n < m_nh_max; ++n)
+		m_ah[n] = sample.m_ah[n];
 }
 
 
@@ -131,7 +139,7 @@ padthv1_sample::~padthv1_sample (void)
 {
 	if (m_ah) delete [] m_ah;
 
-	delete m_sample_sched;
+	delete m_sched;
 
 	::fftwf_destroy_plan(m_fftw_plan);
 
@@ -146,30 +154,28 @@ padthv1_sample::~padthv1_sample (void)
 
 
 // init.
-bool padthv1_sample::reset_test (
+void padthv1_sample::reset_test (
 	float freq0, float width, float scale, uint16_t nh, Apodizer apod )
 {
-	int updated = 0;
-
 	if (m_freq0 != freq0)
-		++updated;
+		++m_reset;
 	if (m_width != width)
-		++updated;
+		++m_reset;
 	if (m_scale != scale)
-		++updated;
+		++m_reset;
 	if (m_nh != nh)
-		++updated;
+		++m_reset;
 	if (m_apod != apod)
-		++updated;
+		++m_reset;
 
-	if (updated > 0)
-		m_sample_sched->schedule(freq0, width, scale, nh, apod, m_sid);
-
-	return (updated > 0);
+	if (m_reset > 0) {
+		m_reset = 0;
+		m_sched->schedule(freq0, width, scale, nh, apod);
+	}
 }
 
 
-void padthv1_sample::reset (
+void padthv1_sample::reset_sync (
 	float freq0, float width, float scale, uint16_t nh, Apodizer apod )
 {
 	m_freq0 = freq0;
@@ -187,10 +193,7 @@ void padthv1_sample::reset (
 
 void padthv1_sample::reset (void)
 {
-	m_freq0 = 0.0f;
-	m_width = 0.0f;
-	m_scale = 0.0f;
-//	m_nh    = 0;
+	++m_reset;
 }
 
 

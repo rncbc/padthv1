@@ -35,7 +35,6 @@
 
 // forward decls.
 class padthv1;
-class padthv1_sample_sched;
 
 
 //-------------------------------------------------------------------------
@@ -50,10 +49,13 @@ public:
 	static const uint32_t DEFAULT_NH    = 32;
 	static const uint32_t DEFAULT_NSIZE = 1024 << 6; // 64K
 
-	// ctor.
+	// ctors.
 	padthv1_sample(
 		padthv1 *pSynth, int sid = 0,
 		uint32_t nsize = DEFAULT_NSIZE);
+
+	// copy ctor.
+	padthv1_sample(const padthv1_sample& sample);
 
 	// dtor.
 	~padthv1_sample();
@@ -93,9 +95,9 @@ public:
 		{ return (n < m_nh_max) ? m_ah[n] : 0.0f; }
 
 	// init.
-	bool reset_test(
+	void reset_test(
 		float freq0, float width, float scale, uint16_t nh, Apodizer apod);
-	void reset(
+	void reset_sync(
 		float freq0, float width, float scale, uint16_t nh, Apodizer apod);
 	void reset();
 
@@ -117,7 +119,7 @@ public:
 		const uint32_t i = uint32_t(phase);
 		const float alpha = phase - float(i);
 		const float p0 = float(m_nsize);
-	
+
 		phase += (freq / m_freq0);
 
 		if (phase >= p0)
@@ -200,7 +202,11 @@ private:
 
 	uint32_t  m_srand;
 
-	padthv1_sample_sched *m_sample_sched;
+	volatile int m_reset;
+
+	class sched;
+
+	sched *m_sched;
 };
 
 
@@ -232,6 +238,78 @@ private:
 	padthv1_sample *m_sample;
 
 	float m_phase;
+};
+
+
+//-------------------------------------------------------------------------
+// padthv1_sample_ref - PADsynth wave table (sample reference lists).
+//
+#include "padthv1_list.h"
+
+class padthv1_sample_ref
+{
+public:
+
+	// dtor.
+	~padthv1_sample_ref()
+		{ clear_refs(true); }
+
+	// methods.
+	void append(padthv1_sample *sample)
+		{ m_play.append(new sample_ref(sample)); }
+
+	padthv1_sample *next() const
+		{ return m_play.next()->refp; }
+	padthv1_sample *prev() const
+		{ return m_play.prev()->refp; }
+
+	void acquire()
+		{ ++(m_play.next()->refc); }
+	void release()
+		{ --(m_play.next()->refc); free_refs(); }
+
+	void free_refs()
+	{
+		sample_ref *ref = m_play.next();
+		while (ref && ref->refc == 0 && ref != m_play.prev()) {
+			m_play.remove(ref);
+			m_free.append(ref);
+			ref = m_play.next();
+		}
+	}
+
+	void clear_refs(bool force = false)
+	{
+		sample_ref *ref;
+		if (force) {
+			ref = m_play.next();
+			while (ref) {
+				m_play.remove(ref);
+				m_free.append(ref);
+				ref = m_play.next();
+			}
+		}
+		ref = m_free.next();
+		while (ref) {
+			m_free.remove(ref);
+			delete ref->refp;
+			delete ref;
+			ref = m_free.next();
+		}
+	}
+
+private:
+
+	struct sample_ref : public padthv1_list<sample_ref>
+	{
+		sample_ref(padthv1_sample *sample) : refp(sample), refc(0) {}
+
+		padthv1_sample *refp;
+		uint32_t        refc;
+	};
+
+	padthv1_list<sample_ref> m_play;
+	padthv1_list<sample_ref> m_free;
 };
 
 

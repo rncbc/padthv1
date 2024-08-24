@@ -170,6 +170,9 @@ public:
 
 	void stabilize();
 	void reset_test();
+	void reset_sync(
+		float freq0, float width, float scale,
+		uint16_t nh, int apod, int sid);
 	void reset();
 
 	padthv1_controls *controls() const;

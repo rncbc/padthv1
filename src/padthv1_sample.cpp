@@ -30,6 +30,8 @@
 
 #include "padthv1.h"
 
+#include <QHash>
+
 #include <cstdlib>
 #include <cstring>
 
@@ -86,6 +88,29 @@ private:
 };
 
 
+// local schedule registry.
+//
+static QHash<int, padthv1_sample::sched *> g_sched_registry;
+
+padthv1_sample::sched *padthv1_sample::sched_register (
+	padthv1 *pSynth, int sid )
+{
+	sched *ret = g_sched_registry.value(sid, nullptr);
+	if (ret == nullptr) {
+		ret = new padthv1_sample::sched(pSynth, sid);
+		g_sched_registry.insert(sid, ret);
+	}
+	return ret;
+}
+
+
+void padthv1_sample::sched_cleanup (void)
+{
+	qDeleteAll(g_sched_registry);
+	g_sched_registry.clear();
+}
+
+
 //-------------------------------------------------------------------------
 // padthv1_sample - PADsynth wave table.
 //
@@ -113,7 +138,7 @@ padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	m_fftw_plan = ::fftwf_plan_r2r_1d(
 		m_nsize, m_fftw_data, m_fftw_data, FFTW_HC2R, FFTW_ESTIMATE);
 
-	m_sched = new sched(pSynth, sid);
+	m_sched = sched_register(pSynth, sid);
 
 	reset_nh_max(DEFAULT_NH);
 }
@@ -139,7 +164,7 @@ padthv1_sample::~padthv1_sample (void)
 {
 	if (m_ah) delete [] m_ah;
 
-	delete m_sched;
+//	delete m_sched;
 
 	::fftwf_destroy_plan(m_fftw_plan);
 

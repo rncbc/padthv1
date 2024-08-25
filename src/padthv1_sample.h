@@ -156,6 +156,13 @@ public:
 		return m_table[uint32_t(phase)];
 	}
 
+	// local schedule registry stuff.
+	//
+	class sched;
+
+	static sched *sched_register(padthv1 *pSynth, int sid);
+	static void sched_cleanup();
+
 protected:
 
 	// init harmonics table.
@@ -198,13 +205,12 @@ private:
 	float    *m_freq_sin;
 	float    *m_freq_cos;
 	float    *m_fftw_data;
+
 	fftwf_plan m_fftw_plan;
 
 	uint32_t  m_srand;
 
 	volatile int m_reset;
-
-	class sched;
 
 	sched *m_sched;
 };

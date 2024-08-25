@@ -1184,6 +1184,8 @@ padthv1_impl::~padthv1_impl (void)
 	gen1_sample1.clear_refs(true);
 	gen1_sample2.clear_refs(true);
 
+	padthv1_sample::sched_cleanup();
+
 	// deallocate local buffers
 	alloc_sfxs(0);
 

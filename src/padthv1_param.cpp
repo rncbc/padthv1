@@ -309,7 +309,9 @@ bool padthv1_param::loadPreset (
 	pSynth->stabilize();
 	pSynth->reset();
 	pSynth->reset_test();
+
 	padthv1_sched::sync_pending();
+
 	pSynth->running(running);
 
 	QDir::setCurrent(currentDir.absolutePath());

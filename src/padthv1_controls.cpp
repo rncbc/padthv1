@@ -1,7 +1,7 @@
 // padthv1_controls.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -570,9 +570,9 @@ private:
 // padthv1_controls - impl.
 //
 
-padthv1_controls::padthv1_controls ( padthv1 *pSynth )
+padthv1_controls::padthv1_controls ( padthv1 *pPadth )
 	: m_pImpl(new padthv1_controls::Impl()), m_enabled(false),
-		m_sched_in(pSynth), m_sched_out(pSynth),
+		m_sched_in(pPadth), m_sched_out(pPadth),
 		m_timeout(0), m_timein(0)
 {
 }

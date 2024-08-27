@@ -144,10 +144,10 @@ static void padthv1_jack_on_shutdown ( void *arg )
 static void padthv1_jack_session_event (
 	jack_session_event_t *pSessionEvent, void *pvArg )
 {
-	padthv1_jack *pSynth = static_cast<padthv1_jack *> (pvArg);
+	padthv1_jack *pPadth = static_cast<padthv1_jack *> (pvArg);
 
-	if (pSynth)
-		pSynth->sessionEvent(pSessionEvent);
+	if (pPadth)
+		pPadth->sessionEvent(pSessionEvent);
 }
 
 #endif	// CONFIG_JACK_SESSION
@@ -726,7 +726,7 @@ static void padthv1_sigterm_handler ( int /*signo*/ )
 // Constructor.
 padthv1_jack_application::padthv1_jack_application ( int& argc, char **argv )
 	: QObject(nullptr), m_pApp(nullptr), m_bGui(true),
-		m_sClientName(PROJECT_NAME), m_pSynth(nullptr), m_pWidget(nullptr)
+		m_sClientName(PROJECT_NAME), m_pPadth(nullptr), m_pWidget(nullptr)
 	  #ifdef CONFIG_NSM
 		, m_pNsmClient(nullptr)
 	  #endif
@@ -825,7 +825,7 @@ padthv1_jack_application::~padthv1_jack_application (void)
 	if (m_pNsmClient) delete m_pNsmClient;
 #endif
 	if (m_pWidget) delete m_pWidget;
-	if (m_pSynth) delete m_pSynth;
+	if (m_pPadth) delete m_pPadth;
 	if (m_pApp) delete m_pApp;
 }
 
@@ -977,10 +977,10 @@ bool padthv1_jack_application::setup (void)
 	const char *client_name
 		= aClientName.constData();
 
-	m_pSynth = new padthv1_jack(client_name);
+	m_pPadth = new padthv1_jack(client_name);
 
 	if (m_bGui) {
-		m_pWidget = new padthv1widget_jack(m_pSynth);
+		m_pWidget = new padthv1widget_jack(m_pPadth);
 	//	m_pWidget->show();
 		if (m_presets.isEmpty())
 			m_pWidget->initPreset();
@@ -989,7 +989,7 @@ bool padthv1_jack_application::setup (void)
 	}
 	else
 	if (!m_presets.isEmpty())
-		padthv1_param::loadPreset(m_pSynth, m_presets.first());
+		padthv1_param::loadPreset(m_pPadth, m_presets.first());
 
 #ifdef CONFIG_NSM
 	// Check whether to participate into a NSM session...
@@ -1039,7 +1039,7 @@ int padthv1_jack_application::exec (void)
 
 void padthv1_jack_application::openSession (void)
 {
-	if (m_pSynth == nullptr)
+	if (m_pPadth == nullptr)
 		return;
 
 	if (m_pNsmClient == nullptr)
@@ -1052,15 +1052,15 @@ void padthv1_jack_application::openSession (void)
 	qDebug("padthv1_jack::openSession()");
 #endif
 
-	m_pSynth->deactivate();
-	m_pSynth->close();
+	m_pPadth->deactivate();
+	m_pPadth->close();
 
 	const QString& client_name = m_pNsmClient->client_name();
 	const QString& path_name = m_pNsmClient->path_name();
 	const QString& display_name = m_pNsmClient->display_name();
 
-	m_pSynth->open(client_name.toUtf8().constData());
-	m_pSynth->activate();
+	m_pPadth->open(client_name.toUtf8().constData());
+	m_pPadth->activate();
 
 	const QDir dir(path_name);
 	if (!dir.exists())
@@ -1076,7 +1076,7 @@ void padthv1_jack_application::openSession (void)
 		if (m_pWidget) {
 			bOpen = m_pWidget->loadPreset(sFilename);
 		} else {
-			bOpen = padthv1_param::loadPreset(m_pSynth, sFilename);
+			bOpen = padthv1_param::loadPreset(m_pPadth, sFilename);
 		}
 	}
 
@@ -1091,7 +1091,7 @@ void padthv1_jack_application::openSession (void)
 
 void padthv1_jack_application::saveSession (void)
 {
-	if (m_pSynth == nullptr)
+	if (m_pPadth == nullptr)
 		return;
 
 	if (m_pNsmClient == nullptr)
@@ -1111,7 +1111,7 @@ void padthv1_jack_application::saveSession (void)
 	const QFileInfo fi(path_name, "session." PROJECT_NAME);
 
 	const bool bSave
-		= padthv1_param::savePreset(m_pSynth, fi.absoluteFilePath(), true);
+		= padthv1_param::savePreset(m_pPadth, fi.absoluteFilePath(), true);
 
 	m_pNsmClient->save_reply(bSave
 		? padthv1_nsm::ERR_OK
@@ -1184,13 +1184,13 @@ void padthv1_jack_application::handle_sigterm (void)
 // Simple watchdog (3 minute cycle).
 void padthv1_jack_application::watchdog_slot (void)
 {
-	if (m_pSynth && m_pSynth->client() == nullptr) {
+	if (m_pPadth && m_pPadth->client() == nullptr) {
 		const QByteArray aClientName
 			= m_sClientName.toLocal8Bit();
 		const char *client_name
 			= aClientName.constData();
-		m_pSynth->open(client_name);
-		m_pSynth->activate();
+		m_pPadth->open(client_name);
+		m_pPadth->activate();
 	}
 
 	watchdog_start();
@@ -1213,8 +1213,8 @@ void padthv1_jack_application::shutdown (void)
 
 void padthv1_jack_application::shutdown_slot (void)
 {
-	if (m_pSynth)
-		m_pSynth->shutdown_close();
+	if (m_pPadth)
+		m_pPadth->shutdown_close();
 
 #if 0//Don't quit anymore; let watchdog handle auto re-activation...
 	bool bQuit = true;

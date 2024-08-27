@@ -192,8 +192,8 @@ class padthv1widget_sched : public QObject
 public:
 
 	// ctor.
-	padthv1widget_sched(padthv1 *pSampl, QObject *pParent = nullptr)
-		: QObject(pParent), m_notifier(pSampl, this) {}
+	padthv1widget_sched(padthv1 *pPadth, QObject *pParent = nullptr)
+		: QObject(pParent), m_notifier(pPadth, this) {}
 
 signals:
 
@@ -207,8 +207,8 @@ protected:
 	{
 	public:
 
-		Notifier(padthv1 *pSynth, padthv1widget_sched *pSched)
-			: padthv1_sched::Notifier(pSynth), m_pSched(pSched) {}
+		Notifier(padthv1 *pPadth, padthv1widget_sched *pSched)
+			: padthv1_sched::Notifier(pPadth), m_pSched(pSched) {}
 
 		void notify(padthv1_sched::Type stype, int sid) const
 			{ m_pSched->emit_notify(stype, sid); }

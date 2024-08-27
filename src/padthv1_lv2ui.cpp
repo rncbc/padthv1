@@ -37,9 +37,9 @@
 // padthv1_lv2ui - impl.
 //
 
-padthv1_lv2ui::padthv1_lv2ui ( padthv1_lv2 *pSampl,
+padthv1_lv2ui::padthv1_lv2ui ( padthv1_lv2 *pPadth,
 	LV2UI_Controller controller, LV2UI_Write_Function write_function )
-	: padthv1_ui(pSampl, true)
+	: padthv1_ui(pPadth, true)
 {
 	m_controller = controller;
 	m_write_function = write_function;
@@ -71,20 +71,20 @@ static LV2UI_Handle padthv1_lv2ui_instantiate (
 	LV2UI_Controller controller, LV2UI_Widget *widget,
 	const LV2_Feature *const *features )
 {
-	padthv1_lv2 *pSynth = nullptr;
+	padthv1_lv2 *pPadth = nullptr;
 
 	for (int i = 0; features && features[i]; ++i) {
 		if (::strcmp(features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0) {
-			pSynth = static_cast<padthv1_lv2 *> (features[i]->data);
+			pPadth = static_cast<padthv1_lv2 *> (features[i]->data);
 			break;
 		}
 	}
 
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return nullptr;
 
 	padthv1widget_lv2 *pWidget
-		= new padthv1widget_lv2(pSynth, controller, write_function);
+		= new padthv1widget_lv2(pPadth, controller, write_function);
 	*widget = pWidget;
 	return pWidget;
 }
@@ -215,11 +215,11 @@ static LV2UI_Handle padthv1_lv2ui_x11_instantiate (
 {
 	WId winid, parent = 0;
 	LV2UI_Resize *resize = nullptr;
-	padthv1_lv2 *pSynth = nullptr;
+	padthv1_lv2 *pPadth = nullptr;
 
 	for (int i = 0; ui_features[i]; ++i) {
 		if (::strcmp(ui_features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0)
-			pSynth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
+			pPadth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
 		else
 		if (::strcmp(ui_features[i]->URI, LV2_UI__parent) == 0)
 			parent = (WId) ui_features[i]->data;
@@ -228,13 +228,13 @@ static LV2UI_Handle padthv1_lv2ui_x11_instantiate (
 			resize = (LV2UI_Resize *) ui_features[i]->data;
 	}
 
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return nullptr;
 	if (!parent)
 		return nullptr;
 
 	padthv1widget_lv2 *pWidget
-		= new padthv1widget_lv2(pSynth, controller, write_function);
+		= new padthv1widget_lv2(pPadth, controller, write_function);
 	if (resize && resize->handle) {
 		const QSize& hint = pWidget->sizeHint();
 		resize->ui_resize(resize->handle, hint.width(), hint.height());
@@ -258,11 +258,11 @@ static LV2UI_Handle padthv1_lv2ui_windows_instantiate (
 {
 	WId winid, parent = 0;
 	LV2UI_Resize *resize = nullptr;
-	padthv1_lv2 *pSynth = nullptr;
+	padthv1_lv2 *pPadth = nullptr;
 
 	for (int i = 0; ui_features[i]; ++i) {
 		if (::strcmp(ui_features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0)
-			pSynth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
+			pPadth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
 		else
 		if (::strcmp(ui_features[i]->URI, LV2_UI__parent) == 0)
 			parent = (WId) ui_features[i]->data;
@@ -271,13 +271,13 @@ static LV2UI_Handle padthv1_lv2ui_windows_instantiate (
 			resize = (LV2UI_Resize *) ui_features[i]->data;
 	}
 
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return nullptr;
 	if (!parent)
 		return nullptr;
 
 	padthv1widget_lv2 *pWidget
-		= new padthv1widget_lv2(pSynth, controller, write_function);
+		= new padthv1widget_lv2(pPadth, controller, write_function);
 	if (resize && resize->handle) {
 		const QSize& hint = pWidget->sizeHint();
 		resize->ui_resize(resize->handle, UI_WINDOWS_RECOMMENDED_WIDTH, UI_WINDOWS_RECOMMENDED_HEIGHT);
@@ -342,12 +342,12 @@ static LV2UI_Handle padthv1_lv2ui_external_instantiate (
 	LV2UI_Controller controller, LV2UI_Widget *widget,
 	const LV2_Feature *const *ui_features )
 {
-	padthv1_lv2 *pSynth = nullptr;
+	padthv1_lv2 *pPadth = nullptr;
 	LV2_External_UI_Host *external_host = nullptr;
 
 	for (int i = 0; ui_features[i] && !external_host; ++i) {
 		if (::strcmp(ui_features[i]->URI, LV2_INSTANCE_ACCESS_URI) == 0)
-			pSynth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
+			pPadth = static_cast<padthv1_lv2 *> (ui_features[i]->data);
 		else
 		if (::strcmp(ui_features[i]->URI, LV2_EXTERNAL_UI__Host) == 0 ||
 			::strcmp(ui_features[i]->URI, LV2_EXTERNAL_UI_DEPRECATED_URI) == 0) {
@@ -360,7 +360,7 @@ static LV2UI_Handle padthv1_lv2ui_external_instantiate (
 	pExtWidget->external.show = padthv1_lv2ui_external_show;
 	pExtWidget->external.hide = padthv1_lv2ui_external_hide;
 	pExtWidget->external_host = external_host;
-	pExtWidget->widget = new padthv1widget_lv2(pSynth, controller, write_function);
+	pExtWidget->widget = new padthv1widget_lv2(pPadth, controller, write_function);
 	if (external_host)
 		pExtWidget->widget->setExternalHost(external_host);
 	*widget = pExtWidget;

@@ -47,8 +47,8 @@ class padthv1_sample::sched : public padthv1_sched
 public:
 
 	// ctor.
-	sched(padthv1 *pSynth, int sid)
-		: padthv1_sched(pSynth, Sample), m_sid(sid), m_sync(0) {}
+	sched(padthv1 *pPadth, int sid)
+		: padthv1_sched(pPadth, Sample), m_sid(sid), m_sync(0) {}
 
 	void schedule(float freq0, float width, float scale,
 		uint16_t nh, padthv1_sample::Apodizer apod)
@@ -67,8 +67,8 @@ public:
 	// process reset (virtual).
 	void process(int)
 	{
-		padthv1 *pSynth = padthv1_sched::instance();
-		pSynth->reset_sync(m_freq0, m_width, m_scale, m_nh, m_apod, m_sid);
+		padthv1 *pPadth = padthv1_sched::instance();
+		pPadth->reset_sync(m_freq0, m_width, m_scale, m_nh, m_apod, m_sid);
 		m_sync = 0;
 	}
 
@@ -93,11 +93,11 @@ private:
 static QHash<int, padthv1_sample::sched *> g_sched_registry;
 
 padthv1_sample::sched *padthv1_sample::sched_register (
-	padthv1 *pSynth, int sid )
+	padthv1 *pPadth, int sid )
 {
 	sched *ret = g_sched_registry.value(sid, nullptr);
 	if (ret == nullptr) {
-		ret = new padthv1_sample::sched(pSynth, sid);
+		ret = new padthv1_sample::sched(pPadth, sid);
 		g_sched_registry.insert(sid, ret);
 	}
 	return ret;
@@ -116,7 +116,7 @@ void padthv1_sample::sched_cleanup (void)
 //
 
 // ctor.
-padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
+padthv1_sample::padthv1_sample ( padthv1 *pPadth, int sid, uint32_t nsize )
 	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0), m_sid(sid),
 		m_nh_max(0), m_ah(nullptr), m_nsize(nsize), m_srate(44100.0f),
 		m_phase0(0.0f), m_apod(Gauss), m_srand(0), m_reset(0)
@@ -138,7 +138,7 @@ padthv1_sample::padthv1_sample ( padthv1 *pSynth, int sid, uint32_t nsize )
 	m_fftw_plan = ::fftwf_plan_r2r_1d(
 		m_nsize, m_fftw_data, m_fftw_data, FFTW_HC2R, FFTW_ESTIMATE);
 
-	m_sched = sched_register(pSynth, sid);
+	m_sched = sched_register(pPadth, sid);
 
 	reset_nh_max(DEFAULT_NH);
 }

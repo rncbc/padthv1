@@ -63,8 +63,8 @@
 //
 
 // Constructor.
-padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
-	: padthv1widget(), m_pSynth(pSynth)
+padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pPadth )
+	: padthv1widget(), m_pPadth(pPadth)
 	#ifdef CONFIG_NSM
 		, m_pNsmClient(nullptr)
 	#endif
@@ -114,7 +114,7 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 	}
 
 	// Initialize (user) interface stuff...
-	m_pSynthUi = new padthv1_ui(m_pSynth, false);
+	m_pPadthUi = new padthv1_ui(m_pPadth, false);
 
 	// Initialise preset stuff...
 	clearPreset();
@@ -133,14 +133,14 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pSynth )
 // Destructor.
 padthv1widget_jack::~padthv1widget_jack (void)
 {
-	delete m_pSynthUi;
+	delete m_pPadthUi;
 }
 
 
 // Synth engine accessor.
 padthv1_ui *padthv1widget_jack::ui_instance (void) const
 {
-	return m_pSynthUi;
+	return m_pPadthUi;
 }
 
 #ifdef CONFIG_NSM
@@ -163,7 +163,7 @@ padthv1_nsm *padthv1widget_jack::nsmClient (void) const
 void padthv1widget_jack::updateParam (
 	padthv1::ParamIndex index, float fValue ) const
 {
-	m_pSynthUi->setParamValue(index, fValue);
+	m_pPadthUi->setParamValue(index, fValue);
 }
 
 

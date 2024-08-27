@@ -812,8 +812,8 @@ class padthv1_midi_in : public padthv1_sched
 {
 public:
 
-	padthv1_midi_in (padthv1 *pSampl)
-		: padthv1_sched(pSampl, MidiIn),
+	padthv1_midi_in (padthv1 *pPadth)
+		: padthv1_sched(pPadth, MidiIn),
 			m_enabled(false), m_count(0) {}
 
 	void schedule_event()
@@ -862,7 +862,7 @@ class padthv1_impl
 {
 public:
 
-	padthv1_impl(padthv1 *pSampl, uint16_t nchannels, float srate, uint32_t nsize);
+	padthv1_impl(padthv1 *pPadth, uint16_t nchannels, float srate, uint32_t nsize);
 
 	~padthv1_impl();
 
@@ -1096,13 +1096,13 @@ padthv1_voice::padthv1_voice ( padthv1_impl *pImpl ) :
 // engine constructor
 
 padthv1_impl::padthv1_impl (
-	padthv1 *pSampl, uint16_t nchannels, float srate, uint32_t nsize )
-	: m_controls(pSampl), m_programs(pSampl),
-		m_midi_in(pSampl), m_bpm(180.0f), m_nvoices(0), m_running(false)
+	padthv1 *pPadth, uint16_t nchannels, float srate, uint32_t nsize )
+	: m_controls(pPadth), m_programs(pPadth),
+		m_midi_in(pPadth), m_bpm(180.0f), m_nvoices(0), m_running(false)
 {
 	// initialize sample lists.
-	gen1_sample1.append(new padthv1_sample(pSampl, 1));
-	gen1_sample2.append(new padthv1_sample(pSampl, 2));
+	gen1_sample1.append(new padthv1_sample(pPadth, 1));
+	gen1_sample2.append(new padthv1_sample(pPadth, 2));
 
 	// null sample freqs.
 	m_gen1.sample1_0 = m_gen1.sample2_0 = 0.0f;

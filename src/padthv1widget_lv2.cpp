@@ -57,7 +57,7 @@
 //
 
 // Constructor.
-padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pSampl,
+padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pPadth,
 	LV2UI_Controller controller, LV2UI_Write_Function write_function )
 	: padthv1widget()
 {
@@ -110,7 +110,7 @@ padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pSampl,
 	}
 
 	// Initialize (user) interface stuff...
-	m_pSynthUi = new padthv1_lv2ui(pSampl, controller, write_function);
+	m_pPadthUi = new padthv1_lv2ui(pPadth, controller, write_function);
 
 #ifdef CONFIG_LV2_UI_EXTERNAL
 	m_external_host = nullptr;
@@ -136,14 +136,14 @@ padthv1widget_lv2::padthv1widget_lv2 ( padthv1_lv2 *pSampl,
 // Destructor.
 padthv1widget_lv2::~padthv1widget_lv2 (void)
 {
-	delete m_pSynthUi;
+	delete m_pPadthUi;
 }
 
 
 // Synth engine accessor.
 padthv1_ui *padthv1widget_lv2::ui_instance (void) const
 {
-	return m_pSynthUi;
+	return m_pPadthUi;
 }
 
 
@@ -184,7 +184,7 @@ void padthv1widget_lv2::closeEvent ( QCloseEvent *pCloseEvent )
 #ifdef CONFIG_LV2_UI_EXTERNAL
 	if (m_external_host && m_external_host->ui_closed) {
 		if (pCloseEvent->isAccepted())
-			m_external_host->ui_closed(m_pSynthUi->controller());
+			m_external_host->ui_closed(m_pPadthUi->controller());
 	}
 #endif
 }
@@ -207,7 +207,7 @@ void padthv1widget_lv2::port_event ( uint32_t port_index,
 void padthv1widget_lv2::updateParam (
 	padthv1::ParamIndex index, float fValue ) const
 {
-	m_pSynthUi->write_function(index, fValue);
+	m_pPadthUi->write_function(index, fValue);
 }
 
 

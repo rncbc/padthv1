@@ -51,7 +51,7 @@ public:
 
 	// ctors.
 	padthv1_sample(
-		padthv1 *pSynth, int sid = 0,
+		padthv1 *pPadth, int sid = 0,
 		uint32_t nsize = DEFAULT_NSIZE);
 
 	// copy ctor.
@@ -160,7 +160,7 @@ public:
 	//
 	class sched;
 
-	static sched *sched_register(padthv1 *pSynth, int sid);
+	static sched *sched_register(padthv1 *pPadth, int sid);
 	static void sched_cleanup();
 
 protected:

@@ -218,9 +218,9 @@ bool padthv1_param::paramFloat ( padthv1::ParamIndex index )
 
 // Preset serialization methods.
 bool padthv1_param::loadPreset (
-	padthv1 *pSynth, const QString& sFilename )
+	padthv1 *pPadth, const QString& sFilename )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return false;
 
 	QFileInfo fi(sFilename);
@@ -241,12 +241,12 @@ bool padthv1_param::loadPreset (
 	if (!file.open(QIODevice::ReadOnly))
 		return false;
 
-	const bool running = pSynth->running(false);
+	const bool running = pPadth->running(false);
 
 	padthv1_sched::sync_reset();
 
-	pSynth->setTuningEnabled(false);
-	pSynth->reset();
+	pPadth->setTuningEnabled(false);
+	pPadth->reset();
 
 	static QHash<QString, padthv1::ParamIndex> s_hash;
 	if (s_hash.isEmpty()) {
@@ -287,18 +287,18 @@ bool padthv1_param::loadPreset (
 								index = s_hash.value(sName);
 							}
 							const float fValue = eParam.text().toFloat();
-							pSynth->setParamValue(index,
+							pPadth->setParamValue(index,
 								padthv1_param::paramSafeValue(index, fValue));
 						}
 					}
 				}
 				else
 				if (eChild.tagName() == "samples") {
-					padthv1_param::loadSamples(pSynth, eChild);
+					padthv1_param::loadSamples(pPadth, eChild);
 				}
 				else
 				if (eChild.tagName() == "tuning") {
-					padthv1_param::loadTuning(pSynth, eChild);
+					padthv1_param::loadTuning(pPadth, eChild);
 				}
 			}
 		}
@@ -306,13 +306,13 @@ bool padthv1_param::loadPreset (
 
 	file.close();
 
-	pSynth->stabilize();
-	pSynth->reset();
-	pSynth->reset_test();
+	pPadth->stabilize();
+	pPadth->reset();
+	pPadth->reset_test();
 
 	padthv1_sched::sync_pending();
 
-	pSynth->running(running);
+	pPadth->running(running);
 
 	QDir::setCurrent(currentDir.absolutePath());
 
@@ -321,12 +321,12 @@ bool padthv1_param::loadPreset (
 
 
 bool padthv1_param::savePreset (
-	padthv1 *pSynth, const QString& sFilename, bool bSymLink )
+	padthv1 *pPadth, const QString& sFilename, bool bSymLink )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return false;
 
-	pSynth->stabilize();
+	pPadth->stabilize();
 
 	const QFileInfo fi(sFilename);
 	const QDir currentDir(QDir::current());
@@ -338,7 +338,7 @@ bool padthv1_param::savePreset (
 	ePreset.setAttribute("version", PROJECT_VERSION);
 
 	QDomElement eSamples = doc.createElement("samples");
-	padthv1_param::saveSamples(pSynth, doc, eSamples, bSymLink);
+	padthv1_param::saveSamples(pPadth, doc, eSamples, bSymLink);
 	ePreset.appendChild(eSamples);
 
 	QDomElement eParams = doc.createElement("params");
@@ -347,15 +347,15 @@ bool padthv1_param::savePreset (
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
 		eParam.setAttribute("index", QString::number(i));
 		eParam.setAttribute("name", padthv1_param::paramName(index));
-		const float fValue = pSynth->paramValue(index);
+		const float fValue = pPadth->paramValue(index);
 		eParam.appendChild(doc.createTextNode(QString::number(fValue)));
 		eParams.appendChild(eParam);
 	}
 	ePreset.appendChild(eParams);
 
-	if (pSynth->isTuningEnabled()) {
+	if (pPadth->isTuningEnabled()) {
 		QDomElement eTuning = doc.createElement("tuning");
-		padthv1_param::saveTuning(pSynth, doc, eTuning, bSymLink);
+		padthv1_param::saveTuning(pPadth, doc, eTuning, bSymLink);
 		ePreset.appendChild(eTuning);
 	}
 
@@ -376,14 +376,14 @@ bool padthv1_param::savePreset (
 
 // Sample serialization methods.
 void padthv1_param::loadSamples (
-	padthv1 *pSynth, const QDomElement& eSamples )
+	padthv1 *pPadth, const QDomElement& eSamples )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return;
 
 	QHash<int, padthv1_sample *> list;
-	list.insert(0, pSynth->sample(1));
-	list.insert(1, pSynth->sample(2));
+	list.insert(0, pPadth->sample(1));
+	list.insert(1, pPadth->sample(2));
 
 	for (QDomNode nSample = eSamples.firstChild();
 			!nSample.isNull();
@@ -425,14 +425,14 @@ void padthv1_param::loadSamples (
 
 
 void padthv1_param::saveSamples (
-	padthv1 *pSynth, QDomDocument& doc, QDomElement& eSamples, bool /*bSymLink*/ )
+	padthv1 *pPadth, QDomDocument& doc, QDomElement& eSamples, bool /*bSymLink*/ )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return;
 
 	QHash<int, padthv1_sample *> list;
-	list.insert(0, pSynth->sample(1));
-	list.insert(1, pSynth->sample(2));
+	list.insert(0, pPadth->sample(1));
+	list.insert(1, pPadth->sample(2));
 
 	QHash<int, padthv1_sample *>::ConstIterator iter = list.constBegin();
 	const QHash<int, padthv1_sample *>::ConstIterator& iter_end = list.constEnd();
@@ -460,12 +460,12 @@ void padthv1_param::saveSamples (
 
 // Tuning serialization methods.
 void padthv1_param::loadTuning (
-	padthv1 *pSynth, const QDomElement& eTuning )
+	padthv1 *pPadth, const QDomElement& eTuning )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return;
 
-	pSynth->setTuningEnabled(eTuning.attribute("enabled").toInt() > 0);
+	pPadth->setTuningEnabled(eTuning.attribute("enabled").toInt() > 0);
 
 	for (QDomNode nChild = eTuning.firstChild();
 			!nChild.isNull();
@@ -474,14 +474,14 @@ void padthv1_param::loadTuning (
 		if (eChild.isNull())
 			continue;
 		if (eChild.tagName() == "enabled") {
-			pSynth->setTuningEnabled(eChild.text().toInt() > 0);
+			pPadth->setTuningEnabled(eChild.text().toInt() > 0);
 		}
 		if (eChild.tagName() == "ref-pitch") {
-			pSynth->setTuningRefPitch(eChild.text().toFloat());
+			pPadth->setTuningRefPitch(eChild.text().toFloat());
 		}
 		else
 		if (eChild.tagName() == "ref-note") {
-			pSynth->setTuningRefNote(eChild.text().toInt());
+			pPadth->setTuningRefNote(eChild.text().toInt());
 		}
 		else
 		if (eChild.tagName() == "scale-file") {
@@ -489,7 +489,7 @@ void padthv1_param::loadTuning (
 				= eChild.text();
 			const QByteArray aScaleFile
 				= padthv1_param::loadFilename(sScaleFile).toUtf8();
-			pSynth->setTuningScaleFile(aScaleFile.constData());
+			pPadth->setTuningScaleFile(aScaleFile.constData());
 		}
 		else
 		if (eChild.tagName() == "keymap-file") {
@@ -497,34 +497,34 @@ void padthv1_param::loadTuning (
 				= eChild.text();
 			const QByteArray aKeyMapFile
 				= padthv1_param::loadFilename(sKeyMapFile).toUtf8();
-			pSynth->setTuningScaleFile(aKeyMapFile.constData());
+			pPadth->setTuningScaleFile(aKeyMapFile.constData());
 		}
 	}
 
 	// Consolidate tuning state...
-	pSynth->updateTuning();
+	pPadth->updateTuning();
 }
 
 
 void padthv1_param::saveTuning (
-	padthv1 *pSynth, QDomDocument& doc, QDomElement& eTuning, bool bSymLink )
+	padthv1 *pPadth, QDomDocument& doc, QDomElement& eTuning, bool bSymLink )
 {
-	if (pSynth == nullptr)
+	if (pPadth == nullptr)
 		return;
 
-	eTuning.setAttribute("enabled", int(pSynth->isTuningEnabled()));
+	eTuning.setAttribute("enabled", int(pPadth->isTuningEnabled()));
 
 	QDomElement eRefPitch = doc.createElement("ref-pitch");
 	eRefPitch.appendChild(doc.createTextNode(
-		QString::number(pSynth->tuningRefPitch())));
+		QString::number(pPadth->tuningRefPitch())));
 	eTuning.appendChild(eRefPitch);
 
 	QDomElement eRefNote = doc.createElement("ref-note");
 	eRefNote.appendChild(doc.createTextNode(
-		QString::number(pSynth->tuningRefNote())));
+		QString::number(pPadth->tuningRefNote())));
 	eTuning.appendChild(eRefNote);
 
-	const char *pszScaleFile = pSynth->tuningScaleFile();
+	const char *pszScaleFile = pPadth->tuningScaleFile();
 	if (pszScaleFile) {
 		const QString& sScaleFile
 			= QString::fromUtf8(pszScaleFile);
@@ -537,7 +537,7 @@ void padthv1_param::saveTuning (
 		}
 	}
 
-	const char *pszKeyMapFile = pSynth->tuningKeyMapFile();
+	const char *pszKeyMapFile = pPadth->tuningKeyMapFile();
 	if (pszKeyMapFile) {
 		const QString& sKeyMapFile
 			= QString::fromUtf8(pszKeyMapFile);

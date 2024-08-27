@@ -190,7 +190,7 @@ private:
 	QString m_sClientName;
 	QStringList m_presets;
 
-	padthv1_jack *m_pSynth;
+	padthv1_jack *m_pPadth;
 	padthv1widget_jack *m_pWidget;
 
 #ifdef CONFIG_NSM

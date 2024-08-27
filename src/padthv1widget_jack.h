@@ -42,7 +42,7 @@ class padthv1widget_jack : public padthv1widget
 public:
 
 	// Constructor.
-	padthv1widget_jack(padthv1_jack *pSynth);
+	padthv1widget_jack(padthv1_jack *pPadth);
 
 	// Destructor.
 	~padthv1widget_jack();
@@ -76,8 +76,8 @@ protected:
 private:
 
 	// Instance variables.
-	padthv1     *m_pSynth;
-	padthv1_ui  *m_pSynthUi;
+	padthv1     *m_pPadth;
+	padthv1_ui  *m_pPadthUi;
 
 #ifdef CONFIG_NSM
 	padthv1_nsm *m_pNsmClient;

@@ -38,23 +38,23 @@ class QDomDocument;
 namespace padthv1_param
 {
 	// Preset serialization methods.
-	bool loadPreset(padthv1 *pSynth,
+	bool loadPreset(padthv1 *pPadth,
 		const QString& sFilename);
-	bool savePreset(padthv1 *pSynth,
+	bool savePreset(padthv1 *pPadth,
 		const QString& sFilename,
 		bool bSymLink = false);
 
 	// Sample serialization methods.
-	void loadSamples(padthv1 *pSynth,
+	void loadSamples(padthv1 *pPadth,
 		const QDomElement& eSamples);
-	void saveSamples(padthv1 *pSynth,
+	void saveSamples(padthv1 *pPadth,
 		QDomDocument& doc, QDomElement& eSamples,
 		bool bSymLink = false);
 
 	// Tuning serialization methods.
-	void loadTuning(padthv1 *pSynth,
+	void loadTuning(padthv1 *pPadth,
 		const QDomElement& eTuning);
-	void saveTuning(padthv1 *pSynth,
+	void saveTuning(padthv1 *pPadth,
 		QDomDocument& doc, QDomElement& eTuning,
 		bool bSymLink = false);
 

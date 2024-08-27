@@ -1,7 +1,7 @@
 // padthv1_programs.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ class padthv1_programs
 public:
 
 	// ctor.
-	padthv1_programs(padthv1 *pSynth);
+	padthv1_programs(padthv1 *pPadth);
 
 	// dtor.
 	~padthv1_programs();
@@ -111,7 +111,7 @@ public:
 
 	void select_program(uint16_t bank_id, uint16_t prog_id);
 
-	void process_program(padthv1 *pSynth, uint16_t bank_id, uint16_t prog_id);
+	void process_program(padthv1 *pPadth, uint16_t bank_id, uint16_t prog_id);
 
 	Bank *current_bank() const { return m_bank; }
 	Prog *current_prog() const { return m_prog; }
@@ -126,8 +126,8 @@ protected:
 	public:
 
 		// ctor.
-		Sched (padthv1 *pSynth)
-			: padthv1_sched(pSynth, Programs), m_bank_id(0), m_prog_id(0) {}
+		Sched (padthv1 *pPadth)
+			: padthv1_sched(pPadth, Programs), m_bank_id(0), m_prog_id(0) {}
 
 		// schedule (override)
 		void select_program(uint16_t bank_id, uint16_t prog_id)
@@ -143,9 +143,9 @@ protected:
 		// process (virtual).
 		void process(int)
 		{
-			padthv1 *pSynth = instance();
-			padthv1_programs *pPrograms = pSynth->programs();
-			pPrograms->process_program(pSynth, m_bank_id, m_prog_id);
+			padthv1 *pPadth = instance();
+			padthv1_programs *pPrograms = pPadth->programs();
+			pPrograms->process_program(pPadth, m_bank_id, m_prog_id);
 		}
 
 	private:

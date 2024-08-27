@@ -35,7 +35,7 @@ class padthv1widget_lv2 : public padthv1widget
 public:
 
 	// Constructor.
-	padthv1widget_lv2(padthv1_lv2 *pSampl,
+	padthv1widget_lv2(padthv1_lv2 *pPadth,
 		LV2UI_Controller controller, LV2UI_Write_Function write_function);
 
 	// Destructor.
@@ -68,7 +68,7 @@ protected:
 private:
 
 	// Instance variables.
-	padthv1_lv2ui *m_pSynthUi;
+	padthv1_lv2ui *m_pPadthUi;
 
 #ifdef CONFIG_LV2_UI_EXTERNAL
 	LV2_External_UI_Host *m_external_host;

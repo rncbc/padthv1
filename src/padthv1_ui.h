@@ -1,7 +1,7 @@
 // padthv1_ui.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2019, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ class padthv1_ui
 {
 public:
 
-	padthv1_ui(padthv1 *pSynth, bool bPlugin);
+	padthv1_ui(padthv1 *pPadth, bool bPlugin);
 
 	padthv1 *instance() const;
 
@@ -83,7 +83,7 @@ public:
 
 private:
 
-	padthv1 *m_pSynth;
+	padthv1 *m_pPadth;
 
 	bool m_bPlugin;
 };

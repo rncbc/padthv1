@@ -977,8 +977,8 @@ static LV2_Worker_Status padthv1_lv2_worker_work (
 	LV2_Handle instance, LV2_Worker_Respond_Function respond,
 	LV2_Worker_Respond_Handle handle, uint32_t size, const void *data )
 {
-	padthv1_lv2 *pSynth = static_cast<padthv1_lv2 *> (instance);
-	if (pSynth && pSynth->worker_work(data, size)) {
+	padthv1_lv2 *pPadth = static_cast<padthv1_lv2 *> (instance);
+	if (pPadth && pPadth->worker_work(data, size)) {
 		respond(handle, size, data);
 		return LV2_WORKER_SUCCESS;
 	}
@@ -990,8 +990,8 @@ static LV2_Worker_Status padthv1_lv2_worker_work (
 static LV2_Worker_Status padthv1_lv2_worker_response (
 	LV2_Handle instance, uint32_t size, const void *data )
 {
-	padthv1_lv2 *pSynth = static_cast<padthv1_lv2 *> (instance);
-	if (pSynth && pSynth->worker_response(data, size))
+	padthv1_lv2 *pPadth = static_cast<padthv1_lv2 *> (instance);
+	if (pPadth && pPadth->worker_response(data, size))
 		return LV2_WORKER_SUCCESS;
 	else
 		return LV2_WORKER_ERR_UNKNOWN;

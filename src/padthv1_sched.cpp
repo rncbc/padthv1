@@ -204,8 +204,8 @@ void padthv1_sched_thread::run_process (void)
 //
 
 // ctor.
-padthv1_sched::padthv1_sched ( padthv1 *pSynth, Type stype, uint32_t nsize )
-	: m_pSynth(pSynth), m_stype(stype), m_sync_wait(false)
+padthv1_sched::padthv1_sched ( padthv1 *pPadth, Type stype, uint32_t nsize )
+	: m_pPadth(pPadth), m_stype(stype), m_sync_wait(false)
 {
 	m_nsize = (4 << 1);
 	while (m_nsize < nsize)
@@ -242,7 +242,7 @@ padthv1_sched::~padthv1_sched (void)
 // instance access.
 padthv1 *padthv1_sched::instance (void) const
 {
-	return m_pSynth;
+	return m_pPadth;
 }
 
 
@@ -280,7 +280,7 @@ void padthv1_sched::sync_process (void)
 	while (r != m_iwrite) {
 		const int sid = m_items[r];
 		process(sid);
-		sync_notify(m_pSynth, m_stype, sid);
+		sync_notify(m_pPadth, m_stype, sid);
 		m_items[r] = 0;
 		++r &= m_nmask;
 	}
@@ -291,11 +291,11 @@ void padthv1_sched::sync_process (void)
 
 
 // signal broadcast (static).
-void padthv1_sched::sync_notify ( padthv1 *pSynth, Type stype, int sid )
+void padthv1_sched::sync_notify ( padthv1 *pPadth, Type stype, int sid )
 {
-	if (g_sched_notifiers.contains(pSynth)) {
+	if (g_sched_notifiers.contains(pPadth)) {
 		const QList<Notifier *>& list
-			= g_sched_notifiers.value(pSynth);
+			= g_sched_notifiers.value(pPadth);
 		QListIterator<Notifier *> iter(list);
 		while (iter.hasNext())
 			iter.next()->notify(stype, sid);
@@ -323,21 +323,21 @@ void padthv1_sched::sync_reset (void)
 //
 
 // ctor.
-padthv1_sched::Notifier::Notifier ( padthv1 *pSynth )
-	: m_pSynth(pSynth)
+padthv1_sched::Notifier::Notifier ( padthv1 *pPadth )
+	: m_pPadth(pPadth)
 {
-	g_sched_notifiers[pSynth].append(this);
+	g_sched_notifiers[pPadth].append(this);
 }
 
 
 // dtor.
 padthv1_sched::Notifier::~Notifier (void)
 {
-	if (g_sched_notifiers.contains(m_pSynth)) {
-		QList<Notifier *>& list = g_sched_notifiers[m_pSynth];
+	if (g_sched_notifiers.contains(m_pPadth)) {
+		QList<Notifier *>& list = g_sched_notifiers[m_pPadth];
 		list.removeAll(this);
 		if (list.isEmpty())
-			g_sched_notifiers.remove(m_pSynth);
+			g_sched_notifiers.remove(m_pPadth);
 	}
 }
 

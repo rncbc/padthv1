@@ -1,7 +1,7 @@
 // padthv1_controls.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ class padthv1_controls
 public:
 
 	// ctor.
-	padthv1_controls(padthv1 *pSynth);
+	padthv1_controls(padthv1 *pPadth);
 
 	// dtor.
 	~padthv1_controls();
@@ -153,8 +153,8 @@ protected:
 	public:
 
 		// ctor.
-		SchedIn (padthv1 *pSynth)
-			: padthv1_sched(pSynth, Controller) {}
+		SchedIn (padthv1 *pPadth)
+			: padthv1_sched(pPadth, Controller) {}
 
 		void schedule_key(const Key& key)
 			{ m_key = key; schedule(); }
@@ -178,8 +178,8 @@ protected:
 	public:
 
 		// ctor.
-		SchedOut (padthv1 *pSynth)
-			: padthv1_sched(pSynth, Controls), m_value(0.0f) {}
+		SchedOut (padthv1 *pPadth)
+			: padthv1_sched(pPadth, Controls), m_value(0.0f) {}
 
 		void schedule_event(padthv1::ParamIndex index, float value)
 		{
@@ -192,10 +192,10 @@ protected:
 		// process (virtual stub).
 		void process(int sid)
 		{
-			padthv1 *pSynth = instance();
+			padthv1 *pPadth = instance();
 			padthv1::ParamIndex index = padthv1::ParamIndex(sid);
-			pSynth->setParamValue(index, m_value);
-			pSynth->updateParam(index);
+			pPadth->setParamValue(index, m_value);
+			pPadth->updateParam(index);
 		}
 
 	private:

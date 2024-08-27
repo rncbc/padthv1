@@ -1,7 +1,7 @@
 // padthv1_programs.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2020, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -27,8 +27,8 @@
 //
 
 // ctor.
-padthv1_programs::padthv1_programs ( padthv1 *pSynth )
-	: m_enabled(false), m_sched(pSynth),
+padthv1_programs::padthv1_programs ( padthv1 *pPadth )
+	: m_enabled(false), m_sched(pPadth),
 		m_bank_msb(0), m_bank_lsb(0),
 		m_bank(nullptr), m_prog(nullptr)
 {
@@ -175,14 +175,14 @@ void padthv1_programs::select_program ( uint16_t bank_id, uint16_t prog_id )
 
 
 void padthv1_programs::process_program (
-	padthv1 *pSynth, uint16_t bank_id, uint16_t prog_id )
+	padthv1 *pPadth, uint16_t bank_id, uint16_t prog_id )
 {
 	m_bank = find_bank(bank_id);
 	m_prog = (m_bank ? m_bank->find_prog(prog_id) : nullptr);
 
 	if (m_prog) {
-		padthv1_param::loadPreset(pSynth, m_prog->name());
-		pSynth->updateParams();
+		padthv1_param::loadPreset(pPadth, m_prog->name());
+		pPadth->updateParams();
 	}
 }
 

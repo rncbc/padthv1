@@ -69,7 +69,7 @@ class padthv1_lv2ui : public padthv1_ui
 public:
 
 	// Constructor.
-	padthv1_lv2ui(padthv1_lv2 *pSampl,
+	padthv1_lv2ui(padthv1_lv2 *pPadth,
 		LV2UI_Controller controller, LV2UI_Write_Function write_function);
 
 	// Accessors.

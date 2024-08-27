@@ -41,7 +41,7 @@ public:
 	enum Type { Sample, Programs, Controls, Controller, MidiIn };
 
 	// ctor.
-	padthv1_sched(padthv1 *pSynth, Type stype, uint32_t nsize = 8);
+	padthv1_sched(padthv1 *pPadth, Type stype, uint32_t nsize = 8);
 
 	// virtual dtor.
 	virtual ~padthv1_sched();
@@ -62,7 +62,7 @@ public:
 	virtual void process(int sid) = 0;
 
 	// signal broadcast (static).
-	static void sync_notify(padthv1 *pSynth, Type stype, int sid);
+	static void sync_notify(padthv1 *pPadth, Type stype, int sid);
 
 	// Notifier - Worker/schedule proxy decl.
 	//
@@ -71,7 +71,7 @@ public:
 	public:
 
 		// ctor.
-		Notifier(padthv1 *pSynth);
+		Notifier(padthv1 *pPadth);
 
 		// dtor.
 		virtual ~Notifier();
@@ -82,7 +82,7 @@ public:
 	private:
 
 		// instance variables.
-		padthv1 *m_pSynth;
+		padthv1 *m_pPadth;
 	};
 
 	// process/clear pending schedules, immediately. (static)
@@ -92,7 +92,7 @@ public:
 private:
 
 	// instance variables.
-	padthv1 *m_pSynth;
+	padthv1 *m_pPadth;
 
 	Type m_stype;
 

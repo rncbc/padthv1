@@ -4,11 +4,10 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+1.1.0  2024-08-28  A Mid-Summer'24 Release.
 
 - Smooth and seamless voice/note deferred switching, whenever any
-  wavetable parameter is reset or changed. (EXPERIMENTAL) (solves
-  GH Issue #12)
+  wavetable parameter is reset or changed.
 - LV2 Plug-in Control Input Port-Change Request extension is not
   tagged experimental anymore.
 

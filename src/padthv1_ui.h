@@ -43,6 +43,8 @@ public:
 
 	padthv1_sample *sample(int sid) const;
 
+	bool newPreset();
+
 	bool loadPreset(const QString& sFilename);
 	bool savePreset(const QString& sFilename);
 

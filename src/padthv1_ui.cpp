@@ -52,6 +52,12 @@ padthv1_sample *padthv1_ui::sample ( int sid ) const
 }
 
 
+bool padthv1_ui::newPreset (void)
+{
+	return padthv1_param::newPreset(m_pPadth);
+}
+
+
 bool padthv1_ui::loadPreset ( const QString& sFilename )
 {
 	return padthv1_param::loadPreset(m_pPadth, sFilename);

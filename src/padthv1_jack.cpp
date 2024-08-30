@@ -48,8 +48,8 @@ class padthv1_alsa_thread : public QThread
 {
 public:
 
-	padthv1_alsa_thread(padthv1_jack *sampl)
-		: QThread(), m_sampl(sampl), m_running(false) {}
+	padthv1_alsa_thread(padthv1_jack *padth)
+		: QThread(), m_padth(padth), m_running(false) {}
 
 	~padthv1_alsa_thread()
 	{	// fake sync and wait
@@ -63,7 +63,7 @@ protected:
 
 	void run()
 	{
-		snd_seq_t *seq = m_sampl->alsa_seq();
+		snd_seq_t *seq = m_padth->alsa_seq();
 		if (seq == nullptr)
 			return;
 
@@ -83,7 +83,7 @@ protected:
 			while (poll_rc > 0) {
 				snd_seq_event_t *ev = nullptr;
 				snd_seq_event_input(seq, &ev);
-				m_sampl->alsa_capture(ev);
+				m_padth->alsa_capture(ev);
 			//	snd_seq_free_event(ev);
 				poll_rc = snd_seq_event_input_pending(seq, 0);
 			}
@@ -94,7 +94,7 @@ protected:
 
 private:
 
-	padthv1_jack *m_sampl;
+	padthv1_jack *m_padth;
 
 	volatile bool m_running;
 };
@@ -979,17 +979,8 @@ bool padthv1_jack_application::setup (void)
 
 	m_pPadth = new padthv1_jack(client_name);
 
-	if (m_bGui) {
+	if (m_bGui)
 		m_pWidget = new padthv1widget_jack(m_pPadth);
-	//	m_pWidget->show();
-		if (m_presets.isEmpty())
-			m_pWidget->initPreset();
-		else
-			m_pWidget->loadPreset(m_presets.first());
-	}
-	else
-	if (!m_presets.isEmpty())
-		padthv1_param::loadPreset(m_pPadth, m_presets.first());
 
 #ifdef CONFIG_NSM
 	// Check whether to participate into a NSM session...
@@ -1018,8 +1009,16 @@ bool padthv1_jack_application::setup (void)
 	}
 	else
 #endif	// CONFIG_NSM
-	if (m_pWidget)
+	if (m_pWidget) {
 		m_pWidget->show();
+		if (m_presets.isEmpty())
+			m_pWidget->initPreset();
+		else
+			m_pWidget->loadPreset(m_presets.first());
+	}
+	else
+	if (!m_presets.isEmpty())
+		padthv1_param::loadPreset(m_pPadth, m_presets.first());
 
 	// Start watchdog timer...
 	watchdog_start();

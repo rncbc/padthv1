@@ -37,6 +37,9 @@ class QDomDocument;
 
 namespace padthv1_param
 {
+	// Preset initialization method.
+	bool newPreset(padthv1 *pPadth);
+
 	// Preset serialization methods.
 	bool loadPreset(padthv1 *pPadth,
 		const QString& sFilename);

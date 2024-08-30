@@ -216,6 +216,28 @@ bool padthv1_param::paramFloat ( padthv1::ParamIndex index )
 }
 
 
+// Preset initialization method.
+bool padthv1_param::newPreset ( padthv1 *pPadth )
+{
+	if (pPadth == nullptr)
+		return false;
+
+	const bool running = pPadth->running(false);
+
+	padthv1_sched::sync_reset();
+
+	pPadth->stabilize();
+	pPadth->reset();
+	pPadth->reset_test();
+
+	padthv1_sched::sync_pending();
+
+	pPadth->running(running);
+
+	return true;
+}
+
+
 // Preset serialization methods.
 bool padthv1_param::loadPreset (
 	padthv1 *pPadth, const QString& sFilename )

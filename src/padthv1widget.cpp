@@ -1007,6 +1007,10 @@ void padthv1widget::newPreset (void)
 	resetParamKnobs();
 	resetParamValues();
 
+	padthv1_ui *pSynthUi = ui_instance();
+	if (pSynthUi)
+		pSynthUi->newPreset();
+
 	m_ui.StatusBar->showMessage(tr("New preset"), 5000);
 	updateDirtyPreset(false);
 }

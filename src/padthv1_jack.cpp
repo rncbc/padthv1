@@ -1105,9 +1105,9 @@ void padthv1_jack_application::saveSession (void)
 
 //	const QString& client_name = m_pNsmClient->client_name();
 	const QString& path_name = m_pNsmClient->path_name();
-//	const QString& display_name = m_pNsmClient->display_name();
-//	const QFileInfo fi(path_name, display_name + '.' + PROJECT_NAME);
-	const QFileInfo fi(path_name, "session." PROJECT_NAME);
+	const QString& display_name = m_pNsmClient->display_name();
+	const QFileInfo fi(path_name, display_name + '.' + PROJECT_NAME);
+//	const QFileInfo fi(path_name, "session." PROJECT_NAME);
 
 	const bool bSave
 		= padthv1_param::savePreset(m_pPadth, fi.absoluteFilePath(), true);

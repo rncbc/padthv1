@@ -356,12 +356,12 @@ void padthv1_sample::reset_table (void)
 	::memset(m_freq_amp, 0, nsize2 * sizeof(float));
 
 	const float rate1 = m_srate / float(m_nsize);
+	const float bws = m_scale * m_scale * m_scale;
 
 	for (uint16_t n = 0; n < m_nh; ++n) {
 
 		// n-th harmonic bandwidth scaling
 		const float ni = float(n + 1);
-		const float bws = m_scale * m_scale * m_scale;
 		const float bwi
 			= (fast_powf(2.0f, m_width / 1200.0f) - 1.0f)
 			* 0.5f * m_freq0 * freq_powf(ni, bws);

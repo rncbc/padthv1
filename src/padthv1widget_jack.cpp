@@ -108,7 +108,7 @@ padthv1widget_jack::padthv1widget_jack ( padthv1_jack *pPadth )
 				padthv1widget::setPalette(pal);
 		}
 		if (!pConfig->sCustomStyleTheme.isEmpty()) {
-			padthv1widget::setStyle(
+			QApplication::setStyle(
 				QStyleFactory::create(pConfig->sCustomStyleTheme));
 		}
 	}

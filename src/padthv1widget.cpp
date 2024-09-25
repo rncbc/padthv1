@@ -580,13 +580,7 @@ padthv1widget::padthv1widget ( QWidget *pParent )
 		SLOT(helpAboutQt()));
 
 	// General knob/dial  behavior init...
-	padthv1_config *pConfig = padthv1_config::getInstance();
-	if (pConfig) {
-		padthv1widget_dial::setDialMode(
-			padthv1widget_dial::DialMode(pConfig->iKnobDialMode));
-		padthv1widget_edit::setEditMode(
-			padthv1widget_edit::EditMode(pConfig->iKnobEditMode));
-	}
+	updateConfig();
 
 	// Epilog.
 	// QWidget::adjustSize();
@@ -1098,6 +1092,19 @@ void padthv1widget::updateSample ( int sid )
 bool padthv1widget::queryClose (void)
 {
 	return m_ui.Preset->queryPreset();
+}
+
+
+// Update visual configuration.
+void padthv1widget::updateConfig (void)
+{
+	padthv1_config *pConfig = padthv1_config::getInstance();
+	if (pConfig) {
+		padthv1widget_dial::setDialMode(
+			padthv1widget_dial::DialMode(pConfig->iKnobDialMode));
+		padthv1widget_edit::setEditMode(
+			padthv1widget_edit::EditMode(pConfig->iKnobEditMode));
+	}
 }
 
 

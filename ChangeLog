@@ -4,7 +4,7 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+1.2.0  2024-12-15  An End-of-Year'24 Release.
 
 - Configure/Tuning: fixed initial scale and keyboard map tooltips.
 

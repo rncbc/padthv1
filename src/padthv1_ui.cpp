@@ -1,7 +1,7 @@
 // padthv1_ui.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2025, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -102,6 +102,12 @@ void padthv1_ui::reset (void)
 void padthv1_ui::updatePreset ( bool bDirty )
 {
 	m_pPadth->updatePreset(bDirty);
+}
+
+
+void padthv1_ui::updateParam ( padthv1::ParamIndex index )
+{
+	m_pPadth->updateParam(index);
 }
 
 

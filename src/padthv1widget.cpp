@@ -476,6 +476,7 @@ padthv1widget::padthv1widget ( QWidget *pParent )
 	setParamKnob(padthv1::OUT1_VOLUME,  m_ui.Out1VolumeKnob);
 
 	// Make status-bar keyboard range active.
+	m_ui.StatusBar->keybd()->setAllNotesEnabled(true);
 	m_ui.StatusBar->keybd()->setNoteRange(true);
 
 	// Effects

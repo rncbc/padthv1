@@ -4,5 +4,6 @@
     <sub-class-of type="text/xml"/>
     <comment>padthv1 preset</comment>
     <glob pattern="*.padthv1"/>
+    <icon name="org.rncbc.padthv1.application-x-padthv1-preset"/>
   </mime-type>
 </mime-info>

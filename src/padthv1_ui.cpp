@@ -95,7 +95,7 @@ padthv1_programs *padthv1_ui::programs (void) const
 
 void padthv1_ui::reset (void)
 {
-	return m_pPadth->reset();
+	m_pPadth->reset();
 }
 
 

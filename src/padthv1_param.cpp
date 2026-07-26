@@ -519,7 +519,7 @@ void padthv1_param::loadTuning (
 				= eChild.text();
 			const QByteArray aKeyMapFile
 				= padthv1_param::loadFilename(sKeyMapFile).toUtf8();
-			pPadth->setTuningScaleFile(aKeyMapFile.constData());
+			pPadth->setTuningKeyMapFile(aKeyMapFile.constData());
 		}
 	}
 

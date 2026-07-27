@@ -247,8 +247,8 @@ bool padthv1_tuning::loadScaleFile ( const QString& scaleFile )
 	while (!fs.atEnd()) {
 		const QString& line
 			= fs.readLine().simplified();
-		// Skip all-whitespace lines...
-		if (line.isEmpty())
+		// Skip all-whitespace lines after description...
+		if (line.isEmpty() && !scaleDesc.isEmpty())
 			continue;
 		// Skip comment lines
 		if (line.at(0) == '!')

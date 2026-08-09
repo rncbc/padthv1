@@ -1,7 +1,7 @@
 // padthv1_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2026, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -95,10 +95,11 @@ static QHash<int, padthv1_sample::sched *> g_sched_registry;
 padthv1_sample::sched *padthv1_sample::sched_register (
 	padthv1 *pPadth, int sid )
 {
-	sched *ret = g_sched_registry.value(sid, nullptr);
+	const uint key = qHash(pPadth) ^ qHash(sid);
+	sched *ret = g_sched_registry.value(key, nullptr);
 	if (ret == nullptr) {
 		ret = new padthv1_sample::sched(pPadth, sid);
-		g_sched_registry.insert(sid, ret);
+		g_sched_registry.insert(key, ret);
 	}
 	return ret;
 }

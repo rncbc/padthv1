@@ -1,7 +1,7 @@
 // padthv1_config.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2026, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -60,15 +60,15 @@ padthv1_config::~padthv1_config (void)
 
 
 // Preset utility methods.
-QString padthv1_config::presetGroup (void) const
+QString padthv1_config::presetsGroup (void) const
 {
-	return "/Presets/";
+	return "/Presets";
 }
 
 
 QString padthv1_config::presetFile ( const QString& sPreset )
 {
-	QSettings::beginGroup(presetGroup());
+	QSettings::beginGroup(presetsGroup());
 	const QString sPresetFile(QSettings::value(sPreset).toString());
 	QSettings::endGroup();
 	return sPresetFile;
@@ -78,41 +78,37 @@ QString padthv1_config::presetFile ( const QString& sPreset )
 void padthv1_config::setPresetFile (
 	const QString& sPreset, const QString& sPresetFile )
 {
-	QSettings::beginGroup(presetGroup());
+	QSettings::beginGroup(presetsGroup());
 	QSettings::setValue(sPreset, sPresetFile);
 	QSettings::endGroup();
-
-	m_presetList.clear();
 }
 
 
 void padthv1_config::removePreset ( const QString& sPreset )
 {
-	QSettings::beginGroup(presetGroup());
+	QSettings::beginGroup(presetsGroup());
 	const QString& sPresetFile = QSettings::value(sPreset).toString();
-	if (QFileInfo(sPresetFile).exists())
+	if (QFileInfo::exists(sPresetFile))
 		QFile(sPresetFile).remove();
 	QSettings::remove(sPreset);
 	QSettings::endGroup();
-
-	m_presetList.clear();
 }
 
 
-const QStringList& padthv1_config::presetList (void)
+// Presets utility methods.
+QString padthv1_config::presetsBanksGroup (void) const
 {
-	if (m_presetList.isEmpty()) {
-		QSettings::beginGroup(presetGroup());
-		QStringListIterator iter(QSettings::childKeys());
-		while (iter.hasNext()) {
-			const QString& sPreset = iter.next();
-			if (QFileInfo(QSettings::value(sPreset).toString()).exists())
-				m_presetList.append(sPreset);
-		}
-		QSettings::endGroup();
-	}
+	return "/Banks";
+}
 
-	return m_presetList;
+QString padthv1_config::presetsBankListKey (void) const
+{
+	return "/BankList";
+}
+
+QString padthv1_config::presetsCurrentGroup (void) const
+{
+	return "/Current";
 }
 
 
@@ -324,6 +320,7 @@ void padthv1_config::load (void)
 	QSettings::endGroup();
 
 	QSettings::beginGroup("/Dialogs");
+	bPresetsPreview = QSettings::value("/PresetsPreview", false).toBool();
 	bProgramsPreview = QSettings::value("/ProgramsPreview", false).toBool();
 	bUseNativeDialogs = QSettings::value("/UseNativeDialogs", false).toBool();
 	// Run-time special non-persistent options.
@@ -344,6 +341,47 @@ void padthv1_config::load (void)
 	sTuningScaleFile = QSettings::value("/ScaleFile").toString();
 	sTuningKeyMapDir = QSettings::value("/KeyMapDir").toString();
 	sTuningKeyMapFile = QSettings::value("/KeyMapFile").toString();
+	QSettings::endGroup();
+
+	// Presets database.
+	presets.clear_banks();
+	QSettings::beginGroup(presetsBanksGroup());
+	const QStringList& bank_list
+		= QSettings::value(presetsBankListKey()).toStringList();
+	QStringListIterator bank_iter(bank_list);
+	while (bank_iter.hasNext()) {
+		const QString& sBank = bank_iter.next();
+		padthv1_presets::Bank *pBank = presets.add_bank(sBank);
+		const QStringList& preset_list
+			= QSettings::value(sBank).toStringList();
+		QStringListIterator preset_iter(preset_list);
+		while (preset_iter.hasNext()) {
+			const QString& sPreset = preset_iter.next();
+			pBank->add_preset(sPreset);
+		}
+	}
+	QSettings::endGroup();
+
+	presets.clear_presets();
+	QSettings::beginGroup(presetsGroup());
+	const QStringList& preset_list = QSettings::childKeys();
+	QStringListIterator preset_iter(preset_list);
+	while (preset_iter.hasNext()) {
+		const QString& sPreset = preset_iter.next();
+		padthv1_presets::Preset *pPreset = presets.find_preset(sPreset);
+		if (pPreset == nullptr)
+			pPreset = presets.add_preset(sPreset);
+		const QString& sPresetFile
+			= QSettings::value(sPreset).toString();
+		if (!sPresetFile.isEmpty()
+			&& QFileInfo::exists(sPresetFile))
+			pPreset->set_file(sPresetFile);
+	}
+	QSettings::endGroup();
+
+	QSettings::beginGroup(presetsCurrentGroup());
+	presets.set_current_bank(QSettings::value("/Bank").toString());
+	presets.set_current_preset(QSettings::value("/Preset").toString());
 	QSettings::endGroup();
 }
 
@@ -366,6 +404,7 @@ void padthv1_config::save (void)
 	QSettings::endGroup();
 
 	QSettings::beginGroup("/Dialogs");
+	QSettings::setValue("/PresetsPreview", bPresetsPreview);
 	QSettings::setValue("/ProgramsPreview", bProgramsPreview);
 	QSettings::setValue("/UseNativeDialogs", bUseNativeDialogs);
 	QSettings::endGroup();
@@ -384,6 +423,60 @@ void padthv1_config::save (void)
 	QSettings::setValue("/ScaleFile", sTuningScaleFile);
 	QSettings::setValue("/KeyMapDir", sTuningKeyMapDir);
 	QSettings::setValue("/KeyMapFile", sTuningKeyMapFile);
+	QSettings::endGroup();
+
+	// Presets database.
+	QSettings::beginGroup(presetsBanksGroup());
+	const QStringList& bank_keys = QSettings::childKeys();
+	QStringListIterator bank_key(bank_keys);
+	while (bank_key.hasNext())
+		QSettings::remove(bank_key.next());
+	const QStringList& bank_list = presets.bank_list();
+	QSettings::setValue(presetsBankListKey(), bank_list);
+	QStringListIterator bank_iter(bank_list);
+	while (bank_iter.hasNext()) {
+		const QString& sBank = bank_iter.next();
+		padthv1_presets::Bank *pBank = presets.find_bank(sBank);
+		if (pBank == nullptr)
+			continue;
+		QStringList preset_list;
+		QStringListIterator bank_preset_iter(pBank->preset_list());
+		while (bank_preset_iter.hasNext()) {
+			const QString& sPreset
+				= bank_preset_iter.next();
+			preset_list.append(sPreset);
+		}
+		QSettings::setValue(sBank, preset_list);
+	}
+	QSettings::endGroup();
+
+	QSettings::beginGroup(presetsGroup());
+	const QStringList& preset_keys = QSettings::childKeys();
+	QStringListIterator preset_key(preset_keys);
+	while (preset_key.hasNext())
+		QSettings::remove(preset_key.next());
+	const padthv1_presets::Presets& presets_map
+		= presets.presets();
+	padthv1_presets::Presets::ConstIterator presets_iter
+		= presets_map.constBegin();
+	const padthv1_presets::Presets::ConstIterator& presets_end
+		= presets_map.constEnd();
+	for ( ; presets_iter != presets_end; ++presets_iter) {
+		const QString& sPreset = presets_iter.key();
+		padthv1_presets::Preset *pPreset = presets_iter.value();
+		const QString& sPresetFile = pPreset->file();
+		if (!sPresetFile.isEmpty()
+			&& QFileInfo::exists(sPresetFile)) {
+			QSettings::setValue(sPreset, sPresetFile);
+		}
+	}
+	QSettings::endGroup();
+
+	QSettings::beginGroup(presetsCurrentGroup());
+	padthv1_presets::Bank *pBank = presets.current_bank();
+	padthv1_presets::Preset *pPreset = presets.current_preset();
+	QSettings::setValue("/Bank", (pBank ? pBank->name() : QString()));
+	QSettings::setValue("/Preset", (pPreset ? pPreset->name() : QString()));
 	QSettings::endGroup();
 
 	QSettings::sync();

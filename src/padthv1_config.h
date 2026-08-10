@@ -1,7 +1,7 @@
 // padthv1_config.h
 //
 /****************************************************************************
-   Copyright (C) 2012-2024, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2026, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -23,6 +23,8 @@
 #define __padthv1_config_h
 
 #include "config.h"
+
+#include "padthv1_presets.h"
 
 
 //-------------------------------------------------------------------------
@@ -63,6 +65,7 @@ public:
 	bool bControlsEnabled;
 	bool bProgramsEnabled;
 	bool bProgramsPreview;
+	bool bPresetsPreview;
 	bool bUseNativeDialogs;
 	// Run-time special non-persistent options.
 	bool bDontUseNativeDialogs;
@@ -80,6 +83,9 @@ public:
 	QString sTuningKeyMapDir;
 	QString sTuningKeyMapFile;
 
+	// Presets database.
+	padthv1_presets presets;
+
 	// Singleton instance accessor.
 	static padthv1_config *getInstance();
 
@@ -87,7 +93,6 @@ public:
 	QString presetFile(const QString& sPreset);
 	void setPresetFile(const QString& sPreset, const QString& sPresetFile);
 	void removePreset(const QString& sPreset);
-	const QStringList& presetList();
 
 	// Programs utility methods.
 	void loadPrograms(padthv1_programs *pPrograms);
@@ -100,7 +105,13 @@ public:
 protected:
 
 	// Preset group path.
-	QString presetGroup() const;
+	QString presetsGroup() const;
+
+	// Banks/presets group path.
+	QString presetsBanksGroup() const;
+	QString presetsBankListKey() const;
+	QString presetsCurrentGroup() const;
+
 
 	// Banks programs group path.
 	QString programsGroup() const;
@@ -119,9 +130,6 @@ protected:
 	void save();
 
 private:
-
-	// The presets list cache.
-	QStringList m_presetList;
 
 	// The singleton instance.
 	static padthv1_config *g_pSettings;

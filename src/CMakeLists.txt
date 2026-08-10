@@ -27,6 +27,7 @@ set (HEADERS
   padthv1_tuning.h
   padthv1_programs.h
   padthv1_controls.h
+  padthv1_presets.h
 )
 
 set (SOURCES
@@ -40,6 +41,7 @@ set (SOURCES
   padthv1_tuning.cpp
   padthv1_programs.cpp
   padthv1_controls.cpp
+  padthv1_presets.cpp
 )
 
 
@@ -52,8 +54,9 @@ set (HEADERS_UI
   padthv1widget_wave.h
   padthv1widget_param.h
   padthv1widget_keybd.h
-  padthv1widget_preset.h
   padthv1widget_status.h
+  padthv1widget_preset.h
+  padthv1widget_presets.h
   padthv1widget_programs.h
   padthv1widget_controls.h
   padthv1widget_control.h
@@ -70,8 +73,9 @@ set (SOURCES_UI
   padthv1widget_wave.cpp
   padthv1widget_param.cpp
   padthv1widget_keybd.cpp
-  padthv1widget_preset.cpp
   padthv1widget_status.cpp
+  padthv1widget_preset.cpp
+  padthv1widget_presets.cpp
   padthv1widget_programs.cpp
   padthv1widget_controls.cpp
   padthv1widget_control.cpp

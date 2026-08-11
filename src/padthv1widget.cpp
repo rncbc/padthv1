@@ -606,6 +606,8 @@ padthv1widget::padthv1widget ( QWidget *pParent )
 // Destructor.
 padthv1widget::~padthv1widget (void)
 {
+	savePresets();
+
 	if (m_sched_notifier)
 		delete m_sched_notifier;
 
@@ -1120,6 +1122,18 @@ void padthv1widget::updateConfig (void)
 }
 
 
+// Update/reload presets.
+void padthv1widget::loadPresets (void)
+{
+	m_ui.Preset->loadPresets();
+}
+
+void padthv1widget::savePresets (void)
+{
+	m_ui.Preset->savePresets();
+}
+
+
 // Preset status updater.
 void padthv1widget::updateLoadPreset ( const QString& sPreset )
 {
@@ -1234,6 +1248,8 @@ void padthv1widget::midiInLedTimeout (void)
 // Menu actions.
 void padthv1widget::helpConfigure (void)
 {
+	savePresets();
+
 	padthv1_ui *pSynthUi = ui_instance();
 	if (pSynthUi)
 		padthv1widget_config(this, pSynthUi).exec();

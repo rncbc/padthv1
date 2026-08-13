@@ -106,11 +106,6 @@ QString padthv1_config::presetsBankListKey (void) const
 	return "/BankList";
 }
 
-QString padthv1_config::presetsCurrentGroup (void) const
-{
-	return "/Current";
-}
-
 
 // Programs utility methods.
 QString padthv1_config::programsGroup (void) const
@@ -378,11 +373,6 @@ void padthv1_config::load (void)
 			pPreset->set_file(sPresetFile);
 	}
 	QSettings::endGroup();
-
-	QSettings::beginGroup(presetsCurrentGroup());
-	presets.set_current_bank(QSettings::value("/Bank").toString());
-	presets.set_current_preset(QSettings::value("/Preset").toString());
-	QSettings::endGroup();
 }
 
 
@@ -470,13 +460,6 @@ void padthv1_config::save (void)
 			QSettings::setValue(sPreset, sPresetFile);
 		}
 	}
-	QSettings::endGroup();
-
-	QSettings::beginGroup(presetsCurrentGroup());
-	padthv1_presets::Bank *pBank = presets.current_bank();
-	padthv1_presets::Preset *pPreset = presets.current_preset();
-	QSettings::setValue("/Bank", (pBank ? pBank->name() : QString()));
-	QSettings::setValue("/Preset", (pPreset ? pPreset->name() : QString()));
 	QSettings::endGroup();
 
 	QSettings::sync();

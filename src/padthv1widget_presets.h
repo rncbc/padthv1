@@ -52,9 +52,6 @@ public:
 	void loadPresets(padthv1_presets *pPresets);
 	void savePresets(padthv1_presets *pPresets);
 
-	void loadPresetsCurrent(padthv1_presets *pPresets);
-	void savePresetsCurrent(padthv1_presets *pPresets);
-
 	QString currentPreset() const;
 
 	void setPresetItem(const QString& sPreset);

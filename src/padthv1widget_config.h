@@ -47,7 +47,7 @@ class padthv1widget_config : public QDialog
 public:
 
 	// ctor.
-	padthv1widget_config(padthv1widget *pParent, padthv1_ui *pSynthUi);
+	padthv1widget_config(padthv1widget *pParent, padthv1_ui *pPadthUi);
 
 	// dtor.
 	~padthv1widget_config();
@@ -131,7 +131,7 @@ private:
 	Ui::padthv1widget_config& m_ui;
 
 	// Instance reference.
-	padthv1_ui *m_pSynthUi;
+	padthv1_ui *m_pPadthUi;
 
 	// Dialog dirty flag.
 	int m_iDirtyTuning;

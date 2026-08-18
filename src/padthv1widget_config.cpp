@@ -55,9 +55,9 @@ static const char *g_pszDefName = QT_TRANSLATE_NOOP("padthv1widget_config", "(de
 
 // ctor.
 padthv1widget_config::padthv1widget_config (
-	padthv1widget *pParent, padthv1_ui *pSynthUi )
+	padthv1widget *pParent, padthv1_ui *pPadthUi )
 	: QDialog(pParent), p_ui(new Ui::padthv1widget_config), m_ui(*p_ui),
-		m_pSynthUi(pSynthUi)
+		m_pPadthUi(pPadthUi)
 {
 	// Setup UI struct...
 	m_ui.setupUi(this);
@@ -89,8 +89,8 @@ padthv1widget_config::padthv1widget_config (
 
 	// Setup options...
 	padthv1_config *pConfig = padthv1_config::getInstance();
-	if (pConfig && m_pSynthUi) {
-		const bool bPlugin = m_pSynthUi->isPlugin();
+	if (pConfig && m_pPadthUi) {
+		const bool bPlugin = m_pPadthUi->isPlugin();
 		m_ui.PresetsPreviewCheckBox->setChecked(pConfig->bPresetsPreview);
 		m_ui.ProgramsPreviewCheckBox->setChecked(pConfig->bProgramsPreview);
 		m_ui.UseNativeDialogsCheckBox->setChecked(pConfig->bUseNativeDialogs);
@@ -109,14 +109,14 @@ padthv1widget_config::padthv1widget_config (
 		m_ui.PresetsTreeWidget->setPresetItem(pConfig->sPreset);
 		m_ui.PresetsPreviewCheckBox->setEnabled(!bPlugin && m_bPresets);
 		// Load controllers database...
-		padthv1_controls *pControls = m_pSynthUi->controls();
+		padthv1_controls *pControls = m_pPadthUi->controls();
 		if (pControls) {
 			m_ui.ControlsTreeWidget->loadControls(pControls);
 			m_ui.ControlsEnabledCheckBox->setEnabled(bPlugin);
 			m_ui.ControlsEnabledCheckBox->setChecked(pControls->enabled());
 		}
 		// Load programs database...
-		padthv1_programs *pPrograms = m_pSynthUi->programs();
+		padthv1_programs *pPrograms = m_pPadthUi->programs();
 		if (pPrograms) {
 			m_ui.ProgramsTreeWidget->loadPrograms(pPrograms);
 			m_ui.ProgramsEnabledCheckBox->setEnabled(bPlugin && m_bPresets);
@@ -127,7 +127,7 @@ padthv1widget_config::padthv1widget_config (
 		loadComboBoxHistory(m_ui.TuningScaleFileComboBox);
 		loadComboBoxHistory(m_ui.TuningKeyMapFileComboBox);
 		// Micro-tonal tuning settings...
-		const int iTuningTab = (m_pSynthUi->isTuningEnabled() ? 1 : 0);
+		const int iTuningTab = (m_pPadthUi->isTuningEnabled() ? 1 : 0);
 		m_ui.TuningTabBar->setCurrentIndex(iTuningTab);
 		tuningTabChanged(iTuningTab);
 	}
@@ -299,7 +299,7 @@ padthv1widget_config::~padthv1widget_config (void)
 
 padthv1_ui *padthv1widget_config::ui_instance (void) const
 {
-	return m_pSynthUi;
+	return m_pPadthUi;
 }
 
 
@@ -346,7 +346,7 @@ void padthv1widget_config::controlsContextMenuRequested ( const QPoint& pos )
 	QMenu menu(this);
 	QAction *pAction;
 
-	bool bEnabled = (m_pSynthUi && m_pSynthUi->controls() != nullptr);
+	bool bEnabled = (m_pPadthUi && m_pPadthUi->controls() != nullptr);
 
 	pAction = menu.addAction(QIcon(":/images/padthv1_preset.png"),
 		tr("&Add Controller"), this, SLOT(controlsAddItem()));
@@ -372,9 +372,9 @@ void padthv1widget_config::controlsContextMenuRequested ( const QPoint& pos )
 
 void padthv1widget_config::controlsEnabled ( bool bOn )
 {
-	if (m_pSynthUi) {
-		padthv1_controls *pControls = m_pSynthUi->controls();
-		if (pControls && m_pSynthUi->isPlugin())
+	if (m_pPadthUi) {
+		padthv1_controls *pControls = m_pPadthUi->controls();
+		if (pControls && m_pPadthUi->isPlugin())
 			pControls->enabled(bOn);
 	}
 
@@ -486,7 +486,7 @@ void padthv1widget_config::programsContextMenuRequested ( const QPoint& pos )
 	QMenu menu(this);
 	QAction *pAction;
 
-	bool bEnabled = (m_pSynthUi && m_pSynthUi->programs() != nullptr);
+	bool bEnabled = (m_pPadthUi && m_pPadthUi->programs() != nullptr);
 
 	pAction = menu.addAction(QIcon(":/images/presetBank.png"),
 		tr("Add &Bank"), this, SLOT(programsAddBankItem()));
@@ -516,9 +516,9 @@ void padthv1widget_config::programsContextMenuRequested ( const QPoint& pos )
 
 void padthv1widget_config::programsEnabled ( bool bOn )
 {
-	if (m_pSynthUi) {
-		padthv1_programs *pPrograms = m_pSynthUi->programs();
-		if (pPrograms && m_pSynthUi->isPlugin())
+	if (m_pPadthUi) {
+		padthv1_programs *pPrograms = m_pPadthUi->programs();
+		if (pPrograms && m_pPadthUi->isPlugin())
 			pPrograms->enabled(bOn);
 	}
 
@@ -632,17 +632,17 @@ void padthv1widget_config::tuningTabChanged ( int iTuningTab )
 		}
 	}
 	else
-	if (m_pSynthUi) {
+	if (m_pPadthUi) {
 		// Instance scope...
-		m_ui.TuningEnabledCheckBox->setChecked(m_pSynthUi->isTuningEnabled());
-		m_ui.TuningRefNoteComboBox->setCurrentIndex(m_pSynthUi->tuningRefNote());
-		m_ui.TuningRefPitchSpinBox->setValue(double(m_pSynthUi->tuningRefPitch()));
+		m_ui.TuningEnabledCheckBox->setChecked(m_pPadthUi->isTuningEnabled());
+		m_ui.TuningRefNoteComboBox->setCurrentIndex(m_pPadthUi->tuningRefNote());
+		m_ui.TuningRefPitchSpinBox->setValue(double(m_pPadthUi->tuningRefPitch()));
 		setComboBoxCurrentItem(
 			m_ui.TuningScaleFileComboBox,
-			QFileInfo(QString::fromUtf8(m_pSynthUi->tuningScaleFile())));
+			QFileInfo(QString::fromUtf8(m_pPadthUi->tuningScaleFile())));
 		setComboBoxCurrentItem(
 			m_ui.TuningKeyMapFileComboBox,
-			QFileInfo(QString::fromUtf8(m_pSynthUi->tuningKeyMapFile())));
+			QFileInfo(QString::fromUtf8(m_pPadthUi->tuningKeyMapFile())));
 	}
 
 	// Reset tuning dirty flag...
@@ -778,14 +778,14 @@ void padthv1widget_config::optionsChanged (void)
 void padthv1widget_config::stabilize (void)
 {
 	QTreeWidgetItem *pItem = m_ui.ControlsTreeWidget->currentItem();
-	bool bEnabled = (m_pSynthUi && m_pSynthUi->controls() != nullptr);
+	bool bEnabled = (m_pPadthUi && m_pPadthUi->controls() != nullptr);
 	m_ui.ControlsAddItemToolButton->setEnabled(bEnabled);
 	bEnabled = bEnabled && (pItem != nullptr);
 	m_ui.ControlsEditToolButton->setEnabled(bEnabled);
 	m_ui.ControlsDeleteToolButton->setEnabled(bEnabled);
 
 	pItem = m_ui.ProgramsTreeWidget->currentItem();
-	bEnabled = (m_pSynthUi && m_pSynthUi->programs() != nullptr && m_bPresets);
+	bEnabled = (m_pPadthUi && m_pPadthUi->programs() != nullptr && m_bPresets);
 	m_ui.ProgramsPreviewCheckBox->setEnabled(
 		bEnabled && m_ui.ProgramsEnabledCheckBox->isChecked());
 	m_ui.ProgramsAddBankToolButton->setEnabled(bEnabled);
@@ -830,7 +830,7 @@ void padthv1widget_config::stabilize (void)
 // dialog slots.
 void padthv1widget_config::accept (void)
 {
-	if (m_pSynthUi == nullptr)
+	if (m_pPadthUi == nullptr)
 		return;
 
 	padthv1_config *pConfig = padthv1_config::getInstance();
@@ -852,19 +852,19 @@ void padthv1widget_config::accept (void)
 			pConfig->sTuningScaleFile = comboBoxCurrentItem(m_ui.TuningScaleFileComboBox);
 			pConfig->sTuningKeyMapFile = comboBoxCurrentItem(m_ui.TuningKeyMapFileComboBox);
 		} else {
-			m_pSynthUi->setTuningEnabled(
+			m_pPadthUi->setTuningEnabled(
 				m_ui.TuningEnabledCheckBox->isChecked());
-			m_pSynthUi->setTuningRefNote(
+			m_pPadthUi->setTuningRefNote(
 				m_ui.TuningRefNoteComboBox->currentIndex());
-			m_pSynthUi->setTuningRefPitch(
+			m_pPadthUi->setTuningRefPitch(
 				float(m_ui.TuningRefPitchSpinBox->value()));
-			m_pSynthUi->setTuningScaleFile(comboBoxCurrentItem(
+			m_pPadthUi->setTuningScaleFile(comboBoxCurrentItem(
 				m_ui.TuningScaleFileComboBox).toUtf8().constData());
-			m_pSynthUi->setTuningKeyMapFile(comboBoxCurrentItem(
+			m_pPadthUi->setTuningKeyMapFile(comboBoxCurrentItem(
 				m_ui.TuningKeyMapFileComboBox).toUtf8().constData());
 		}
 		// Reset/update micro-tonal tuning...
-		m_pSynthUi->resetTuning();
+		m_pPadthUi->resetTuning();
 		// Save other conveniency options...
 		saveComboBoxHistory(m_ui.TuningScaleFileComboBox);
 		saveComboBoxHistory(m_ui.TuningKeyMapFileComboBox);
@@ -874,7 +874,7 @@ void padthv1widget_config::accept (void)
 
 	if (m_iDirtyControls > 0) {
 		// Save controls...
-		padthv1_controls *pControls = m_pSynthUi->controls();
+		padthv1_controls *pControls = m_pPadthUi->controls();
 		if (pControls) {
 			m_ui.ControlsTreeWidget->saveControls(pControls);
 			pConfig->saveControls(pControls);
@@ -885,7 +885,7 @@ void padthv1widget_config::accept (void)
 
 	if (m_iDirtyPrograms > 0) {
 		// Save programs...
-		padthv1_programs *pPrograms = m_pSynthUi->programs();
+		padthv1_programs *pPrograms = m_pPadthUi->programs();
 		if (pPrograms) {
 			m_ui.ProgramsTreeWidget->savePrograms(pPrograms);
 			pConfig->savePrograms(pPrograms);
@@ -921,7 +921,7 @@ void padthv1widget_config::accept (void)
 		pConfig->iKnobDialMode = m_ui.KnobDialModeComboBox->currentIndex();
 		pConfig->iKnobEditMode = m_ui.KnobEditModeComboBox->currentIndex();
 		int iNeedRestart = 0;
-		if (!m_pSynthUi->isPlugin()) {
+		if (!m_pPadthUi->isPlugin()) {
 			const QString sOldCustomStyleTheme = pConfig->sCustomStyleTheme;
 			if (m_ui.CustomStyleThemeComboBox->currentIndex() > 0)
 				pConfig->sCustomStyleTheme = m_ui.CustomStyleThemeComboBox->currentText();
@@ -1076,7 +1076,7 @@ void padthv1widget_config::resetCustomStyleThemes (
 
 	int iCustomStyleTheme = 0;
 	if (!sCustomStyleTheme.isEmpty()
-		&& m_pSynthUi && !m_pSynthUi->isPlugin()) {
+		&& m_pPadthUi && !m_pPadthUi->isPlugin()) {
 		iCustomStyleTheme = m_ui.CustomStyleThemeComboBox->findText(
 			sCustomStyleTheme);
 		if (iCustomStyleTheme < 0)
@@ -1187,7 +1187,7 @@ void padthv1widget_config::loadPreset ( const QString& sPreset )
 
 	padthv1widget *pParentWidget
 		= qobject_cast<padthv1widget *> (parentWidget());
-	if (pParentWidget && pParentWidget->loadPreset(sPresetFile)) {
+	if (pParentWidget && pParentWidget->loadPreset(sPreset, sPresetFile)) {
 		if (++m_iLoadPreset == 1)
 			m_sSavePreset = pConfig->sPreset;
 		pConfig->sPreset = sPreset;

@@ -534,11 +534,11 @@ padthv1widget::padthv1widget ( QWidget *pParent )
 		SIGNAL(newPresetFile()),
 		SLOT(newPreset()));
 	QObject::connect(m_ui.Preset,
-		SIGNAL(loadPresetFile(const QString&)),
-		SLOT(loadPreset(const QString&)));
+		SIGNAL(loadPresetFile(const QString&, const QString&)),
+		SLOT(loadPreset(const QString&, const QString&)));
 	QObject::connect(m_ui.Preset,
-		SIGNAL(savePresetFile(const QString&)),
-		SLOT(savePreset(const QString&)));
+		SIGNAL(savePresetFile(const QString&, const QString&)),
+		SLOT(savePreset(const QString&, const QString&)));
 	QObject::connect(m_ui.Preset,
 		SIGNAL(resetPresetFile()),
 		SLOT(resetParams()));
@@ -621,17 +621,17 @@ void padthv1widget::openSchedNotifier (void)
 	if (m_sched_notifier)
 		return;
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
-	m_sched_notifier = new padthv1widget_sched(pSynthUi->instance(), this);
+	m_sched_notifier = new padthv1widget_sched(pPadthUi->instance(), this);
 
 	QObject::connect(m_sched_notifier,
 		SIGNAL(notify(int, int)),
 		SLOT(updateSchedNotify(int, int)));
 
-	pSynthUi->midiInEnabled(true);
+	pPadthUi->midiInEnabled(true);
 }
 
 
@@ -642,9 +642,9 @@ void padthv1widget::closeSchedNotifier (void)
 		m_sched_notifier = nullptr;
 	}
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->midiInEnabled(false);
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->midiInEnabled(false);
 }
 
 
@@ -712,9 +712,9 @@ float padthv1widget::paramValue ( padthv1::ParamIndex index ) const
 	if (pParam) {
 		fValue = pParam->value();
 	} else {
-		padthv1_ui *pSynthUi = ui_instance();
-		if (pSynthUi)
-			fValue = pSynthUi->paramValue(index);
+		padthv1_ui *pPadthUi = ui_instance();
+		if (pPadthUi)
+			fValue = pPadthUi->paramValue(index);
 	}
 
 	return fValue;
@@ -743,8 +743,8 @@ void padthv1widget::paramChanged ( float fValue )
 // Update local tied widgets.
 void padthv1widget::updateParamEx ( padthv1::ParamIndex index, float fValue )
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
 	++m_iUpdate;
@@ -813,11 +813,11 @@ void padthv1widget::updateSchedParam ( padthv1::ParamIndex index, float fValue )
 // Reset all param knobs to default values.
 void padthv1widget::resetParams (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
-	pSynthUi->reset();
+	pPadthUi->reset();
 
 	resetSwapParams();
 
@@ -841,8 +841,8 @@ void padthv1widget::resetParams (void)
 // Randomize params (partial).
 void padthv1widget::randomParams (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
 	float p = 1.0f;
@@ -927,9 +927,9 @@ void padthv1widget::swapParams ( bool bOn )
 // Panic: all-notes/sound-off (reset).
 void padthv1widget::panic (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->reset();
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->reset();
 }
 
 
@@ -947,12 +947,12 @@ void padthv1widget::updateParamValues (void)
 {
 	resetSwapParams();
 
-	padthv1_ui *pSynthUi = ui_instance();
+	padthv1_ui *pPadthUi = ui_instance();
 
 	for (uint32_t i = 0; i < padthv1::NUM_PARAMS; ++i) {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(i);
-		const float fValue = (pSynthUi
-			? pSynthUi->paramValue(index)
+		const float fValue = (pPadthUi
+			? pPadthUi->paramValue(index)
 			: padthv1_param::paramDefaultValue(index));
 		setParamValue(index, fValue);
 		updateParam(index, fValue);
@@ -1015,9 +1015,9 @@ void padthv1widget::newPreset (void)
 	resetParamKnobs();
 	resetParamValues();
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->newPreset();
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->newPreset();
 
 	m_ui.StatusBar->showMessage(tr("New preset"), 5000);
 	updateDirtyPreset(false);
@@ -1025,10 +1025,13 @@ void padthv1widget::newPreset (void)
 
 
 // Preset file I/O slots.
-bool padthv1widget::loadPreset ( const QString& sFilename )
+bool padthv1widget::loadPreset (
+	const QString& sPreset, const QString& sPresetFile )
 {
 #ifdef CONFIG_DEBUG
-	qDebug("padthv1widget::loadPreset(\"%s\")", sFilename.toUtf8().constData());
+	qDebug("padthv1widget::loadPreset(\"%s\", \"%s\")",
+		sPreset.toUtf8().constData(),
+		sPresetFile.toUtf8().constData());
 #endif
 
 	clearSample();
@@ -1038,37 +1041,49 @@ bool padthv1widget::loadPreset ( const QString& sFilename )
 
 	bool bLoad = false;
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		bLoad = pSynthUi->loadPreset(sFilename);
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		bLoad = pPadthUi->loadPreset(sPresetFile);
 
-	if (bLoad)
-		updateLoadPreset(QFileInfo(sFilename).completeBaseName());
-	else
+	if (bLoad) {
+		updateLoadPreset(sPreset);
+	} else {
 		updateDirtyPreset(true);
+		QMessageBox::warning(this, tr("Warning"),
+			tr("Could not load preset from file:\n\n"
+			"\"%1\"\n\nSorry.").arg(sPresetFile),
+			QMessageBox::Ok);
+	}
 
 	return bLoad;
 }
 
 
-bool padthv1widget::savePreset ( const QString& sFilename )
+bool padthv1widget::savePreset (
+	const QString& sPreset, const QString& sPresetFile )
 {
 #ifdef CONFIG_DEBUG
-	qDebug("padthv1widget::savePreset(\"%s\")", sFilename.toUtf8().constData());
+	qDebug("padthv1widget::savePreset(\"%s\", \"%s\")",
+		sPreset.toUtf8().constData(),
+		sPresetFile.toUtf8().constData());
 #endif
 
 	bool bSave = false;
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		bSave = pSynthUi->savePreset(sFilename);
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		bSave = pPadthUi->savePreset(sPresetFile);
 
 	if (bSave) {
-		const QString& sPreset
-			= QFileInfo(sFilename).completeBaseName();
 		m_ui.StatusBar->showMessage(tr("Save preset: %1").arg(sPreset), 5000);
+		updateDirtyPreset(false);
+	} else {
+		updateDirtyPreset(true);
+		QMessageBox::warning(this, tr("Warning"),
+			tr("Could not save preset to file:\n\n"
+			"\"%1\"\n\nSorry.").arg(sPresetFile),
+			QMessageBox::Ok);
 	}
-	updateDirtyPreset(!bSave);
 
 	return bSave;
 }
@@ -1077,28 +1092,28 @@ bool padthv1widget::savePreset ( const QString& sFilename )
 // Sample updater (sid: 3=both).
 void padthv1widget::clearSample ( int sid )
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
 	if (sid & 1)
-		pSynthUi->sample(1)->reset_nh();
+		pPadthUi->sample(1)->reset_nh();
 	if (sid & 2)
-		pSynthUi->sample(2)->reset_nh();
+		pPadthUi->sample(2)->reset_nh();
 }
 
 
 // Sample updater (sid: 3=both).
 void padthv1widget::updateSample ( int sid )
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
 	if (sid & 1)
-		m_ui.Gen1Sample1->setSample(pSynthUi->sample(1));
+		m_ui.Gen1Sample1->setSample(pPadthUi->sample(1));
 	if (sid & 2)
-		m_ui.Gen1Sample2->setSample(pSynthUi->sample(2));
+		m_ui.Gen1Sample2->setSample(pPadthUi->sample(2));
 }
 
 
@@ -1149,8 +1164,8 @@ void padthv1widget::updateLoadPreset ( const QString& sPreset )
 // Notification updater.
 void padthv1widget::updateSchedNotify ( int stype, int sid )
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
 #ifdef CONFIG_DEBUG_0
@@ -1165,7 +1180,7 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 			m_ui.StatusBar->midiInNote(key, vel);
 		}
 		else
-		if (pSynthUi->midiInCount() > 0) {
+		if (pPadthUi->midiInCount() > 0) {
 			m_ui.StatusBar->midiInLed(true);
 			QTimer::singleShot(200, this, SLOT(midiInLedTimeout()));
 		}
@@ -1174,18 +1189,18 @@ void padthv1widget::updateSchedNotify ( int stype, int sid )
 		padthv1widget_control *pInstance
 			= padthv1widget_control::getInstance();
 		if (pInstance) {
-			padthv1_controls *pControls = pSynthUi->controls();
+			padthv1_controls *pControls = pPadthUi->controls();
 			pInstance->setControlKey(pControls->current_key());
 		}
 		break;
 	}
 	case padthv1_sched::Controls: {
 		const padthv1::ParamIndex index = padthv1::ParamIndex(sid);
-		updateSchedParam(index, pSynthUi->paramValue(index));
+		updateSchedParam(index, pPadthUi->paramValue(index));
 		break;
 	}
 	case padthv1_sched::Programs: {
-		padthv1_programs *pPrograms = pSynthUi->programs();
+		padthv1_programs *pPrograms = pPadthUi->programs();
 		padthv1_programs::Prog *pProg = pPrograms->current_prog();
 		if (pProg) updateLoadPreset(pProg->name());
 		break;
@@ -1211,9 +1226,9 @@ void padthv1widget::directNoteOn ( int iNote, int iVelocity )
 	qDebug("padthv1widget::directNoteOn(%d, %d)", iNote, iVelocity);
 #endif
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->directNoteOn(iNote, iVelocity); // note-on!
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->directNoteOn(iNote, iVelocity); // note-on!
 }
 
 
@@ -1250,9 +1265,9 @@ void padthv1widget::helpConfigure (void)
 {
 	savePresets();
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		padthv1widget_config(this, pSynthUi).exec();
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		padthv1widget_config(this, pPadthUi).exec();
 }
 
 
@@ -1327,9 +1342,9 @@ void padthv1widget::helpAboutQt (void)
 // Dirty flag (overridable virtual) methods.
 void padthv1widget::updateDirtyPreset ( bool bDirtyPreset )
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->updatePreset(bDirtyPreset);
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->updatePreset(bDirtyPreset);
 
 	m_ui.StatusBar->modified(bDirtyPreset);
 	m_ui.Preset->setDirtyPreset(bDirtyPreset);
@@ -1344,11 +1359,11 @@ void padthv1widget::paramContextMenu ( const QPoint& pos )
 	if (pParam == nullptr)
 		return;
 
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi == nullptr)
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi == nullptr)
 		return;
 
-	padthv1_controls *pControls = pSynthUi->controls();
+	padthv1_controls *pControls = pPadthUi->controls();
 	if (pControls == nullptr)
 		return;
 
@@ -1372,9 +1387,9 @@ void padthv1widget::paramContextMenu ( const QPoint& pos )
 // Sample harmonics edits.
 void padthv1widget::resetSample1 (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->sample(1)->reset();
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->sample(1)->reset();
 
 	updateDirtyPreset(true);
 }
@@ -1382,9 +1397,9 @@ void padthv1widget::resetSample1 (void)
 
 void padthv1widget::resetSample2 (void)
 {
-	padthv1_ui *pSynthUi = ui_instance();
-	if (pSynthUi)
-		pSynthUi->sample(2)->reset();
+	padthv1_ui *pPadthUi = ui_instance();
+	if (pPadthUi)
+		pPadthUi->sample(2)->reset();
 
 	updateDirtyPreset(true);
 }

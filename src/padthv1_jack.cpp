@@ -1033,16 +1033,21 @@ bool padthv1_jack_application::setup (void)
 	}
 	else
 #endif	// CONFIG_NSM
-	if (m_pWidget) {
+	if (m_pWidget)
 		m_pWidget->show();
-		if (m_presets.isEmpty())
+	if (m_presets.isEmpty()) {
+		if (m_pWidget)
 			m_pWidget->initPreset();
-		else
-			m_pWidget->loadPreset(m_presets.first());
+	} else {
+		const QString& sPresetFile = m_presets.first();
+		if (m_pWidget) {
+			const QString& sPreset
+				= QFileInfo(sPresetFile).completeBaseName();
+			m_pWidget->loadPreset(sPreset, sPresetFile);
+		} else {
+			padthv1_param::loadPreset(m_pPadth, sPresetFile);
+		}
 	}
-	else
-	if (!m_presets.isEmpty())
-		padthv1_param::loadPreset(m_pPadth, m_presets.first());
 
 	// Start watchdog timer...
 	watchdog_start();
@@ -1095,11 +1100,12 @@ void padthv1_jack_application::openSession (void)
 	if (!fi.exists())
 		fi.setFile(path_name, "session." PROJECT_NAME);
 	if (fi.exists()) {
-		const QString& sFilename = fi.absoluteFilePath();
+		const QString& sPresetFile = fi.absoluteFilePath();
 		if (m_pWidget) {
-			bOpen = m_pWidget->loadPreset(sFilename);
+			const QString& sPreset = fi.completeBaseName();
+			bOpen = m_pWidget->loadPreset(sPreset, sPresetFile);
 		} else {
-			bOpen = padthv1_param::loadPreset(m_pPadth, sFilename);
+			bOpen = padthv1_param::loadPreset(m_pPadth, sPresetFile);
 		}
 	}
 

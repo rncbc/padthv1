@@ -518,11 +518,12 @@ void padthv1widget_config::presetsImportItems (void)
 		sFilename = fileDialog.selectedFiles().first();
 #endif
 
-	if (!sFilename.isEmpty()) {
-		padthv1_presets presets;
-		padthv1_config::importPresets(sFilename, &presets);
-		m_ui.PresetsTreeWidget->loadPresets(&presets);
-	}
+	if (sFilename.isEmpty())
+		return;
+
+	padthv1_presets presets;
+	padthv1_config::importPresets(sFilename, &presets);
+	m_ui.PresetsTreeWidget->loadPresets(&presets);
 
 	stabilize();
 }
@@ -567,11 +568,15 @@ void padthv1widget_config::presetsExportItems (void)
 		sFilename = fileDialog.selectedFiles().first();
 #endif
 
-	if (!sFilename.isEmpty()) {
-		padthv1_presets presets;
-		m_ui.PresetsTreeWidget->savePresets(&presets);
-		padthv1_config::exportPresets(sFilename, &presets);
-	}
+	if (sFilename.isEmpty())
+		return;
+
+	if (QFileInfo(sFilename).completeSuffix() != sExt)
+		sFilename += '.' + sExt;
+
+	padthv1_presets presets;
+	m_ui.PresetsTreeWidget->savePresets(&presets);
+	padthv1_config::exportPresets(sFilename, &presets);
 
 	stabilize();
 }
@@ -901,6 +906,7 @@ void padthv1widget_config::stabilize (void)
 
 	pItem = m_ui.PresetsTreeWidget->currentItem();
 	bEnabled = m_bPresets;
+	m_ui.PresetsExportToolButton->setEnabled(bEnabled);
 	m_ui.PresetsPreviewCheckBox->setEnabled(bEnabled);
 	bEnabled = bEnabled && (pItem != nullptr);
 	m_ui.PresetsRenameToolButton->setEnabled(bEnabled);

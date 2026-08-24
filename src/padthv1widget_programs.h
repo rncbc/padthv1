@@ -27,6 +27,7 @@
 
 // forward decls.
 class padthv1_programs;
+class padthv1_presets;
 
 
 //----------------------------------------------------------------------------
@@ -54,6 +55,8 @@ public slots:
 	// slots.
 	void addBankItem();
 	void addProgramItem();
+
+	void addPresetItems(padthv1_presets *pPresets);
 
 protected slots:
 

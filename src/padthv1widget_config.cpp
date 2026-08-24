@@ -167,6 +167,10 @@ padthv1widget_config::padthv1widget_config (
 		SIGNAL(clicked()),
 		SLOT(programsDeleteItem()));
 
+	QObject::connect(m_ui.ProgramsAddPresetsToolButton,
+		SIGNAL(clicked()),
+		SLOT(programsAddPresetItems()));
+
 	QObject::connect(m_ui.ProgramsTreeWidget,
 		SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		SLOT(programsCurrentChanged()));
@@ -429,6 +433,17 @@ void padthv1widget_config::programsDeleteItem (void)
 	QTreeWidgetItem *pItem = m_ui.ProgramsTreeWidget->currentItem();
 	if (pItem)
 		delete pItem;
+
+	programsChanged();
+}
+
+
+void padthv1widget_config::programsAddPresetItems (void)
+{
+	// Get the presets...
+	padthv1_presets presets;
+	m_ui.PresetsTreeWidget->savePresets(&presets);
+	m_ui.ProgramsTreeWidget->addPresetItems(&presets);
 
 	programsChanged();
 }

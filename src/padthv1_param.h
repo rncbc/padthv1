@@ -42,9 +42,13 @@ namespace padthv1_param
 
 	// Preset serialization methods.
 	bool loadPreset(padthv1 *pPadth,
-		const QString& sFilename);
-	bool savePreset(padthv1 *pPadth,
-		const QString& sFilename,
+		const QString& sPresetFile);
+	bool loadPresetEx(padthv1 *pPadth,
+		const QString& sPresetFile);
+	bool loadPresetName(padthv1 *pPadth,
+		const QString& sPreset);
+ 	bool savePreset(padthv1 *pPadth,
+		const QString& sPresetFile,
 		bool bSymLink = false);
 
 	// Sample serialization methods.

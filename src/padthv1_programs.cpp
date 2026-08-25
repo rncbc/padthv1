@@ -181,7 +181,7 @@ void padthv1_programs::process_program (
 	m_prog = (m_bank ? m_bank->find_prog(prog_id) : nullptr);
 
 	if (m_prog) {
-		padthv1_param::loadPreset(pPadth, m_prog->name());
+		padthv1_param::loadPresetName(pPadth, m_prog->name());
 		pPadth->updateParams();
 	}
 }

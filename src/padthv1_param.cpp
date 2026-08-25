@@ -222,8 +222,8 @@ bool padthv1_param::newPreset ( padthv1 *pPadth )
 	if (pPadth == nullptr)
 		return false;
 
-	const bool running = pPadth->running(false);
-
+	const bool bRunning
+		= pPadth->running(false);
 	padthv1_sched::sync_reset();
 
 	pPadth->stabilize();
@@ -231,8 +231,7 @@ bool padthv1_param::newPreset ( padthv1 *pPadth )
 	pPadth->reset_test();
 
 	padthv1_sched::sync_pending();
-
-	pPadth->running(running);
+	pPadth->running(bRunning);
 
 	return true;
 }
@@ -240,32 +239,31 @@ bool padthv1_param::newPreset ( padthv1 *pPadth )
 
 // Preset serialization methods.
 bool padthv1_param::loadPreset (
-	padthv1 *pPadth, const QString& sFilename )
+	padthv1 *pPadth, const QString& sPresetFile )
+{
+	const bool bRunning
+		= pPadth->running(false);
+	padthv1_sched::sync_reset();
+
+	const bool bLoaded
+		= loadPresetEx(pPadth, sPresetFile);
+
+	padthv1_sched::sync_pending();
+	pPadth->running(bRunning);
+
+	return bLoaded;
+}
+
+
+bool padthv1_param::loadPresetEx (
+	padthv1 *pPadth, const QString& sPresetFile )
 {
 	if (pPadth == nullptr)
 		return false;
 
-	QFileInfo fi(sFilename);
-	if (!fi.exists()) {
-		padthv1_config *pConfig = padthv1_config::getInstance();
-		if (pConfig) {
-			const QString& sPresetFile
-				= pConfig->presetFile(sFilename);
-			if (sPresetFile.isEmpty())
-				return false;
-			fi.setFile(sPresetFile);
-			if (!fi.exists())
-				return false;
-		}
-	}
-
-	QFile file(fi.filePath());
+	QFile file(sPresetFile);
 	if (!file.open(QIODevice::ReadOnly))
 		return false;
-
-	const bool running = pPadth->running(false);
-
-	padthv1_sched::sync_reset();
 
 	pPadth->setTuningEnabled(false);
 	pPadth->reset();
@@ -278,6 +276,7 @@ bool padthv1_param::loadPreset (
 		}
 	}
 
+	const QFileInfo fi(sPresetFile);
 	const QDir currentDir(QDir::current());
 	QDir::setCurrent(fi.absolutePath());
 
@@ -332,25 +331,51 @@ bool padthv1_param::loadPreset (
 	pPadth->reset();
 	pPadth->reset_test();
 
-	padthv1_sched::sync_pending();
-
-	pPadth->running(running);
-
 	QDir::setCurrent(currentDir.absolutePath());
 
 	return true;
 }
 
 
+bool padthv1_param::loadPresetName (
+	padthv1 *pPadth, const QString& sPreset )
+{
+	if (pPadth == nullptr)
+		return false;
+
+	if (sPreset.isEmpty())
+		return false;
+
+	padthv1_config *pConfig = padthv1_config::getInstance();
+	if (pConfig == nullptr)
+		return false;
+
+	const QString& sPresetFile
+		= pConfig->presetFile(sPreset);
+	if (sPresetFile.isEmpty())
+		return false;
+	if (!QFileInfo::exists(sPresetFile))
+		return false;
+
+	const bool bRunning
+		= pPadth->running(false);
+	const bool bLoaded
+		= loadPresetEx(pPadth, sPresetFile);
+	pPadth->running(bRunning);
+
+	return bLoaded;
+}
+
+
 bool padthv1_param::savePreset (
-	padthv1 *pPadth, const QString& sFilename, bool bSymLink )
+	padthv1 *pPadth, const QString& sPresetFile, bool bSymLink )
 {
 	if (pPadth == nullptr)
 		return false;
 
 	pPadth->stabilize();
 
-	const QFileInfo fi(sFilename);
+	const QFileInfo fi(sPresetFile);
 	const QDir currentDir(QDir::current());
 	QDir::setCurrent(fi.absolutePath());
 

@@ -1,7 +1,7 @@
 // padthv1_lv2.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2025, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2026, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -21,10 +21,9 @@
 
 #include "padthv1_lv2.h"
 #include "padthv1_config.h"
-#include "padthv1_sched.h"
 
-#include "padthv1_programs.h"
-#include "padthv1_controls.h"
+#include "padthv1_sched.h"
+#include "padthv1_param.h"
 
 #ifdef CONFIG_LV2_OLD_HEADERS
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
@@ -581,6 +580,9 @@ static const LV2_State_Interface padthv1_lv2_state_interface =
 const LV2_Program_Descriptor *padthv1_lv2::get_program ( uint32_t index )
 {
 	padthv1_programs *pPrograms = padthv1::programs();
+	if (!pPrograms->enabled())
+		return nullptr;
+
 	const padthv1_programs::Banks& banks = pPrograms->banks();
 	padthv1_programs::Banks::ConstIterator bank_iter = banks.constBegin();
 	const padthv1_programs::Banks::ConstIterator& bank_end = banks.constEnd();

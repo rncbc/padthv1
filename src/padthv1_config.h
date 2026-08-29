@@ -115,18 +115,6 @@ public:
 
 protected:
 
-	// Preset group path.
-	static QString presetsGroup();
-	static QString presetsListKey();
-
-	// Banks/presets group path.
-	static QString presetsBanksGroup();
-	static QString presetsBankListKey();
-
-	// Preset conf.factory group path.
-	static QString presetsConfGroup();
-	static QString presetsConfListKey();
-
 	// Absolute/relative path functors.
 	struct MapPath
 	{
@@ -143,16 +131,7 @@ protected:
 		padthv1_presets *pPresets,
 		const MapPath& mapPath = MapPath());
 
-	// Banks programs group path.
-	static QString programsGroup();
-	static QString bankPrefix();
-
 	void clearPrograms();
-
-	// Controllers group path.
-	static QString controlsGroup();
-	static QString controlPrefix();
-
 	void clearControls();
 
 	// Explicit I/O methods.

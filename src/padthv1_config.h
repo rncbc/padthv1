@@ -26,11 +26,6 @@
 
 #include "padthv1_presets.h"
 
-
-//-------------------------------------------------------------------------
-// padthv1_config - Prototype settings class (singleton).
-//
-
 #include <QSettings>
 #include <QStringList>
 
@@ -38,6 +33,12 @@
 class padthv1_programs;
 class padthv1_controls;
 
+class QDir;
+
+
+//-------------------------------------------------------------------------
+// padthv1_config - Prototype settings class (singleton).
+//
 
 class padthv1_config : public QSettings
 {
@@ -130,6 +131,13 @@ protected:
 		QSettings *pSettings,
 		padthv1_presets *pPresets,
 		const MapPath& mapPath = MapPath());
+
+	static int loadPresetsConf(
+		QSettings *pSettings,
+		padthv1_presets *pPresets);
+	static int loadPresetsConfDir(
+		padthv1_presets *pPresets,
+		const QDir& dir, QStringList& confs);
 
 	void clearPrograms();
 	void clearControls();

@@ -161,6 +161,7 @@ public:
 	class sched;
 
 	static sched *sched_register(padthv1 *pPadth, int sid);
+	static void sched_unregister(padthv1 *pPadth, int sid);
 	static void sched_cleanup();
 
 protected:
@@ -248,7 +249,7 @@ private:
 
 
 //-------------------------------------------------------------------------
-// padthv1_sample_ref - PADsynth wave table (sample reference lists).
+// padthv1_sample_ref - wave table sample reference lists.
 //
 #include "padthv1_list.h"
 

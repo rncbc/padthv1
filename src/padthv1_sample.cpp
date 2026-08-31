@@ -50,6 +50,8 @@ public:
 	sched(padthv1 *pPadth, int sid)
 		: padthv1_sched(pPadth, Sample), m_sid(sid), m_sync(0) {}
 
+	int sid() const	{ return m_sid; }
+
 	void schedule(float freq0, float width, float scale,
 		uint16_t nh, padthv1_sample::Apodizer apod)
 	{
@@ -90,7 +92,7 @@ private:
 
 // local schedule registry.
 //
-static QHash<int, padthv1_sample::sched *> g_sched_registry;
+static QHash<uint, padthv1_sample::sched *> g_sched_registry;
 
 padthv1_sample::sched *padthv1_sample::sched_register (
 	padthv1 *pPadth, int sid )
@@ -103,6 +105,18 @@ padthv1_sample::sched *padthv1_sample::sched_register (
 	}
 	return ret;
 }
+
+
+void padthv1_sample::sched_unregister (	padthv1 *pPadth, int sid )
+{
+	const uint key = qHash(pPadth) ^ qHash(sid);
+	sched *ret = g_sched_registry.value(key, nullptr);
+	if (ret) {
+		g_sched_registry.remove(key);
+		delete ret;
+	}
+}
+
 
 
 void padthv1_sample::sched_cleanup (void)
@@ -165,7 +179,7 @@ padthv1_sample::~padthv1_sample (void)
 {
 	if (m_ah) delete [] m_ah;
 
-//	delete m_sched;
+	sched_unregister(m_sched->instance(), m_sched->sid());
 
 	::fftwf_destroy_plan(m_fftw_plan);
 

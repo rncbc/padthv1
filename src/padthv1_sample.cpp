@@ -179,7 +179,7 @@ padthv1_sample::~padthv1_sample (void)
 {
 	if (m_ah) delete [] m_ah;
 
-	sched_unregister(m_sched->instance(), m_sched->sid());
+//	sched_unregister(m_sched->instance(), m_sched->sid());
 
 	::fftwf_destroy_plan(m_fftw_plan);
 

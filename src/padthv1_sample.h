@@ -64,6 +64,11 @@ public:
 	enum Apodizer { Rect = 0, Triang, Welch, Hann, Gauss };
 
 	// properties.
+	padthv1 *instance() const
+		{ return m_pPadth; }
+	int sid() const
+		{ return m_sid; }
+
 	float freq0() const
 		{ return m_freq0; }
 	float width() const
@@ -160,9 +165,8 @@ public:
 	//
 	class sched;
 
-	static sched *sched_register(padthv1 *pPadth, int sid);
-	static void sched_unregister(padthv1 *pPadth, int sid);
-	static void sched_cleanup();
+	static sched *sched_register(padthv1_sample *sample);
+	static void sched_unregister(padthv1_sample *sample);
 
 protected:
 
@@ -184,12 +188,13 @@ protected:
 
 private:
 
+	padthv1  *m_pPadth;
+	int       m_sid;
+
 	float     m_freq0;
 	float     m_width;
 	float     m_scale;
 	uint16_t  m_nh;
-
-	int       m_sid;
 
 	uint16_t  m_nh_max;
 	float    *m_ah;
@@ -299,6 +304,8 @@ public:
 		ref = m_free.next();
 		while (ref) {
 			m_free.remove(ref);
+			if (force)
+				padthv1_sample::sched_unregister(ref->refp);
 			delete ref->refp;
 			delete ref;
 			ref = m_free.next();

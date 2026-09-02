@@ -95,8 +95,10 @@ private:
 static QHash<uint, padthv1_sample::sched *> g_sched_registry;
 
 padthv1_sample::sched *padthv1_sample::sched_register (
-	padthv1 *pPadth, int sid )
+	padthv1_sample *sample )
 {
+	padthv1 *pPadth = sample->instance();
+	const int sid = sample->sid();
 	const uint key = qHash(pPadth) ^ qHash(sid);
 	sched *ret = g_sched_registry.value(key, nullptr);
 	if (ret == nullptr) {
@@ -107,8 +109,11 @@ padthv1_sample::sched *padthv1_sample::sched_register (
 }
 
 
-void padthv1_sample::sched_unregister (	padthv1 *pPadth, int sid )
+void padthv1_sample::sched_unregister (
+	padthv1_sample *sample )
 {
+	padthv1 *pPadth = sample->instance();
+	const int sid = sample->sid();
 	const uint key = qHash(pPadth) ^ qHash(sid);
 	sched *ret = g_sched_registry.value(key, nullptr);
 	if (ret) {
@@ -118,21 +123,14 @@ void padthv1_sample::sched_unregister (	padthv1 *pPadth, int sid )
 }
 
 
-
-void padthv1_sample::sched_cleanup (void)
-{
-	qDeleteAll(g_sched_registry);
-	g_sched_registry.clear();
-}
-
-
 //-------------------------------------------------------------------------
 // padthv1_sample - PADsynth wave table.
 //
 
 // ctor.
 padthv1_sample::padthv1_sample ( padthv1 *pPadth, int sid, uint32_t nsize )
-	: m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0), m_sid(sid),
+	: m_pPadth(pPadth), m_sid(sid),
+		m_freq0(0.0f), m_width(0.0f), m_scale(0.0f), m_nh(0),
 		m_nh_max(0), m_ah(nullptr), m_nsize(nsize), m_srate(44100.0f),
 		m_phase0(0.0f), m_apod(Gauss), m_srand(0), m_reset(0)
 {
@@ -153,7 +151,7 @@ padthv1_sample::padthv1_sample ( padthv1 *pPadth, int sid, uint32_t nsize )
 	m_fftw_plan = ::fftwf_plan_r2r_1d(
 		m_nsize, m_fftw_data, m_fftw_data, FFTW_HC2R, FFTW_ESTIMATE);
 
-	m_sched = sched_register(pPadth, sid);
+	m_sched = padthv1_sample::sched_register(this);
 
 	reset_nh_max(DEFAULT_NH);
 }
@@ -161,9 +159,7 @@ padthv1_sample::padthv1_sample ( padthv1 *pPadth, int sid, uint32_t nsize )
 
 // copy ctor.
 padthv1_sample::padthv1_sample ( const padthv1_sample& sample )
-	: padthv1_sample(
-		  sample.m_sched->instance(),
-		  sample.m_sid, sample.m_nsize)
+	: padthv1_sample(sample.m_pPadth, sample.m_sid, sample.m_nsize)
 {
 	m_srate = sample.m_srate;
 
@@ -178,8 +174,6 @@ padthv1_sample::padthv1_sample ( const padthv1_sample& sample )
 padthv1_sample::~padthv1_sample (void)
 {
 	if (m_ah) delete [] m_ah;
-
-//	sched_unregister(m_sched->instance(), m_sched->sid());
 
 	::fftwf_destroy_plan(m_fftw_plan);
 

@@ -27,3 +27,14 @@ Description: An old-school polyphonic additive synthesizer  - LV2 plugin
   An old-school all-digital polyphonic additive synthesizer with stereo fx.
   .
   This package provides the LV2 plugin (http://padthv1.sourceforge.net/lv2)
+
+Package: padthv1-preset
+Architecture: all
+Depends: padthv1-jack | padthv1-lv2
+Description: An old-school polyphonic subtractive synthesizer - LV2 plugin
+  An old-school all-digital 4-oscillator subtractive polyphonic synthesizer
+  with stereo fx.
+  .
+  This package provides the factory/community presets from
+    https://github.com//rncbc/padthv1-preset
+  

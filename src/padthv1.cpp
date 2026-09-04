@@ -1044,7 +1044,7 @@ private:
 
 	padthv1_ramp1 m_wid1;
 	padthv1_bal2  m_pan1;
-	padthv1_ramp3 m_vol1;
+	padthv1_ramp2 m_vol1;
 
 	float  **m_sfxs;
 	uint32_t m_nsize;
@@ -1348,7 +1348,6 @@ void padthv1_impl::setParamPort ( padthv1::ParamIndex index, float *pfParam )
 	case padthv1::DCA1_VOLUME:
 		m_vol1.reset(
 			m_out1.volume.value_ptr(),
-			m_dca1.volume.value_ptr(),
 			&m_ctl1.volume);
 		break;
 	case padthv1::OUT1_WIDTH:
@@ -1976,7 +1975,6 @@ void padthv1_impl::reset (void)
 {
 	m_vol1.reset(
 		m_out1.volume.value_ptr(),
-		m_dca1.volume.value_ptr(),
 		&m_ctl1.volume);
 	m_pan1.reset(
 		m_out1.panning.value_ptr(),
@@ -2063,7 +2061,7 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 		? m_ctl1.modwheel + PITCH_SCALE * *m_lfo1.pitch : 0.0f);
 
 	const bool dcf1_enabled = (*m_dcf1.enabled > 0.0f);
-	
+
 	const float fxsend1 = *m_out1.fxsend * *m_out1.fxsend;
 
 	reset_test(); // inline...
@@ -2181,6 +2179,7 @@ void padthv1_impl::process ( float **ins, float **outs, uint32_t nframes )
 				const float mid1 = 0.5f * (mod1 + mod2);
 				const float sid1 = 0.5f * (mod1 - mod2);
 				const float vol1 = vel1 * m_vol1.value(j)
+					* m_dca1.volume.value()
 					* pv->dca1_env.tick()
 					* pv->out1_vol.value(j);
 

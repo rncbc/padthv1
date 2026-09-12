@@ -6,13 +6,13 @@ ChangeLog
 
 GIT HEAD
 
-- Introduce the factory/community preset install package.
+- Introduce factory/community presets install package.
 - Color theme (with palette editor) and (widget) Style theme
   options moved to Help/Configure.../Custom tab (with preview).
 - Fix to a terribly old multiple LV2 plug-in instance mess up,
   revisited again
 
-  
+
 1.4.3  2026-09-01  A Late-Summer'26 Release.
 
 - Fixed an old freezer bug that manifested whenever a MIDI

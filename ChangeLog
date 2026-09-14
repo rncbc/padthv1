@@ -4,13 +4,13 @@ padthv1 - An old-school additive polyphonic synthesizer
 ChangeLog
 
 
-GIT HEAD
+1.5.0  2026-09-15  An End-of-Summer'26 Release.
 
 - Introducing factory/community presets install package.
 - Color theme (with palette editor) and (widget) Style theme
   options moved to Help/Configure.../Custom tab (with preview).
 - Fix to a terribly old multiple LV2 plug-in instance mess up,
-  revisited again
+  revisited again.
 
 
 1.4.3  2026-09-01  A Late-Summer'26 Release.

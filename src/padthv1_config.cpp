@@ -561,6 +561,9 @@ void padthv1_config::load (void)
 	bProgramsEnabled = QSettings::value("/ProgramsEnabled", false).toBool();
 	QSettings::endGroup();
 
+	if (!QFileInfo(sPresetDir).permission(QFile::WriteUser))
+		sPresetDir.clear();
+
 	QSettings::beginGroup("/Dialogs");
 	bPresetsPreview = QSettings::value("/PresetsPreview", false).toBool();
 	bProgramsPreview = QSettings::value("/ProgramsPreview", false).toBool();

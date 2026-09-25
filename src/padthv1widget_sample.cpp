@@ -1,7 +1,7 @@
 // padthv1widget_sample.cpp
 //
 /****************************************************************************
-   Copyright (C) 2012-2021, rncbc aka Rui Nuno Capela. All rights reserved.
+   Copyright (C) 2012-2026, rncbc aka Rui Nuno Capela. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -31,6 +31,8 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QMenu>
+
+#include <QInputDialog>
 
 #include <QMouseEvent>
 
@@ -608,6 +610,7 @@ void padthv1widget_sample::randomize (void)
 	if (pConfig)
 		p = 0.01f * pConfig->fRandomizePercent;
 
+#if 0// Old passive prompt...
 	if (QMessageBox::warning(this,
 		tr("Warning"),
 		tr("About to randomize current partials magnitudes:\n\n"
@@ -615,13 +618,26 @@ void padthv1widget_sample::randomize (void)
 		"Are you sure?").arg(100.0f * p),
 		QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Cancel)
 		return;
+#else
+	bool bOk = false;
+	const double randomizePercent
+		= QInputDialog::getDouble(this,
+			tr("Randomize"),
+			tr("Randomize current partials magnitudes\n"
+				"within a specified percentage deviation.\n\n"
+				"Randomize factor ± (%):"),
+			double(100.0f * p), 0.0, 100.0, 1, &bOk);
+	if (!bOk)
+		return;
+	p = 0.01f * float(randomizePercent);
+#endif
 
 	std::default_random_engine re(::time(nullptr));
 
 	const int nh = m_pSample->nh();
 	for (int n = 0; n < nh; ++n) {
 		std::normal_distribution<float> nd;
-		float v = m_pSample->harmonic(n) + 0.25f * p * nd(re);
+		float v = m_pSample->harmonic(n) + 0.2f * p * nd(re);
 		if (v < 0.0f)
 			v = 0.0f;
 		else

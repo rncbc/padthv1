@@ -2318,6 +2318,9 @@ padthv1::padthv1 ( uint16_t nchannels, float srate, uint32_t nsize )
 
 padthv1::~padthv1 (void)
 {
+	// no scheduled run may reach a half-destroyed instance.
+	padthv1_sched::sync_cancel(this);
+
 	delete m_pImpl;
 }
 
